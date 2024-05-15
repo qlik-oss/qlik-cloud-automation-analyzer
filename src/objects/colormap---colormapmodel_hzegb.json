@@ -1,0 +1,38 @@
+{
+  "qInfo": {
+    "qId": "ColorMapModel_hZegb",
+    "qType": "ColorMap"
+  },
+  "qMetaDef": {},
+  "colorMap": {
+    "colors": [
+      {
+        "value": "Disabled",
+        "baseColor": {
+          "color": "#d63031",
+          "index": -1
+        }
+      },
+      {
+        "value": "Available",
+        "baseColor": {
+          "color": "#19426C",
+          "index": -1
+        }
+      },
+      {
+        "value": "[Unknown - Deleted]",
+        "baseColor": {
+          "color": "#A9AAAC",
+          "index": -1
+        }
+      }
+    ],
+    "nul": null,
+    "oth": null,
+    "pal": null,
+    "single": null,
+    "usePal": true,
+    "autoFill": true
+  }
+}

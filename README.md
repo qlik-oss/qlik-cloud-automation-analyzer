@@ -1,6 +1,6 @@
-> **Warning**
-> This application is _community supported_. This means that you should not contact
-> Qlik Support for help with this app. See below for additional information
+> [!IMPORTANT]
+> This project is _community supported_. This means that you should not contact
+> Qlik Support for help with these apps. See below for additional information
 > on how to raise issues on this repository to ask for help.
 
 # Qlik Cloud Automation Analyzer
@@ -14,9 +14,28 @@ helps you to analyze and monitor Qlik Application Automation runs in your tenant
 
 ![Sheets in the app](/images/readme_sheets.png)
 
-It provides information such as:
+Some of the benefits of this application are as follows:
 
-* Information provided in the app
+- Track number of automations by type and by user
+- Analyze concurrent automations
+- Compare current month vs prior month runs
+- Analyze failed runs - view all schedules and their statuses
+- Tie in Qlik Alerting
+
+This application:
+
+- Pulls a max of 60 days of automation run history, and will then continue to build from there incrementally using QVDs.
+- Does not pull in runs that are currently running.
+- Should not be used as an audit application.
+
+Endpoints:
+
+- audits
+- tenants
+- spaces
+- users
+- automations
+- automations/{id}/runs/{id}
 
 ## Installing/ updating
 
@@ -33,9 +52,9 @@ basis by contributors to this project.
 
 If you have an issue:
 
-* Review the FAQ section in this readme to see if your issue is a common one
-* Review open and closed [issues](/../../issues)
-* Open a [new issue](/../../issues/new), following the issue template
+- Review the FAQ section in this readme to see if your issue is a common one
+- Review open and closed [issues](/../../issues)
+- Open a [new issue](/../../issues/new), following the issue template
 
 If you are able to resolve the issue, then close your issue with the resolution,
 and if you feel inclined, open a PR with your proposed changes so that we can

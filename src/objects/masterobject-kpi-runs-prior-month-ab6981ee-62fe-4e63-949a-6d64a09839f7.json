@@ -1,0 +1,306 @@
+{
+  "qInfo": {
+    "qId": "ab6981ee-62fe-4e63-949a-6d64a09839f7",
+    "qType": "masterobject"
+  },
+  "qMetaDef": {
+    "title": "Runs Prior Month",
+    "description": "",
+    "tags": []
+  },
+  "qHyperCubeDef": {
+    "qDimensions": [],
+    "qMeasures": [
+      {
+        "qLibraryId": "e5f9cdff-5671-4c73-a3c2-05a09a9f646e",
+        "qDef": {
+          "qTags": [],
+          "qGrouping": "N",
+          "qAccumulate": 0,
+          "qActiveExpression": 0,
+          "qExpressions": [],
+          "autoSort": true,
+          "cId": "atuFNKJ",
+          "numFormatFromTemplate": true,
+          "measureAxis": {
+            "min": 0,
+            "max": 100
+          },
+          "conditionalColoring": {
+            "useConditionalColoring": false,
+            "singleColor": 3,
+            "paletteSingleColor": {
+              "index": 6
+            },
+            "segments": {
+              "limits": [],
+              "paletteColors": [
+                {
+                  "index": 6
+                }
+              ]
+            }
+          },
+          "quarantine": {
+            "qNumFormat": {},
+            "isCustomFormatted": false
+          }
+        },
+        "qSortBy": {
+          "qSortByNumeric": -1,
+          "qSortByLoadOrder": 1,
+          "qExpression": {}
+        },
+        "qAttributeExpressions": [],
+        "qAttributeDimensions": [],
+        "qCalcCond": {},
+        "qCalcCondition": {
+          "qCond": {},
+          "qMsg": {}
+        },
+        "qTrendLines": [],
+        "qMiniChartDef": {
+          "qSortBy": {
+            "qExpression": {}
+          },
+          "qOtherTotalSpec": {
+            "qOtherMode": "OTHER_OFF",
+            "qOtherCounted": {},
+            "qOtherLimit": {},
+            "qOtherLimitMode": "OTHER_GT_LIMIT",
+            "qForceBadValueKeeping": true,
+            "qApplyEvenWhenPossiblyWrongResult": true,
+            "qOtherSortMode": "OTHER_SORT_DESCENDING",
+            "qTotalMode": "TOTAL_OFF",
+            "qReferencedExpression": {}
+          },
+          "qMaxNumberPoints": -1,
+          "qAttributeExpressions": []
+        }
+      }
+    ],
+    "qInterColumnSortOrder": [
+      0
+    ],
+    "qSuppressMissing": true,
+    "qInitialDataFetch": [
+      {
+        "qLeft": 0,
+        "qTop": 0,
+        "qWidth": 500,
+        "qHeight": 10
+      }
+    ],
+    "qReductionMode": "N",
+    "qMode": "S",
+    "qPseudoDimPos": -1,
+    "qNoOfLeftDims": -1,
+    "qMaxStackedCells": 5000,
+    "qCalcCond": {},
+    "qTitle": {},
+    "qCalcCondition": {
+      "qCond": {},
+      "qMsg": {}
+    },
+    "qColumnOrder": [],
+    "qExpansionState": [],
+    "qDynamicScript": [],
+    "qLayoutExclude": {
+      "qHyperCubeDef": {
+        "qDimensions": [],
+        "qMeasures": [],
+        "qInterColumnSortOrder": [],
+        "qInitialDataFetch": [],
+        "qReductionMode": "N",
+        "qMode": "S",
+        "qPseudoDimPos": -1,
+        "qNoOfLeftDims": -1,
+        "qMaxStackedCells": 5000,
+        "qCalcCond": {},
+        "qTitle": {},
+        "qCalcCondition": {
+          "qCond": {},
+          "qMsg": {}
+        },
+        "qColumnOrder": [],
+        "qExpansionState": [],
+        "qDynamicScript": []
+      }
+    }
+  },
+  "script": "",
+  "showTitles": false,
+  "title": "",
+  "subtitle": "",
+  "footnote": "",
+  "disableNavMenu": true,
+  "showDetails": true,
+  "showDetailsExpression": false,
+  "useLink": false,
+  "sheetLink": "",
+  "openUrlInNewTab": true,
+  "tooltip": {
+    "hideBasic": false,
+    "chart": {
+      "style": {
+        "size": "medium"
+      }
+    }
+  },
+  "visualization": "kpi",
+  "version": "0.13.4",
+  "showMeasureTitle": true,
+  "showSecondMeasureTitle": true,
+  "textAlign": "center",
+  "layoutBehavior": "relative",
+  "fontSize": "M",
+  "components": [
+    {
+      "key": "general",
+      "shadow": {
+        "boxShadow": "0px 1px 2px 0px"
+      }
+    },
+    {
+      "key": "textAlignment",
+      "textAlignment": "center"
+    },
+    {
+      "key": "textBehavior",
+      "textBehavior": "responsive"
+    },
+    {
+      "key": "useAdvancedMode",
+      "useAdvancedMode": true
+    },
+    {
+      "key": "simpleSettings"
+    },
+    {
+      "key": "firstMeasureTitle",
+      "label": {
+        "name": {
+          "fontSize": {
+            "responsive": 0.8
+          }
+        }
+      }
+    },
+    {
+      "key": "firstMeasureValue",
+      "label": {
+        "value": {
+          "fontSize": {
+            "responsive": 1
+          }
+        }
+      }
+    },
+    {
+      "key": "secondMeasureTitle"
+    },
+    {
+      "key": "secondMeasureValue"
+    }
+  ],
+  "isRecommended": true,
+  "qLayoutExclude": {
+    "disabled": {},
+    "quarantine": {}
+  },
+  "recommendation": {
+    "options": {},
+    "analysis": {
+      "analysis": "fact",
+      "analysisGroup": "fact",
+      "titleTemplate": [],
+      "msrs": [
+        {
+          "expr": "rurTRrM",
+          "overridenMsrFormat": {
+            "qType": "U",
+            "qnDec": 10,
+            "qUseThou": 0
+          },
+          "masterMsrFormat": {
+            "qType": "U",
+            "qnDec": 10,
+            "qUseThou": 0
+          },
+          "coloring": {},
+          "cType": "eLibItem",
+          "libId": "rurTRrM",
+          "label": "#Runs last 30 days",
+          "fieldStats": {
+            "dataType": "string",
+            "valueRange": {
+              "min": 24731,
+              "max": 24731
+            },
+            "classification": [
+              "measure"
+            ]
+          }
+        },
+        {
+          "expr": "XPpqqp",
+          "overridenMsrFormat": {
+            "qType": "F",
+            "qnDec": 2,
+            "qUseThou": 0,
+            "qFmt": "#,##0",
+            "qDec": ".",
+            "qThou": ","
+          },
+          "masterMsrFormat": {
+            "qType": "F",
+            "qnDec": 2,
+            "qUseThou": 0,
+            "qFmt": "#,##0",
+            "qDec": ".",
+            "qThou": ","
+          },
+          "coloring": {},
+          "cType": "eLibItem",
+          "libId": "XPpqqp",
+          "label": "Average runs per day",
+          "fieldStats": {
+            "valueRange": {
+              "min": 824.3666666666667,
+              "max": 824.3666666666667
+            },
+            "classification": [
+              "measure"
+            ]
+          }
+        }
+      ]
+    },
+    "isExtendedAnalysis": false,
+    "matchRecord": {
+      "analysisPrecedentId": "P-NMin-Msr-Aggr",
+      "matches": [
+        {
+          "slot": "$$1",
+          "slotRole": "measure",
+          "libId": "rurTRrM",
+          "libIdLabel": "#Runs last 30 days"
+        },
+        {
+          "slot": "$$2",
+          "slotRole": "measure",
+          "libId": "XPpqqp",
+          "libIdLabel": "Average runs per day"
+        }
+      ],
+      "precedentStats": {
+        "matchedFields": 0,
+        "uniquePrecedents": 0
+      }
+    },
+    "relevance": 1,
+    "analysisIntentRelevance": 0.09000000000000001
+  },
+  "appId": "332743a0-0ab7-4685-a278-73c5720e69e1",
+  "masterVersion": 0.96
+}
