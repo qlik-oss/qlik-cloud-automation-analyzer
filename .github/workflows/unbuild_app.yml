@@ -1,0 +1,82 @@
+name: Unbuild app
+
+on:
+    pull_request:
+        types: [opened, synchronize]
+        branches: [ "main" ]
+
+    workflow_dispatch:
+  
+jobs:
+    unbuild:
+        runs-on: ubuntu-20.04
+        steps:
+          - uses: actions/checkout@v4
+            with:
+              ref: ${{ github.event.pull_request.head.ref }}
+          
+          - name: Retrieve app name from APPNAME
+            run: |
+                APPNAME=$(cat APPNAME)
+                echo "APPNAME=$APPNAME" >> $GITHUB_ENV 
+    
+          - name: Checkout repo
+            run: echo ${{ github.triggering_actor }}
+          
+          - name: Download qlik-cli and unzip
+            run: |
+                wget https://github.com/qlik-oss/qlik-cli/releases/download/v2.20.3/qlik-Linux-x86_64.tar.gz -O qlik-cli.tar.gz
+                # Unzip archive
+                tar -xf qlik-cli.tar.gz
+                # Remove archive
+                rm qlik-cli.tar.gz
+                # Update permissions to execute
+                chmod +x qlik
+          
+          - name: Retrieve qlik-cli version
+            run: ./qlik version
+        
+          - name: Create context in qlik-cli
+            run: |
+                ./qlik context create veritenant \
+                --server ${{ vars.TENANT }} \
+                --oauth-client-id ${{ vars.OAUTH_ID }} \
+                --oauth-client-secret ${{ secrets.OAUTH_SECRET }} \
+                --server-type cloud
+          
+          - name: Select context
+            run: ./qlik context use veritenant
+          
+          - name: Retrieve debugging info
+            run: |
+                ls -lh "./app/${{ env.APPNAME }}.qvf"
+                ./qlik user me
+          
+          - name: Import app to tenant
+            run: |
+                APP_ID=$(./qlik raw post v1/apps/import --body-file "./app/${{ env.APPNAME }}.qvf" | jq -r '.attributes.id')
+                echo "APP_ID=$APP_ID" >> $GITHUB_ENV
+                echo "Imported appId ${{ env.APP_ID }}"
+
+          - name: Delete any existing src dir
+            run: rm -rf src
+          
+          - name: Unbuild app to ./src
+            run: |
+                ./qlik app unbuild --app ${{ env.APP_ID }} --dir './src' --no-data
+                ls -lh "./src"
+          
+          - name: Delete app from tenant
+            run: ./qlik app rm ${{ env.APP_ID }}
+
+          - name: Remove qlik-cli
+            run: rm qlik
+
+          # No check for push as github token won't trigger an action re-run
+          - name: Commit new .src
+            run: |
+                 git config --global user.name "UnbuildBot Automation"
+                 git config --global user.email "username@users.noreply.github.com"
+                 git add src
+                 git commit -m "Automated unbuild of app into /src"
+                 git push
