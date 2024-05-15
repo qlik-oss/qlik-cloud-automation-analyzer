@@ -1,0 +1,29 @@
+{
+  "qInfo": {
+    "qId": "_gitoqlikMetaData",
+    "qType": "_gitoqlikMetaData"
+  },
+  "qMetaDef": {},
+  "qMeta": {
+    "_resourcetype": "app.object",
+    "_objecttype": "_gitoqlikMetaData",
+    "id": "_gitoqlikMetaData",
+    "approved": false,
+    "published": true,
+    "owner": "00u2n0ejqaz5yzbui0x7",
+    "ownerId": "OznI2S4nBw_pZsexZ_cB1C_3N4USd_OW",
+    "createdDate": "2022-12-19T11:58:40.677Z",
+    "modifiedDate": "2022-12-19T11:58:40.780Z",
+    "publishTime": "2022-12-19T11:58:40.780Z",
+    "privileges": [
+      "read",
+      "publish"
+    ]
+  },
+  "qSelectionInfo": {},
+  "_data": {
+    "masterId": "4fdb11b1-58e4-4086-bc40-a0e0cae1930e",
+    "infoByServerType": {},
+    "updatedAt": 1671451121950
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "qInfo": {
+    "qId": "ColorMapModel_enGFUDr",
+    "qType": "ColorMap"
+  },
+  "qMetaDef": {},
+  "colorMap": {
+    "colors": [],
+    "nul": null,
+    "oth": null,
+    "pal": null,
+    "single": {
+      "color": "#19426C",
+      "index": -1
+    },
+    "usePal": false,
+    "autoFill": false
+  }
+}

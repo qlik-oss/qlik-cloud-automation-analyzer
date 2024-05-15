@@ -1,0 +1,142 @@
+{
+  "qInfo": {
+    "qId": "a23fa5fb-cc05-46b2-b6fd-824fdea90e78",
+    "qType": "masterobject"
+  },
+  "qMetaDef": {
+    "title": "Automation Table Button",
+    "description": "",
+    "tags": []
+  },
+  "runtimeExpressionEvaluation": false,
+  "actions": [
+    {
+      "actionLabel": "Show/Hide Filters",
+      "actionType": "setVariable",
+      "bookmark": "",
+      "field": "",
+      "cyclicGroupId": "",
+      "indexStepper": 1,
+      "variable": "vFilterShow",
+      "showSystemVariables": false,
+      "softLock": false,
+      "value": {
+        "qStringExpression": {
+          "qExpr": "If($(vFilterShow),0,1)"
+        }
+      },
+      "partial": false,
+      "automation": "",
+      "automationId": "",
+      "automationPostData": false,
+      "automationTriggered": false,
+      "automationShowNotification": false,
+      "automationNotificationDuration": 4,
+      "automationOpenLinkSameWindow": false,
+      "cId": "ePyJqqp"
+    }
+  ],
+  "navigation": {
+    "action": "none",
+    "appId": "",
+    "sheet": "",
+    "chartId": "",
+    "story": "",
+    "websiteUrl": "",
+    "sameWindow": false,
+    "odagLink": ""
+  },
+  "useEnabledCondition": false,
+  "enabledCondition": 1,
+  "showTitles": false,
+  "title": "",
+  "subtitle": "",
+  "footnote": "",
+  "disableNavMenu": true,
+  "showDetails": false,
+  "showDetailsExpression": false,
+  "style": {
+    "label": "Automations",
+    "showLabel": true,
+    "icon": {
+      "useIcon": true,
+      "iconType": "table",
+      "position": "left"
+    },
+    "font": {
+      "fontFamily": "Open Sans, sans-serif",
+      "useColorExpression": false,
+      "color": {
+        "index": -1,
+        "color": "#808080",
+        "alpha": 1
+      },
+      "colorExpression": "",
+      "size": 0.6,
+      "sizeFixed": 20,
+      "sizeBehavior": "responsive",
+      "style": {
+        "bold": false,
+        "italic": false,
+        "underline": false
+      },
+      "align": "left"
+    },
+    "background": {
+      "useColorExpression": false,
+      "color": {
+        "index": 1,
+        "color": "#ffffff",
+        "alpha": 1
+      },
+      "colorExpression": "",
+      "mode": "none",
+      "useImage": false,
+      "url": {
+        "qStaticContentUrlDef": {}
+      },
+      "size": "auto",
+      "position": "centerCenter"
+    },
+    "border": {
+      "useColorExpression": false,
+      "color": {
+        "index": -1,
+        "color": "#808080"
+      },
+      "colorExpression": "",
+      "useBorder": true,
+      "radius": 1,
+      "width": 0.025
+    }
+  },
+  "components": [
+    {
+      "key": "general",
+      "shadow": {
+        "boxShadow": "none"
+      },
+      "borderWidth": "0px",
+      "borderColor": {
+        "index": 1,
+        "color": "#ffffff",
+        "alpha": 1
+      },
+      "title": {
+        "main": {
+          "fontFamily": "Open Sans, sans-serif"
+        },
+        "subTitle": {
+          "fontFamily": "Open Sans, sans-serif"
+        },
+        "footer": {
+          "fontFamily": "Open Sans, sans-serif"
+        }
+      }
+    }
+  ],
+  "visualization": "action-button",
+  "version": "1.40.0",
+  "appId": "ae92ea40-e9c3-4ffe-9988-5af6d0497c29",
+  "masterVersion": 0.96
+}

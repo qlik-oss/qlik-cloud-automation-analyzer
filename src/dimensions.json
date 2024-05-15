@@ -1,0 +1,831 @@
+[
+  {
+    "qInfo": {
+      "qId": "wzFmWwm",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "TenantName"
+      ],
+      "qFieldLabels": [
+        "Tenant Name"
+      ],
+      "qAlias": "Tenant Name",
+      "title": "Tenant Name",
+      "coloring": {
+        "changeHash": "0.5958913607609564",
+        "hasValueColors": false
+      }
+    },
+    "qMetaDef": {
+      "title": "Tenant Name",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "EKEvtS",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "=Pick(Match(AutomationLastRunOver30DaysAgo,0,1),'False','True')"
+      ],
+      "qFieldLabels": [
+        "Last Run Over 30 Days Ago"
+      ],
+      "qAlias": "Last Run Over 30 Days Ago",
+      "title": "Last Run Over 30 Days Ago",
+      "coloring": {
+        "changeHash": "0.6702255745356378",
+        "hasValueColors": false,
+        "colorMapRef": "EKEvtS"
+      }
+    },
+    "qMetaDef": {
+      "title": "Last Run Over 30 Days Ago",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "23f50e88-d914-41b9-b016-bca828a5f0d2",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "=Pick(Match(AutomationLastRunOver90DaysAgo,0,1),'False','True')"
+      ],
+      "qFieldLabels": [
+        "Last Run Over 90 Days Ago"
+      ],
+      "qAlias": "Last Run Over 90 Days Ago",
+      "title": "Last Run Over 90 Days Ago",
+      "coloring": {
+        "colorMapRef": "23f50e88-d914-41b9-b016-bca828a5f0d2",
+        "changeHash": "0.003178196971582059",
+        "hasValueColors": false
+      }
+    },
+    "qMetaDef": {
+      "title": "Last Run Over 90 Days Ago",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "7f1df14a-e58b-4a5b-b273-fa41f012fe9e",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "=Pick(Match(AutomationLastRunOver60DaysAgo,0,1),'False','True')"
+      ],
+      "qFieldLabels": [
+        "Last Run Over 60 Days Ago"
+      ],
+      "qAlias": "Last Run Over 60 Days Ago",
+      "title": "Last Run Over 60 Days Ago",
+      "coloring": {
+        "colorMapRef": "7f1df14a-e58b-4a5b-b273-fa41f012fe9e",
+        "changeHash": "0.6541127025232987",
+        "hasValueColors": false
+      }
+    },
+    "qMetaDef": {
+      "title": "Last Run Over 60 Days Ago",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "wJusE",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "=Pick(Match(AutomationRunTimeLimitAlertThresholdHit,0,1),'False','True')"
+      ],
+      "qFieldLabels": [
+        "Alert Threshold Hit"
+      ],
+      "qLabelExpression": "=($(vu_automation_duration_alert_percent) * 100) \u0026 '% Threshold Hit'",
+      "qAlias": "Alert Threshold Hit",
+      "title": "Alert Threshold Hit",
+      "coloring": {
+        "changeHash": "0.6283022963683633",
+        "hasValueColors": false,
+        "colorMapRef": "wJusE"
+      }
+    },
+    "qMetaDef": {
+      "title": "Alert Threshold Hit",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "JprJjZ",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "=Pick(Match(AutomationRunMaxTimeHit,0,1),'False','True')"
+      ],
+      "qFieldLabels": [
+        "Automation Run Max Time Hit"
+      ],
+      "qAlias": "Automation Run Max Time Hit",
+      "title": "Automation Run Max Time Hit",
+      "coloring": {
+        "changeHash": "0.9615409583146026",
+        "hasValueColors": false,
+        "colorMapRef": "JprJjZ"
+      }
+    },
+    "qMetaDef": {
+      "title": "Automation Run Max Time Hit",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "uqGsd",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "AutomationRunStatus"
+      ],
+      "qFieldLabels": [
+        "Run Status"
+      ],
+      "qAlias": "Run Status",
+      "title": "Run Status",
+      "coloring": {
+        "changeHash": "0.3832667980240858",
+        "hasValueColors": true,
+        "colorMapRef": "uqGsd"
+      }
+    },
+    "qMetaDef": {
+      "title": "Run Status",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "SMHH",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "AutomationRunPathURL"
+      ],
+      "qFieldLabels": [
+        "Automation Run Path URL"
+      ],
+      "title": "Automation Run Path URL",
+      "coloring": {
+        "changeHash": "0.42577400402117327",
+        "hasValueColors": false
+      }
+    },
+    "qMetaDef": {
+      "title": "Automation Run Path URL",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "hZegb",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "AutomationState"
+      ],
+      "qFieldLabels": [
+        "Automation State"
+      ],
+      "title": "Automation State",
+      "coloring": {
+        "changeHash": "0.606141267049694",
+        "hasValueColors": true,
+        "colorMapRef": "hZegb"
+      }
+    },
+    "qMetaDef": {
+      "title": "Automation State",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "jmJCp",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "AutomationRunExecutingUserName"
+      ],
+      "qFieldLabels": [
+        "Executing User Name"
+      ],
+      "title": "Executing User Name",
+      "coloring": {
+        "changeHash": "0.22223202292773458",
+        "hasValueColors": false
+      }
+    },
+    "qMetaDef": {
+      "title": "Executing User Name",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "RyPs",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "AutomationRunId"
+      ],
+      "qFieldLabels": [
+        "Run Id"
+      ],
+      "title": "Run Id",
+      "coloring": {
+        "changeHash": "0.985025439748594",
+        "hasValueColors": false,
+        "colorMapRef": "RyPs"
+      }
+    },
+    "qMetaDef": {
+      "title": "Run Id",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "PmYFWD",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "AutomationRunStopTime"
+      ],
+      "qFieldLabels": [
+        "Automation Run Stop Time"
+      ],
+      "title": "Automation Run Stop Time",
+      "coloring": {
+        "changeHash": "0.5613214437395586",
+        "hasValueColors": false
+      }
+    },
+    "qMetaDef": {
+      "title": "Automation Run Stop Time",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "Bmpqu",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "AutomationRunStartTime"
+      ],
+      "qFieldLabels": [
+        "Automation Run Start Time"
+      ],
+      "title": "Automation Run Start Time",
+      "coloring": {
+        "changeHash": "0.9776393194319153",
+        "hasValueColors": false
+      }
+    },
+    "qMetaDef": {
+      "title": "Automation Run Start Time",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "RQpkPru",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "AutomationNameUnique"
+      ],
+      "qFieldLabels": [
+        "Automation Name Unique"
+      ],
+      "title": "Automation Name Unique",
+      "coloring": {
+        "changeHash": "0.42607077208697075",
+        "hasValueColors": false
+      }
+    },
+    "qMetaDef": {
+      "title": "Automation Name Unique",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "WLAfmu",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "AutomationRunDuration"
+      ],
+      "qFieldLabels": [
+        "Automation Run Duration"
+      ],
+      "title": "Automation Run Duration",
+      "coloring": {
+        "changeHash": "0.2634033676580465",
+        "hasValueColors": false
+      }
+    },
+    "qMetaDef": {
+      "title": "Automation Run Duration",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "dBePP",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "AutomationRunError"
+      ],
+      "qFieldLabels": [
+        "Automation Run Error"
+      ],
+      "title": "Automation Run Error",
+      "coloring": {
+        "changeHash": "0.7741394277627909",
+        "hasValueColors": false
+      }
+    },
+    "qMetaDef": {
+      "title": "Automation Run Error",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "FwFmwE",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "AutomationRunTimeLimit"
+      ],
+      "qFieldLabels": [
+        "Automation Run Time Limit"
+      ],
+      "title": "Automation Run Time Limit",
+      "coloring": {
+        "changeHash": "0.6464702354352858",
+        "hasValueColors": false
+      }
+    },
+    "qMetaDef": {
+      "title": "Automation Run Time Limit",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "jPUb",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "AutomationRunMode"
+      ],
+      "qFieldLabels": [
+        "Run Mode"
+      ],
+      "title": "Run Mode",
+      "coloring": {
+        "changeHash": "0.12716244507316032",
+        "hasValueColors": true,
+        "colorMapRef": "jPUb"
+      }
+    },
+    "qMetaDef": {
+      "title": "Run Mode",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "enGFUDr",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "ConcurrencySecond"
+      ],
+      "qFieldLabels": [
+        "Concurrency Second"
+      ],
+      "title": "Concurrency Second",
+      "coloring": {
+        "changeHash": "0.38192821782318087",
+        "hasValueColors": false,
+        "colorMapRef": "enGFUDr"
+      }
+    },
+    "qMetaDef": {
+      "title": "Concurrency Second",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "EwKhtzf",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "AutomationRunYear"
+      ],
+      "qFieldLabels": [
+        "Run Year"
+      ],
+      "title": "Run Year",
+      "coloring": {
+        "changeHash": "0.45657741666968743",
+        "hasValueColors": false
+      }
+    },
+    "qMetaDef": {
+      "title": "Run Year",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "eMJcZK",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "AutomationRunWeek"
+      ],
+      "qFieldLabels": [
+        "Run Week"
+      ],
+      "title": "Run Week",
+      "coloring": {
+        "changeHash": "0.9146236176585798",
+        "hasValueColors": false,
+        "colorMapRef": "eMJcZK"
+      }
+    },
+    "qMetaDef": {
+      "title": "Run Week",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "LXWEes",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "AutomationRunMonthText"
+      ],
+      "qFieldLabels": [
+        "Run Month (Text)"
+      ],
+      "title": "Run Month (Text)",
+      "coloring": {
+        "changeHash": "0.871671517390066",
+        "hasValueColors": false,
+        "colorMapRef": "LXWEes"
+      }
+    },
+    "qMetaDef": {
+      "title": "Run Month (Text)",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "9236cc1e-eedc-4551-995c-901325024dd1",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "AutomationRunMonth"
+      ],
+      "qFieldLabels": [
+        "Run Month"
+      ],
+      "title": "Run Month",
+      "coloring": {
+        "colorMapRef": "9236cc1e-eedc-4551-995c-901325024dd1",
+        "changeHash": "0.5681071585712911",
+        "hasValueColors": false
+      }
+    },
+    "qMetaDef": {
+      "title": "Run Month",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "uVmjx",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "AutomationRunDate"
+      ],
+      "qFieldLabels": [
+        "Run Date"
+      ],
+      "title": "Run Date",
+      "coloring": {
+        "changeHash": "0.201450711660363",
+        "hasValueColors": false,
+        "colorMapRef": "uVmjx"
+      }
+    },
+    "qMetaDef": {
+      "title": "Run Date",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "VYxJR",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "AutomationRunContext"
+      ],
+      "qFieldLabels": [
+        "Run Context"
+      ],
+      "title": "Run Context",
+      "coloring": {
+        "changeHash": "0.07469956350328633",
+        "hasValueColors": false,
+        "colorMapRef": "VYxJR"
+      }
+    },
+    "qMetaDef": {
+      "title": "Run Context",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "dsFyQq",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "AutomationLastRunStatus"
+      ],
+      "qFieldLabels": [
+        "Last Run Status"
+      ],
+      "title": "Last Run Status",
+      "coloring": {
+        "changeHash": "0.10145907875530935",
+        "hasValueColors": false,
+        "colorMapRef": "dsFyQq"
+      }
+    },
+    "qMetaDef": {
+      "title": "Last Run Status",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "PNULzqq",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "AutomationId"
+      ],
+      "qFieldLabels": [
+        "Automation Id"
+      ],
+      "title": "Automation Id",
+      "coloring": {
+        "changeHash": "0.383069860461817",
+        "hasValueColors": false,
+        "colorMapRef": "PNULzqq"
+      }
+    },
+    "qMetaDef": {
+      "title": "Automation Id",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "DCjBMDc",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "AutomationDescription"
+      ],
+      "qFieldLabels": [
+        "Automation Description"
+      ],
+      "title": "Automation Description",
+      "coloring": {
+        "changeHash": "0.984388316229668",
+        "hasValueColors": false,
+        "colorMapRef": "DCjBMDc"
+      }
+    },
+    "qMetaDef": {
+      "title": "Automation Description",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "13cd50e4-1ce9-45a5-a2e4-b81c97f28c2e",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "SpaceType"
+      ],
+      "qFieldLabels": [
+        "Space Type"
+      ],
+      "title": "Space Type",
+      "coloring": {
+        "colorMapRef": "BBbpz",
+        "changeHash": "0.3551910373457099",
+        "hasValueColors": false
+      }
+    },
+    "qMetaDef": {
+      "title": "Space Type",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "BBbpz",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "SpaceName"
+      ],
+      "qFieldLabels": [
+        "Space Name"
+      ],
+      "title": "Space Name",
+      "coloring": {
+        "changeHash": "0.41909012738587115",
+        "hasValueColors": false
+      }
+    },
+    "qMetaDef": {
+      "title": "Space Name",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "NFftcZd",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "AutomationOwnerName"
+      ],
+      "qFieldLabels": [
+        "Automation Owner"
+      ],
+      "title": "Automation Owner",
+      "coloring": {
+        "changeHash": "0.5462261777222337",
+        "hasValueColors": false,
+        "colorMapRef": "NFftcZd"
+      }
+    },
+    "qMetaDef": {
+      "title": "Automation Owner",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "HGRSWVn",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "AutomationName"
+      ],
+      "qFieldLabels": [
+        "Automation Name"
+      ],
+      "title": "Automation Name",
+      "coloring": {
+        "changeHash": "0.022257074194015125",
+        "hasValueColors": false,
+        "colorMapRef": "HGRSWVn"
+      }
+    },
+    "qMetaDef": {
+      "title": "Automation Name",
+      "description": "",
+      "tags": []
+    }
+  }
+]

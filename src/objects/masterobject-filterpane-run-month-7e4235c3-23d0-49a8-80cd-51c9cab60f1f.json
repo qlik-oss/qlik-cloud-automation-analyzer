@@ -1,0 +1,66 @@
+{
+  "qProperty": {
+    "qInfo": {
+      "qId": "7e4235c3-23d0-49a8-80cd-51c9cab60f1f",
+      "qType": "masterobject"
+    },
+    "qMetaDef": {
+      "title": "Run Month",
+      "description": "",
+      "tags": []
+    },
+    "showTitles": false,
+    "title": "",
+    "subtitle": "",
+    "footnote": "",
+    "disableNavMenu": false,
+    "showDetails": true,
+    "showDetailsExpression": false,
+    "visualization": "filterpane",
+    "version": "0.17.4",
+    "qChildListDef": {
+      "qData": {}
+    },
+    "masterVersion": 0.96
+  },
+  "qChildren": [
+    {
+      "qProperty": {
+        "qInfo": {
+          "qId": "8ed4f460-2cf8-4dca-b3c9-7024325dfbfb",
+          "qType": "listbox"
+        },
+        "qMetaDef": {},
+        "qListObjectDef": {
+          "qLibraryId": "9236cc1e-eedc-4551-995c-901325024dd1",
+          "qDef": {
+            "qGrouping": "N",
+            "qFieldDefs": [],
+            "qFieldLabels": [],
+            "qSortCriterias": [
+              {
+                "qSortByState": 1,
+                "qSortByNumeric": -1,
+                "qSortByLoadOrder": 1,
+                "qExpression": {}
+              }
+            ],
+            "qNumberPresentations": [],
+            "qActiveField": 0,
+            "autoSort": false
+          },
+          "qFrequencyMode": "N",
+          "qShowAlternatives": true,
+          "qInitialDataFetch": [],
+          "qExpressions": []
+        },
+        "title": "Run Month",
+        "visualization": "listbox",
+        "layoutOptions": {
+          "dense": true
+        }
+      },
+      "qChildren": []
+    }
+  ]
+}

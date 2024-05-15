@@ -1,0 +1,87 @@
+{
+  "qProperty": {
+    "qInfo": {
+      "qId": "7bbbf73c-aa62-4bfb-b542-207e612d8734",
+      "qType": "masterobject"
+    },
+    "qMetaDef": {
+      "title": "Automation Name",
+      "description": "",
+      "tags": []
+    },
+    "showTitles": false,
+    "title": "",
+    "subtitle": "",
+    "footnote": "",
+    "disableNavMenu": false,
+    "showDetails": true,
+    "showDetailsExpression": false,
+    "visualization": "filterpane",
+    "version": "0.17.4",
+    "qChildListDef": {
+      "qData": {}
+    },
+    "masterVersion": 0.96,
+    "components": [
+      {
+        "key": "general",
+        "shadow": {
+          "boxShadow": "none"
+        },
+        "borderWidth": "0px",
+        "borderColor": {
+          "index": -1,
+          "color": "#808080"
+        },
+        "borderRadius": "2px"
+      },
+      {
+        "key": "theme"
+      },
+      {
+        "key": "selections"
+      }
+    ]
+  },
+  "qChildren": [
+    {
+      "qProperty": {
+        "qInfo": {
+          "qId": "9e505082-fdfd-40bc-b792-4e14c23de283",
+          "qType": "listbox"
+        },
+        "qMetaDef": {},
+        "qListObjectDef": {
+          "qLibraryId": "HGRSWVn",
+          "qDef": {
+            "qGrouping": "N",
+            "qFieldDefs": [],
+            "qFieldLabels": [],
+            "qSortCriterias": [
+              {
+                "qSortByState": 1,
+                "qSortByNumeric": 1,
+                "qSortByAscii": 1,
+                "qSortByLoadOrder": 1,
+                "qExpression": {}
+              }
+            ],
+            "qNumberPresentations": [],
+            "qActiveField": 0,
+            "autoSort": true
+          },
+          "qFrequencyMode": "N",
+          "qShowAlternatives": true,
+          "qInitialDataFetch": [],
+          "qExpressions": []
+        },
+        "title": "Automation Name",
+        "visualization": "listbox",
+        "layoutOptions": {
+          "dense": true
+        }
+      },
+      "qChildren": []
+    }
+  ]
+}
