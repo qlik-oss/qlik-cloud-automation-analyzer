@@ -24,7 +24,7 @@ Some of the benefits of this application are as follows:
 
 This application:
 
-- Pulls a max of 60 days of automation run history, and will then continue to build from there incrementally using QVDs.
+- Pulls a max of 90 days of automation run history, and will then continue to build from there incrementally using QVDs.
 - Does not pull in runs that are currently running.
 - Should not be used as an audit application.
 
