@@ -1,0 +1,1745 @@
+///$tab About
+/*
+
+    _______       _____                        __________                   _______              ______                          
+    ___    |___  ___  /_____________ _________ __  /___(_)____________      ___    |____________ ___  /____  ____________________
+    __  /| |  / / /  __/  __ \_  __ `__ \  __ `/  __/_  /_  __ \_  __ \     __  /| |_  __ \  __ `/_  /__  / / /__  /_  _ \_  ___/
+    _  ___ / /_/ // /_ / /_/ /  / / / / / /_/ // /_ _  / / /_/ /  / / /     _  ___ |  / / / /_/ /_  / _  /_/ /__  /_/  __/  /    
+    /_/  |_\__,_/ \__/ \____//_/ /_/ /_/\__,_/ \__/ /_/  \____//_/ /_/      /_/  |_/_/ /_/\__,_/ /_/  _\__, / _____/\___//_/     
+                                                                                                      /____/                     
+    Copyright 2024 QlikTech International
+    Daniel Pilla, Master Principal Analytics Platform Architect, Qlik
+    Konstantinos Mertzianis, Customer First Leader EMEA, Qlik
+    
+    The Automation Analyzer provides a comprehensive dashboard to analyze automation run metadata across a Qlik Sense tenant(s),
+    providing developers and administrators a holistic view of the automations used. 
+
+    Enjoy!    
+    
+*/    
+///$tab ** Configuration **
+TRACE Configuration;
+
+////////////////////////////////////////////////////////////////////////////////////////
+// *Required* Configuration 
+
+// IMPORTANT: To run this application, the user must be a "Tenant Admin" and must have an API Key, which requires the "Developer Role"
+// and APIs to be enabled within the tenant.
+
+/*
+1. The name of the REST connection that will be used. You must first create a valid REST connection to any endpoint to Qlik Sense tenant.
+		Example: '<Space>:<Connection Name>'
+        			Note: ':<Connection Name>' is the relative path which will check for a connection in the current space.
+		Example Connection: 
+					URL: 			https://<tenant-name>.<region>.qlikcloud.com/api/v1/items
+					Header: 		"Authorization"
+					Header Value: 	"Bearer <token>"
+		For reference on how to connect: 
+					https://qlik.dev/tutorials/generate-your-first-api-key
+*/
+SET vu_rest_connection = ':monitoring_apps_REST';
+   
+/*
+2. The full path to where you want to store your QVDs.
+		Example: 'lib://<Space>:<DataFiles>'
+        			Note: 'lib://:<Connection Name>' is the relative path which will check for a connection in the current space.
+*/
+SET vu_qvd_storage_connection = 'lib://:DataFiles';
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+///$tab * Optional Configuration *
+TRACE Optional Configuration;
+
+////////////////////////////////////////////////////////////////////////////////////////
+// Optional Configuration (No need to change these unless you desire) 
+
+// Optional Configuration (No need to change these unless you desire)
+
+SET vu_GMT_offset = 0; // The timezone difference from GMT. Modifies the reload times to desired GMT offset (this is written to QVDs)
+//	Example 1: -5
+//	Example 2: +5
+
+SET vu_automation_rolling_range = 365; // Maximum days back to store automation data in QVDs -- default 365
+
+SET vu_personal_space_user_field = 'Name'; // The user field to best represent the user: 'Id', 'Name', 'Subject', 'Email'
+
+SET vu_initial_days_back = 90; // The number of days back to fetch data initially, before incrementally building
+
+SET vu_dashboard_panel_chart_default = 'Owned Automations by User';	// Set the default landing chart on the side panel of the Dashboard sheet.
+// Can be one of: 
+//		Owned Automations by User
+//    	Runs by User
+//    	Runs by User CM vs PM
+//    	Runs by User CMTD vs PMTD
+//    	Runs by Context CMTD vs PMTD
+//    	Runs by Status
+
+SET vu_dashboard_automation_table_preset_filter = 'All'; // Set the default filter for the Automations table on the Dashboard sheet. Defaults to All.
+// Can be one of: 
+//		All
+//    	Totals
+//    	CMTD
+//    	PMTD
+
+SET vu_automation_duration_alert_percent = .7;	// Relative threshold setting for automation duration limits, e.g., scheduled is 4 hrs, so at what percent (0-1) of 4 hrs
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+// Multi-Tenant App Configuration
+
+// This application has support for multi-tenancy. If this app is designated as a "parent" app, it loads in the generated
+// QVDs of all "child" apps from a centralized location (e.g., AWS S3, Azure Blob, or Google Cloud Storage where the 
+// "QlikMetaCollection" directory resides) and does not directly harvest any data itself, meaning it depends on the existence 
+// of "child" apps. If designated as a child app, it writes out all of its final QVDs post harvest to a centralized location.
+
+SET vu_multi_tenant_enabled 			= 0;					// To enable Multi-Tenant app support, regardless of "Parent" or "Child" (1 or 0)
+
+SET vu_is_parent_app 					= 0;					// If this application is to be the parent app across varying tenants (1 or 0)
+
+// The connection to the parent directory of the QlikMetaCollection directory, which houses all of the multi-tenant metadata.
+// This is the root location to read/write all QVDs to so that they can be loaded across tenants (S3, Azure Blob, or Google 
+// Cloud Storage). The final path will resemble "QlikMetaCollection/Tenants/<TenantID>/Monitoring/<Monitoring App Name>/<Table>.qvd". 
+// The location below should point to the parent directory of the "QlikMetaCollection" folder. If the "QlikMetaCollection" 
+// folder does not exist, it will be automatically created.
+
+// **Azure Blob, AWS S3, and Google CLoud Storage have been tested and confirmed to work without any modifications**
+SET vu_qlik_meta_collection_parent_dir = 'lib://:';			// Parent directory of the "QlikMetaCollection" folder (trailing slash optional)
+
+////////////////////////////////////////////////////////////////////////////////////////
+///$tab Variables
+SUB variables
+  
+  	//// General System  & Date Time Variables
+    SET ThousandSep=',';
+    SET DecimalSep='.';
+    SET TimeFormat= 'hh:mm:ss';
+    SET DateFormat= 'YYYY-MM-DD';
+    SET TimestampFormat= 'YYYY-MM-DD hh:mm:ss';
+    SET FirstWeekDay=6;
+    SET BrokenWeeks=1;
+    SET ReferenceDay=0;
+    SET FirstMonthOfYear=1;
+    SET CollationLocale='en-US';
+    SET MonthNames='Jan;Feb;Mar;Apr;May;Jun;Jul;Aug;Sep;Oct;Nov;Dec';
+    SET LongMonthNames='January;February;March;April;May;June;July;August;September;October;November;December';
+    SET DayNames='Mon;Tue;Wed;Thu;Fri;Sat;Sun';
+    SET LongDayNames='Monday;Tuesday;Wednesday;Thursday;Friday;Saturday;Sunday';
+    SET NumericalAbbreviation='3:k;6:M;9:B;12:T;15:P;18:E;21:Z;24:Y;-3:m;-6:μ;-9:n;-12:p;-15:f;-18:a;-21:z;-24:y';
+
+    SET CreateSearchIndexOnReload=1;	// to assist search results in app
+    Search Exclude '*ID','_*','*Tim*';	// Exclude these fields from the global search.
+    SET HidePrefix='_';
+    LET vu_tenant_id = GetSysAttr('tenantId');
+    LET vu_tenant_fqdn = GetSysAttr('tenantUrl');
+    SET vForecastRunThreshold = 100;
+
+  	//// Automation Time Limit Variables
+    SET vLimitTriggeredSync	= 55;
+    SET vLimitScheduled		= 14400;
+    SET vLimitWebhook		= 870;
+
+  	//// Run-time variables
+    LET vStartTime 					= Now(1);
+    LET vLast24Hours 				= Num(TimeStamp('$(vStartTime)'-1));
+    LET vLast72Hours 				= Num(TimeStamp('$(vStartTime)'-3));
+    LET vLast7Days 					= Num(TimeStamp('$(vStartTime)'-7));
+    LET vLast30Days	 				= Num(TimeStamp('$(vStartTime)'-30));
+    LET vLast60Days 				= Num(TimeStamp('$(vStartTime)'-60));
+    LET vLast90Days 				= Num(TimeStamp('$(vStartTime)'-90)); 
+    LET vu_GMT_offset 				= Replace(vu_GMT_offset,'+','');
+    LET vReloadDiffFromGMTString	= If(vu_GMT_offset=0,'GMT-00:00',
+        If(vu_GMT_offset<0,'GMT-' & Right('0' & Replace(vu_GMT_offset,'-',''),2) & ':00',
+        If(vu_GMT_offset>0,'GMT+' & Right('0' & vu_GMT_offset,2) & ':00')));  
+    LET vReloadTimeDiffFromGMT		= ConvertToLocalTime('$(vStartTime)','$(vReloadDiffFromGMTString)') - GMT();
+    LET vMaxAutomationRunAge			= TimeStamp(Date(Today(1)) - $(vu_automation_rolling_range));
+    
+    
+    LET vAppQVDName			= Lower(Replace('$(app_name)',' ','_'));
+    SET vOutputQVDName		= '$(vu_qvd_storage_connection)/$(vAppQVDName)_$1_$2.qvd';
+    LET vAPICallCounter 	= 0;
+
+    LET vDashSelection				= '$(vu_dashboard_panel_chart_default)';
+    LET vDashTableColumnFilter		= '$(vu_dashboard_automation_table_preset_filter)';
+    LET vConcurrencyDaysBack 		= TimeStamp(MonthStart(AddMonths(Now(1),-1))); // Calculate the monthstart of the previous month for concurrency calcs
+    SET vIncremental 				= 1;  // Incremental load flag -- default = 1 (active). This can be disabled by setting to 0 (why do that?)
+    SET vu_personal_space_user_list = 'id','name','subject','email';
+    LET vAutomationRunsQVD 			= '$(vOutputQVDName(AutomationRuns,$(app_version)))';
+    LET vIncrementalQVDsAvailable	= If(Len(FileTime('$(vAutomationRunsQVD)'))>0,1,0);  // Check to see that incremental QVDs are available
+    LET vIncrementalMessage 		= If($(vIncrementalQVDsAvailable)=1,'Incremental QVDs found','No Incremental QVDs found. Do not panic. I can fix that.');
+    LET vLastReloadTime 			= TimeStamp(ReloadTime());
+    LET vConcurrencySeconds			= 1;
+    LET vConcurrencyMinutes 		= 1; // The width of the concurrency buckets for analyzing consumption concurrency. Default 1.
+    LET v90BackGMT				 	= Date(Today(1) - 90);
+    LET vInitialDaysBack			= If($(vu_initial_days_back)>0 AND $(vu_initial_days_back)<=90,Date(Today(1) - $(vu_initial_days_back)),$(v90BackGMT)); // If there is an initial days back setting that is between 0 and 90, set it, otherwise set it to 90
+
+  //// Colors
+    SET c_light_gray			= 'RGB(240,240,240)';
+    SET c_threshold_red			= 'RGB(192,57,43)';
+    SET c_red					= 'RGB(172, 77, 88)';
+    SET c_orange 				= 'RGB(233,141,54)'; 
+    SET c_yellow				= 'RGB(221,204,119)';
+    SET c_blue					= 'RGB(68,119,170)';
+    SET c_green					= 'RGB(17, 128, 40)';
+    SET c_gray 					= 'RGB(148, 146, 152)';
+    SET c_lightred 				= 'RGB(240,209,214)';
+    SET c_lightblue 			= 'RGB(188,181,201)'; 
+    SET c_Managed 				= 'RGB(220,66,63)';
+    SET c_Shared 				= 'RGB(0,92,185)';
+    SET c_Personal 				= 'RGB(204,204,204)';
+    //// ARGB colors -- requires input value to set the intensity (alpha) value of the color. Example using field [dual90]:  $(c_red_alpha(dual90)) 
+    SET c_red_alpha				= 'ARGB($1,192,57,43)';
+    SET c_orange_alpha			= 'ARGB($1,233,141,54)'; 
+    SET c_yellow_alpha			= 'ARGB($1,237,200,58)';
+    SET c_green_alpha			= 'ARGB($1,17,119,51)';
+    SET c_purple_alpha			= 'ARGB($1,148,87,156)';
+    SET c_blue_alpha			= 'ARGB($1,71,104,136)';
+    SET c_gray_alpha 			= 'ARGB($1,89,86,90)';
+    SET c_red_breeze_alpha		= 'ARGB($1,155,58,59)';
+    SET c_orange_breeze_alpha	= 'ARGB($1,233,141,54)';
+    SET c_teal_breeze_alpha		= 'ARGB($1,19,118,122)';
+    SET c_green_breeze_alpha	= 'ARGB($1,101,177,99)';
+    SET c_red_0_green_alpha		= 'If($1=0,c_red,ARGB($1,101,177,99))';
+    
+  //// Indicators
+    SET i_up_down 			= 'Pick($1+2,'' 📉'','' '' &Repeat(Chr(0020),2),'' 📈'')';
+    
+    IF $(vu_is_parent_app)=0 THEN
+    
+        IF $(vIncrementalQVDsAvailable)=1 THEN
+
+            AutomationRunMaxEndTime:
+            LOAD
+                Max(AutomationRunStopTime) AS AutomationRunStopTimeMax
+            FROM '$(vAutomationRunsQVD)'(qvd);
+
+            LET vIncrementalStartTime = Peek('AutomationRunStopTimeMax',0,'AutomationRunMaxEndTime') - (1 / 24 / 60);
+
+            DROP TABLE AutomationRunMaxEndTime;
+
+            LET vIncrementalStartTimeDisplay = TimeStamp('$(vIncrementalStartTime)','MM/DD/YYYY hh:mm:ss.fff');
+
+            TRACE Incremental will resume from: $(vIncrementalStartTimeDisplay);
+
+            SET vIncrementalStartTimeDisplay =;
+
+        ELSE
+
+            TRACE $(vIncrementalMessage);
+
+            LET vIncrementalStartTime = '$(v90BackGMT)';
+
+        END IF
+    
+    END IF
+    
+
+END SUB
+///$tab Check Version
+SUB check_version
+
+    // check to see whether the app is the latest version
+
+    LIB CONNECT TO '$(vu_rest_connection)';
+
+    RestConnectorMasterTable:
+    SQL SELECT 
+        "id",
+        "name",
+        "version",
+        "source",
+        "qcmaInstaller",
+        "oemInstaller"
+    FROM JSON (wrap on) "root"
+    WITH CONNECTION (  
+        URL "https://raw.githubusercontent.com/qlik-oss/qlik-cloud-monitoring-apps/main/manifests/resources.json",
+        HTTPHEADER "Authorization" ""
+    );
+
+    [Version]:
+    LOAD	
+        [version]
+    RESIDENT RestConnectorMasterTable
+    WHERE name='$(app_name)';
+
+    DROP TABLE RestConnectorMasterTable;
+
+    LET vLatestVersion = Peek('version',0,'Version');
+    LET vIsLatestVersion = If('$(vLatestVersion)'='v$(app_version)',1,0);
+
+    DROP TABLE Version;
+
+END SUB
+///$tab Tenant Metadata
+SUB get_tenant_metadata
+
+    LIB CONNECT TO '$(vu_rest_connection)';
+
+    RestConnectorMasterTable:
+    SQL SELECT 
+        "__KEY_root",
+        (SELECT 
+            "id",
+            "name",
+            "datacenter",
+            "created",
+            "status",
+            "__FK_data",
+            "__KEY_data",
+            (SELECT 
+                "@Value",
+                "__FK_hostnames"
+            FROM "hostnames" FK "__FK_hostnames" ArrayValueAlias "@Value")
+        FROM "data" PK "__KEY_data" FK "__FK_data")
+    FROM JSON (wrap on) "root" PK "__KEY_root"
+    WITH CONNECTION (  
+      URL "https://$(vu_tenant_fqdn)/api/v1/tenants"
+    );
+
+    [Hostname]:
+    LOAD	
+        [@Value] AS Hostname
+    RESIDENT RestConnectorMasterTable
+    WHERE NOT IsNull([__FK_hostnames]);
+
+    [TenantMetadata]:
+    LOAD	
+        [id] AS TenantID,
+        [name] AS TenantName,
+        [datacenter] AS TenantDataCenter,
+        Date([created]) AS TenantCreatedDate,
+        [status] AS TenantStatus,
+        Peek('Hostname',0,'Hostname') AS Hostname,
+        TimeStamp('$(vStartTime)') AS LastReloadStartTime
+    RESIDENT RestConnectorMasterTable
+    WHERE NOT IsNull([__FK_data]);
+
+    DROP TABLE Hostname;
+    DROP TABLE RestConnectorMasterTable;
+
+    LET vTenantID = Peek('TenantID',0,'TenantMetadata');
+	LET vTenantName = Peek('TenantName',0,'TenantMetadata');
+    
+END SUB
+///$tab Get User Field
+SUB get_user_field
+
+    Lookup_UserVariable_FieldName:
+    LOAD * INLINE [
+        UserVariable	,FieldName
+        id				,userId
+        subject			,userSubject
+        email			,email
+        name			,name
+    ];
+
+    IF Match(Lower('$(vu_personal_space_user_field)'),$(vu_personal_space_user_list)) THEN
+
+        TRACE Using '$(vu_personal_space_user_field)' to construct 'Personal' space names;
+
+        LET vPersonalUserField = Lookup('FieldName','UserVariable',Lower('$(vu_personal_space_user_field)'),'Lookup_UserVariable_FieldName');
+
+    ELSE
+
+        TRACE The value for the variable 'vu_personal_space_user_field' must contain one of: $(vu_personal_space_user_list);
+        TRACE The value found was: '$(vu_personal_space_user_field)';
+        TRACE Defaulting to 'Subject';
+
+        SET vPersonalUserField = 'userSubject';
+
+    END IF
+    
+    DROP TABLE Lookup_UserVariable_FieldName;
+  
+END SUB
+///$tab Multi-Tenant
+SUB write_tenant_qvds(location, sub_dir, name, is_parent)
+  	TRACE Storing QlikMetaCollection QVDs.;
+  
+  	LET location = If(Right('$(location)',1)='/',Left('$(location)',Len('$(location)')-1),'$(location)');
+  
+  	IF $(is_parent)=0 then
+  		LET vFullLocation = '$(location)/QlikMetaCollection/Tenants/$(vTenantID)/$(sub_dir)/$(name)';
+  	ELSE
+  		LET vFullLocation = '$(location)/QlikMetaCollection/CompiledTenants/$(sub_dir)/$(name)';
+  	END IF
+
+  	FOR i = 0 TO NoOfTables()-1
+    	LET vTableName = TableName($(i));
+    	TRACE Storing $(vTableName).;
+    	STORE $(vTableName) INTO [$(vFullLocation)/$(vTableName).qvd](qvd);
+    	TRACE $(vTableName) stored!;
+  	NEXT i
+  
+END SUB
+
+SUB load_multi_tenant_qvds(location, sub_dir, name)
+
+	LET vDirLocation = If(Right('$(location)',1)='/',Left('$(location)',Len('$(location)')-1),'$(location)');
+    LET vAnyFileFound = 0;
+
+	LET vTenants = 1;
+	FOR EACH Dir IN DirList('$(vDirLocation)/QlikMetaCollection/Tenants/')
+
+	  	LET vFolder = '$(Dir)$(sub_dir)/$(name)/';
+      	LET vTenant = TextBetween('$(vFolder)','$(vDirLocation)/','/$(sub_dir)/');
+      	TRACE --------------------;
+      	TRACE Looking to load data for Tenant: $(vTenant);
+      	TRACE --------------------;
+
+	  LET vTenantFileFound = 0;
+      FOR EACH file IN FileList('$(vFolder)')
+        	If WildMatch('$(file)','*.qvd') THEN
+          		LET vAnyFileFound = 1;
+          		LET vTenantFileFound = 1;
+          
+	      		LET vTableName = TextBetween(Subfield('$(file)','/',-1),Null(),'.qvd');
+                "$(vTableName)":
+                LOAD DISTINCT
+                    *
+                FROM [$(file)](qvd);
+
+        	END IF
+      NEXT file
+      
+      IF $(vTenantFileFound) THEN
+      		TRACE Completed loading QVDs for Tenant: $(vTenant);
+      		LET vTenants = $(vTenants) + 1;
+      ELSE
+        	TRACE No QVDs were found for Tenant: $(vTenant);
+      END IF
+              
+    NEXT Dir
+    
+    LET vTenants = $(vTenants) - 1;
+    
+    IF $(vAnyFileFound)>0 THEN
+      	TRACE --------------------;
+      	TRACE Successfully loaded data from $(vTenants) Tenants!;
+      	TRACE --------------------;
+    ELSE
+      	TRACE --------------------;
+      	TRACE No QVDs were Found! Confirm that this directory is the parent directory of "QlikMetaCollection".;
+      	TRACE --------------------;
+    END IF
+
+END SUB
+///$tab Users
+SUB get_users
+
+    SET vParams = 'limit=100';
+    LET vCounter = 0;
+
+    DO
+
+    	LET vAPICallCounter = $(vAPICallCounter) + 1;
+
+        LIB CONNECT TO '$(vu_rest_connection)';
+
+        RestConnectorMasterTable:
+        SQL SELECT 
+            "__KEY_root",
+            (SELECT 
+                "__KEY_links",
+                "__FK_links",
+                (SELECT 
+                    "href",
+                    "__FK_self"
+                FROM "self" FK "__FK_self"),
+                (SELECT 
+                    "href" AS "href_u0",
+                    "__FK_next"
+                FROM "next" FK "__FK_next")
+            FROM "links" PK "__KEY_links" FK "__FK_links"),
+            (SELECT 
+                "id",
+                "tenantId",
+                "created",
+                "lastUpdated",
+                "status",
+                "name",
+                "subject",
+                "email",
+                "__KEY_data",
+                "__FK_data",
+                (SELECT 
+                    "@Value",
+                    "__FK_roles"
+                FROM "roles" FK "__FK_roles" ArrayValueAlias "@Value"),
+                (SELECT 
+                    "__KEY_links_u0",
+                    "__FK_links_u0",
+                    (SELECT 
+                        "href" AS "href_u1",
+                        "__FK_self_u0"
+                    FROM "self" FK "__FK_self_u0")
+                FROM "links" PK "__KEY_links_u0" FK "__FK_links_u0")
+            FROM "data" PK "__KEY_data" FK "__FK_data")
+        FROM JSON (wrap on) "root" PK "__KEY_root"
+        WITH CONNECTION (  
+          URL "https://$(vu_tenant_fqdn)/api/v1/users?$(vParams)"
+        );
+
+        Users:
+        LOAD	
+            [id] AS AutomationUserId,
+    		// [id] AS UserId,
+    		// [tenantId],
+    		// Date([created]) AS AutomationUserCreatedDate,
+    		// Date([lastUpdated]) AS AutomationUserLastUpdatedDate,
+            Capitalize([status]) AS AutomationUserStatus,
+            name,
+            [name] AS AutomationUserName,
+            [subject] AS AutomationUserSubject,
+            [email] AS AutomationUserEmail,
+            [__KEY_data] & '|' & $(vCounter) & '|' & '$(vTenantID)' AS [_UserKey]
+        RESIDENT RestConnectorMasterTable
+        WHERE NOT IsNull([__FK_data])
+        AND Match(status,'disabled','active');
+
+        [UserRoles]:
+        LOAD	
+            [@Value] AS UserRole,
+            [__FK_roles] & '|' & $(vCounter) & '|' & '$(vTenantID)' AS [_UserKey]
+        RESIDENT RestConnectorMasterTable
+        WHERE NOT IsNull([__FK_roles]);
+
+        NextURL:
+        LOAD	
+            [href_u0] AS NextURL
+        RESIDENT RestConnectorMasterTable
+        WHERE NOT IsNull([__FK_next]);
+
+        DROP TABLE RestConnectorMasterTable;
+
+        LET vParams = SubField(Peek('NextURL',0,'NextURL'),'?',-1);
+        LET vNextURLRows = NoOfRows('NextURL');
+
+        DROP TABLE NextURL;
+
+        LET vCounter = $(vCounter) + 1;
+
+    LOOP WHILE $(vNextURLRows)>0;
+
+    RENAME TABLE UserRoles TO TEMP;
+
+    UserRoles:
+    LEFT KEEP(Users)
+    LOAD *
+    RESIDENT TEMP;
+
+    DROP TABLE TEMP;
+
+    Map_AutomationOwner_Exists:
+    MAPPING LOAD DISTINCT
+        AutomationUserId,
+        1
+    RESIDENT Users;
+
+    Map_AutomationOwner_UserName:
+    MAPPING LOAD DISTINCT
+        AutomationUserId,
+        AutomationUserName
+    RESIDENT Users;
+    
+    // for OEM Dashboard
+    Map_AutomationOwner_UserName:
+    NOCONCATENATE LOAD DISTINCT
+        AutomationUserId,
+        AutomationUserName
+    RESIDENT Users;
+
+    Map_AutomationOwner_UserSubject:
+    MAPPING LOAD DISTINCT
+        AutomationUserId,
+        AutomationUserSubject
+    RESIDENT Users;
+    
+    // for OEM Dashboard
+    Map_AutomationOwner_UserSubject:
+    NOCONCATENATE LOAD DISTINCT
+        AutomationUserId,
+        AutomationUserSubject
+    RESIDENT Users;
+
+    Map_AutomationOwner_UserEmail:
+    MAPPING LOAD DISTINCT
+        AutomationUserId,
+        AutomationUserEmail
+    RESIDENT Users;
+    
+    // for OEM Dashboard
+    Map_AutomationOwner_UserEmail:
+    NOCONCATENATE LOAD DISTINCT
+        AutomationUserId,
+        AutomationUserEmail
+    RESIDENT Users;
+
+    CALL get_user_field
+
+    Map_UserId_$(vPersonalUserField):
+    MAPPING LOAD DISTINCT
+        AutomationUserId,
+        $(vPersonalUserField)
+    RESIDENT Users;
+    
+    // for OEM Dashboard
+    Map_UserId_$(vPersonalUserField):
+    NOCONCATENATE LOAD DISTINCT
+        AutomationUserId,
+        $(vPersonalUserField)
+    RESIDENT Users;
+    
+  	DROP TABLES UserRoles, Users; 
+    
+END SUB
+
+///$tab Spaces
+SUB get_spaces
+
+    SET vParams = 'limit=100';
+
+    [Spaces]:
+    LOAD * INLINE [SpaceId];
+
+    DO
+
+        LET vAPICallCounter = $(vAPICallCounter) + 1;
+
+        LIB CONNECT TO '$(vu_rest_connection)';
+
+        RestConnectorMasterTable:
+        SQL SELECT 
+            "__KEY_root",
+            (SELECT 
+                "id",
+                "type",
+                "ownerId",
+                "tenantId",
+                "name",
+                "description",
+                "createdAt",
+                "createdBy",
+                "updatedAt",
+                "__KEY_data",
+                "__FK_data",
+                (SELECT 
+                    "__KEY_meta",
+                    "__FK_meta"
+                FROM "meta" PK "__KEY_meta" FK "__FK_meta"),
+                (SELECT 
+                    "__KEY_links",
+                    "__FK_links"
+                FROM "links" PK "__KEY_links" FK "__FK_links")
+            FROM "data" PK "__KEY_data" FK "__FK_data"),
+            (SELECT 
+                "__KEY_links_u0",
+                "__FK_links_u0",
+                (SELECT 
+                    "href" AS "href_u2",
+                    "__FK_next"
+                FROM "next" FK "__FK_next")
+            FROM "links" PK "__KEY_links_u0" FK "__FK_links_u0")
+        FROM JSON (wrap on) "root" PK "__KEY_root"
+        WITH CONNECTION (  
+          URL "https://$(vu_tenant_fqdn)/api/v1/spaces?$(vParams)"
+        );
+
+        CONCATENATE (Spaces)
+        LOAD	
+          [id] AS SpaceId,
+          Capitalize([type]) AS SpaceType,
+          [ownerId] AS SpaceOwnerId,
+          // [tenantId],
+          [name] AS SpaceName,
+          [description] AS SpaceDescription,
+          TimeStamp([createdAt]) AS SpaceCreatedTime,
+          [createdBy] AS SpaceCreatedBy
+          // [updatedAt],
+          // [__KEY_data],
+          // [__FK_data] AS [__KEY_root]
+        RESIDENT RestConnectorMasterTable
+        WHERE NOT IsNull([__FK_data]);
+
+        NextURL:
+        LOAD	
+            [href_u2] AS NextURL
+        RESIDENT RestConnectorMasterTable
+        WHERE NOT IsNull([__FK_next]);
+
+        DROP TABLE RestConnectorMasterTable;
+
+        LET vParams = SubField(Peek('NextURL',0,'NextURL'),'?',-1);
+        LET vNextURLRows = NoOfRows('NextURL');
+
+        DROP TABLE NextURL;
+
+    LOOP WHILE $(vNextURLRows)>0;
+
+    AllSpacesMap:
+    MAPPING LOAD DISTINCT
+        SpaceId,
+        1
+    RESIDENT Spaces;
+
+    Map_SpaceName_SpaceId:
+    MAPPING LOAD DISTINCT
+        Text(SpaceName) AS SpaceName,
+        SpaceId
+    RESIDENT Spaces;
+
+    Map_SpaceId_SpaceName:
+    MAPPING LOAD DISTINCT
+        SpaceId,
+        Text(SpaceName) AS SpaceName
+    RESIDENT Spaces;
+
+    SpaceOwnerId:
+    MAPPING LOAD DISTINCT
+        SpaceId,
+        SpaceOwnerId
+    RESIDENT Spaces;
+
+    Map_SpaceId_SpaceType:
+    MAPPING LOAD DISTINCT
+        SpaceId,
+        SpaceType
+    RESIDENT Spaces;
+  
+END SUB
+
+///$tab Automations 
+SUB get_automations
+    
+    SET vParams = 'limit=100';
+    
+    [Automation]:
+    LOAD * INLINE [AutomationId];
+    
+    DO
+    
+        LET vAPICallCounter = $(vAPICallCounter) + 1;
+        LIB CONNECT TO '$(vu_rest_connection)';
+
+        RestConnectorMasterTable:
+        SQL SELECT 
+            "__KEY_root",
+            (SELECT 
+                "__KEY_links",
+                "__FK_links",
+                (SELECT 
+                    "href",
+                    "__FK_prev"
+                FROM "prev" FK "__FK_prev"),
+                (SELECT 
+                    "href" AS "href_u0",
+                    "__FK_next"
+                FROM "next" FK "__FK_next")
+            FROM "links" PK "__KEY_links" FK "__FK_links"),
+            (SELECT 
+                "id",
+                "ownerId",
+                "spaceId",
+                "name",
+                "state",
+                "duration",
+                "description",
+                "snippetIds",
+                "endpointIds",
+                "workspace",
+                "lastRun",
+                "lastRunStatus",
+                "executionToken",
+                "runMode",
+                "createdAt",
+                "updatedAt",
+                "lastRunAt",
+                "__KEY_data",
+                "__FK_data",
+                (SELECT 
+                    "@Value",
+                    "__FK_connectorIds"
+                FROM "connectorIds" FK "__FK_connectorIds" ArrayValueAlias "@Value")
+            FROM "data" PK "__KEY_data" FK "__FK_data")
+        FROM JSON (wrap on) "root" PK "__KEY_root"
+        WITH CONNECTION (  
+            URL "https://$(vu_tenant_fqdn)/api/v1/automations?$(vParams)"
+        );
+
+        CONCATENATE (Automation)
+        LOAD
+            '$(vu_tenant_id)' AS TenantID,
+            'False' AS AutomationIsDeleted,
+            //[id] AS _AutomationId,
+            [id] AS AutomationId,
+            If(ApplyMap('AllSpacesMap',spaceId)<>1,
+            	If(Len(ApplyMap('Map_UserId_$(vPersonalUserField)',ownerId))>0,
+                'Personal - ' & ApplyMap('Map_UserId_$(vPersonalUserField)',ownerId),
+                '[Staged]'
+               	),
+            spaceId
+            ) AS SpaceId,
+            [ownerId] AS AutomationOwnerId,
+            [snippetIds] AS AutomationSnippetIds,
+            [endpointIds] AS AutomationEndpointIds,
+            [workspace] AS AutomationWorkspace,
+            [name] AS AutomationName, 
+            Capitalize([state]) AS AutomationState,
+            [description] AS AutomationDescription,
+            If(Len([lastRunStatus])>0,Capitalize([lastRunStatus]),'[Never Run]') AS AutomationLastRunStatus,
+            Capitalize([runMode]) AS  AutomationRunMode,
+            Timestamp(Timestamp([createdAt]) + $(vReloadTimeDiffFromGMT)) AS AutomationCreatedAt,
+            Timestamp(Timestamp([updatedAt]) + $(vReloadTimeDiffFromGMT)) AS AutomationUpdatedAt,
+            Timestamp(Timestamp([lastRunAt]) + $(vReloadTimeDiffFromGMT)) AS AutomationLastRunAt,
+            If(Timestamp(Timestamp([lastRunAt]) + $(vReloadTimeDiffFromGMT))<$(vLast30Days),1,0) AS AutomationLastRunOver30DaysAgo,
+        	If(Timestamp(Timestamp([lastRunAt]) + $(vReloadTimeDiffFromGMT))<$(vLast60Days),1,0) AS AutomationLastRunOver60DaysAgo,
+        	If(Timestamp(Timestamp([lastRunAt]) + $(vReloadTimeDiffFromGMT))<$(vLast90Days),1,0) AS AutomationLastRunOver90DaysAgo,
+            [__KEY_data] & '|' & $(vAPICallCounter) & '|' & '$(vu_tenant_id)' AS _AutomationConnectionLink
+        RESIDENT RestConnectorMasterTable
+        WHERE NOT IsNull([__FK_data]);
+
+        [AutomationConnectionLink]:
+        LOAD	
+            [@Value] AS AutomationConnectionId,
+            [__FK_connectorIds] & '|' & $(vAPICallCounter) & '|' & '$(vu_tenant_id)' AS _AutomationConnectionLink
+        RESIDENT RestConnectorMasterTable
+        WHERE NOT IsNull([__FK_connectorIds]);
+        
+        [NextURL]:
+        LOAD	
+        	[href_u0] AS [NextURL]
+        RESIDENT RestConnectorMasterTable
+        WHERE NOT IsNull([__FK_next]);
+
+        DROP TABLE RestConnectorMasterTable;
+
+        LET vParams = SubField(Peek('NextURL',0,'NextURL'),'?',-1);
+        LET vNextURLRows = NoOfRows('NextURL');
+        LET vNextExists = Len('$(vParams)')>0;
+
+        DROP TABLE NextURL;
+
+    LOOP WHILE $(vNextExists);
+    
+    Map_ExistingAutomations:
+    MAPPING LOAD DISTINCT
+    	AutomationId,
+        1
+    RESIDENT Automation;
+    
+    // for OEM Dashboard
+    Map_ExistingAutomations:
+    NOCONCATENATE LOAD DISTINCT
+    	AutomationId,
+        1
+    RESIDENT Automation;
+    
+    CONCATENATE(Spaces)
+    LOAD DISTINCT
+        SpaceId,
+        SpaceId AS SpaceName,
+        'Personal' AS SpaceType,
+        AutomationOwnerId AS SpaceOwnerId,
+        '[N/A]' AS SpaceDescription,
+        '[N/A]' AS SpaceCreatedTime,
+        '[N/A]' AS SpaceCreatedBy
+    RESIDENT Automation
+    WHERE WildMatch(SpaceId,'Personal - *');
+    
+END SUB
+///$tab Automation Events
+SUB get_automation_events
+
+    LET vCounter = 0;
+    LET vNextURL = '';
+    LET vUniqueKey = Num('$(reload_start)') & '$(vTenantID)';
+
+    IF $(vIncrementalQVDsAvailable)=1 THEN
+        LET vISO_8601_Date_Range = '&eventTime=' & Left(Date(TimeStamp('$(vIncrementalStartTime)'),'YYYY-MM-DD'),10) & 'T' & Right('0' & Timestamp('$(vIncrementalStartTime)','MM/DD/YYYY hh:mm:ss'),8) & 'Z/9999-01-01T00:00:00Z';
+    ELSE
+        LET vISO_8601_Date_Range = '&eventTime=' & Left(Date(TimeStamp('$(vInitialDaysBack)'),'YYYY-MM-DD'),10) & 'T' & Right('0' & Timestamp('$(vInitialDaysBack)','MM/DD/YYYY hh:mm:ss'),8) & 'Z/9999-01-01T00:00:00Z';
+    END IF
+
+    DO
+
+        LET vAPICallCounter = $(vAPICallCounter) + 1;
+
+        LIB CONNECT TO '$(vu_rest_connection)';
+
+        RestConnectorMasterTable:
+        SQL SELECT 
+            "__KEY_root",
+            (SELECT 
+                "id" AS "id_u0",
+                "contentType",
+                "eventId",
+                "eventTime",
+                "eventType",
+                "eventTypeVersion",
+                "source",
+                "tenantId",
+                "userId",
+                "__KEY_data",
+                "__FK_data",
+                (SELECT 
+                    "context",
+                    "createdAt",
+                    "id",
+                    "isArchived",
+                    "isTestRun",
+                    "scheduledStartTime",
+                    "startTime",
+                    "status",
+                    "stopTime",
+                    "title",
+                    "updatedAt",
+                    "__KEY_data_u0",
+                    "__FK_data_u0",
+                    (SELECT 
+                        "totalApiCalls",
+                        "__KEY_metrics",
+                        "__FK_metrics",
+                        (SELECT 
+                            "connectorId",
+                            "duration",
+                            "rxBytes",
+                            "snippetId",
+                            "txBytes",
+                            "type",
+                            "apiCalls",
+                            "endpointId",
+                            "__FK_blocks"
+                        FROM "blocks" FK "__FK_blocks"),
+                        (SELECT 
+                            "rxBytes" AS "rxBytes_u0",
+                            "txBytes" AS "txBytes_u0",
+                            "__FK_network"
+                        FROM "network" FK "__FK_network")
+                    FROM "metrics" PK "__KEY_metrics" FK "__FK_metrics")
+                FROM "data" PK "__KEY_data_u0" FK "__FK_data_u0"),
+                (SELECT 
+                    "ownerId",
+                    "topLevelResourceId",
+                    "__FK_extensions"
+                FROM "extensions" FK "__FK_extensions"),
+                (SELECT 
+                    "__KEY_links",
+                    "__FK_links",
+                    (SELECT 
+                        "Href",
+                        "__FK_Self"
+                    FROM "Self" FK "__FK_Self"),
+                    (SELECT 
+                        "href",
+                        "__FK_self"
+                    FROM "self" FK "__FK_self")
+                FROM "links" PK "__KEY_links" FK "__FK_links")
+            FROM "data" PK "__KEY_data" FK "__FK_data"),
+            (SELECT 
+                "Prev",
+                "__KEY_links_u0",
+                "__FK_links_u0",
+                (SELECT 
+                    "Href" AS "Href_u0",
+                    "__FK_Self_u0"
+                FROM "Self" FK "__FK_Self_u0"),
+                (SELECT 
+                    "Href" AS "Href_u1",
+                    "__FK_Next"
+                FROM "Next" FK "__FK_Next"),
+                (SELECT 
+                    "href" AS "href_u0",
+                    "__FK_self_u0"
+                FROM "self" FK "__FK_self_u0"),
+                (SELECT 
+                    "href" AS "href_u1",
+                    "__FK_next"
+                FROM "next" FK "__FK_next")
+            FROM "links" PK "__KEY_links_u0" FK "__FK_links_u0")
+        FROM JSON (wrap on) "root" PK "__KEY_root"
+        WITH CONNECTION (  
+          URL "https://$(vu_tenant_fqdn)/api/v1/audits?limit=100&sort=-eventTime&source=com.qlik/automations&eventType=com.qlik.v1.automation.run.ended$(vISO_8601_Date_Range)$(vNextURL)"
+        );
+                
+
+        [AutomationRunBlocks]:
+        LOAD	
+            [connectorId] AS AutomationConnectorId,
+            [duration] AS AutomationRunConnectorDuration,
+            [rxBytes] AS AutomationRunConnectorRXBytes,
+            [snippetId] AS AutomationRunConnectorSnippetId,
+            [txBytes] AS AutomationRunConnectorTXBytes,
+            [type] AS AutomationRunConnectorType,
+            [apiCalls] AS AutomationRunConnectorAPICalls,
+            [endpointId] AS AutomationConnectorEndpointId,
+            [__FK_blocks] & '|' & $(vCounter) & '|' & '$(vUniqueKey)' AS [_KeyAutomationRunBlocks]
+        RESIDENT RestConnectorMasterTable
+        WHERE NOT IsNull([__FK_blocks])
+        AND Len(type)>=1;
+
+        [AutomationRunNetwork]:
+        LOAD	
+            [rxBytes_u0] AS AutomationRunRXBytes,
+            [txBytes_u0] AS AutomationRunTXBytes,
+            [__FK_network] & '|' & $(vCounter) & '|' & '$(vUniqueKey)' AS [_KeyAutomationRunBlocks]
+        RESIDENT RestConnectorMasterTable
+        WHERE NOT IsNull([__FK_network]);
+
+        [AutomationRunMetrics]:
+        LOAD	
+            [totalApiCalls] AS AutomationRunTotalAPICalls,
+            [__KEY_metrics] & '|' & $(vCounter) & '|' & '$(vUniqueKey)' AS [_KeyAutomationRunBlocks],
+            [__FK_metrics] & '|' & $(vCounter) & '|' & '$(vUniqueKey)' AS [_KeyAutomationRunMetrics]
+        RESIDENT RestConnectorMasterTable
+        WHERE NOT IsNull([__FK_metrics]);
+
+        [AutomationRuns]:
+        LOAD	
+            [context] AS AutomationRunContext,
+            Timestamp([createdAt]) AS AutomationRunCreatedAt,
+            [id] AS AutomationRunId,
+            [isArchived] AS AutomationRunIsArchived,
+            [isTestRun] AS AutomationRunIsTestRun,
+            Timestamp([scheduledStartTime]) AS AutomationRunScheduledStartTime,
+            Timestamp([startTime]) AS AutomationRunStartTime,
+            [status] AS AutomationRunStatus,
+            Timestamp([stopTime]) AS AutomationRunStopTime,
+            [title] AS AutomationRunTitle,
+            Timestamp([updatedAt]) AS AutomationRunUpdatedAt,
+            [__KEY_data_u0] & '|' & $(vCounter) & '|' & '$(vUniqueKey)' AS [_KeyAutomationRunMetrics],
+            [__FK_data_u0] & '|' & $(vCounter) & '|' & '$(vUniqueKey)' AS [_KeyAutomationRun]
+        RESIDENT RestConnectorMasterTable
+        WHERE NOT IsNull([__FK_data_u0]);
+
+        [AutomationRunMetadata]:
+        LOAD	
+            [ownerId] AS AutomationRunOwnerId,
+            [topLevelResourceId] AS AutomationId,
+            [__FK_extensions] & '|' & $(vCounter) & '|' & '$(vUniqueKey)' AS [_KeyAutomationRun]
+        RESIDENT RestConnectorMasterTable
+        WHERE NOT IsNull([__FK_extensions]);
+
+        [AutomationRunEvent]:
+        LOAD	
+    //         	[id_u0] AS [id_u0],
+    //             [contentType],
+    //             [eventId],
+    //             [eventTime],
+    //             [eventType],
+    //             [eventTypeVersion],
+    //             [source],
+    //             [tenantId],
+            [userId] AS AutomationRunExecutingUserId,
+            [__KEY_data] & '|' & $(vCounter) & '|' & '$(vUniqueKey)' AS [_KeyAutomationRun]
+        RESIDENT RestConnectorMasterTable
+        WHERE NOT IsNull([__FK_data]);
+
+        [NextURL]:
+        LOAD
+            [href_u1] AS NextURL
+        RESIDENT RestConnectorMasterTable
+        WHERE NOT IsNull([__FK_next]);
+
+        DROP TABLE RestConnectorMasterTable;
+
+        LET vNextURL = TextBetween(Peek('NextURL',0,'NextURL'),'&next=',Null());
+
+        IF SubStringCount('$(vNextURL)','&') >= 1 THEN
+            LET vNextURL = TextBetween('$(vNextURL)',Null(),'&');
+        END IF
+
+        LET vNextURL = '&next=' & '$(vNextURL)';
+
+        LET vNextURLRows = NoOfRows('NextURL');
+
+        DROP TABLE NextURL;
+
+        LET vCounter = $(vCounter) + 1;
+
+    LOOP WHILE $(vNextURLRows)>0;
+
+    IF NoOfRows('AutomationRuns') > 0 THEN
+
+        LEFT JOIN(AutomationRuns)
+        LOAD 
+        	*
+        RESIDENT AutomationRunMetadata;
+
+        DROP TABLE AutomationRunMetadata;
+
+        LEFT JOIN(AutomationRuns)
+        LOAD * RESIDENT AutomationRunMetrics;
+
+        DROP TABLE AutomationRunMetrics;
+
+        LEFT JOIN(AutomationRuns)
+        LOAD * RESIDENT AutomationRunNetwork;
+
+        DROP TABLE AutomationRunNetwork;
+
+        LEFT JOIN(AutomationRuns)
+        LOAD * RESIDENT AutomationRunEvent;
+
+        DROP TABLE AutomationRunEvent;
+
+        DROP FIELDS
+            _KeyAutomationRunMetrics
+            ,_KeyAutomationRun
+        ;
+
+        LEFT JOIN (AutomationRunBlocks)
+        LOAD DISTINCT
+            _KeyAutomationRunBlocks,
+            AutomationRunId
+        RESIDENT AutomationRuns;
+
+        DROP FIELD _KeyAutomationRunBlocks;
+
+        Map_MaxRunKey:
+        MAPPING LOAD DISTINCT
+            AutomationId & '|' & Num(AutomationRunStopTimeMax) AS MaxRunKey,
+            1
+        ;
+        LOAD
+            Max(AutomationRunStopTime) AS AutomationRunStopTimeMax,
+            AutomationId
+        RESIDENT AutomationRuns
+        GROUP BY AutomationId;
+
+        LEFT JOIN(AutomationRuns)
+        LOAD 
+            AutomationRunId,
+            If(ApplyMap('Map_MaxRunKey',AutomationId & '|' & Num(AutomationRunStopTime))=1,1,0) AS AutomationRunIsLatest
+        RESIDENT AutomationRuns;
+        
+        Map_NewAutomationRunIds:
+        MAPPING LOAD DISTINCT
+        	AutomationRunId,
+            1
+        RESIDENT AutomationRuns;
+
+        AutomationFailedRunIds:
+        LOAD DISTINCT
+            AutomationId,
+            AutomationRunId,
+            AutomationRunOwnerId,
+            AutomationRunStartTime,
+            If((Now() - Date(AutomationRunStopTime)) >= 30,1,0) AS RunOlderThan30Days
+        RESIDENT AutomationRuns
+        WHERE AutomationRunStatus = 'failed';
+
+        AutomationRunErrors:
+        LOAD * INLINE [AutomationRunId,AutomationRunError,AutomationRunMaxTimeHit,AutomationRunMaxTimeHitDuration,AutomationErrorCanBeViewed];
+
+        FOR i=0 TO NoOfRows('AutomationFailedRunIds')-1
+
+            LET vAutomationFailedId = Peek('AutomationId',$(i),'AutomationFailedRunIds');
+            LET vAutomationFailedRunId = Peek('AutomationRunId',$(i),'AutomationFailedRunIds');
+            LET vAutomationFailedRunOwnerId = Peek('AutomationRunOwnerId',$(i),'AutomationFailedRunIds');
+            LET vAutomationFailedRunOlderThan30Days = Peek('RunOlderThan30Days',$(i),'AutomationFailedRunIds'); 
+            LET vAutomationFailedRunStartTime = Replace(Date(Peek('AutomationRunStartTime',$(i),'AutomationFailedRunIds'),'YYYY-MM-DD|hh:mm:ss.000000Z'),'|','T');
+                        
+            // Check to see if the app exists at this moment and if the automation run is less than 30 days old (as the automations API does not store for longer)
+
+            IF $(vAutomationFailedRunOlderThan30Days) <> 1 THEN
+
+                // Calling the endpoint with a filter as calling the automation directly will result in a 404 which the REST connector interprets as an error
+                // Filtering by userId helps reduce.
+                
+                LET vAPICallCounter = $(vAPICallCounter) + 1;
+
+                LIB CONNECT TO '$(vu_rest_connection)';
+
+                RestConnectorMasterTable:
+                SQL SELECT 
+                    "__KEY_root",
+                    (SELECT 
+                        "id"
+                    FROM "data" PK "__KEY_data" FK "__FK_data")
+                FROM JSON (wrap on) "root" PK "__KEY_root"
+                WITH CONNECTION (  
+                  URL "https://$(vu_tenant_fqdn)/api/v1/automations?filter=(ownerId%20eq%20%22$(vAutomationFailedRunOwnerId)%22)"
+                );
+
+                [AutomationExists]:
+                LOAD	
+                    [id]
+                RESIDENT RestConnectorMasterTable
+                WHERE [id] = '$(vAutomationFailedId)';
+
+                DROP TABLE RestConnectorMasterTable;
+
+                IF NoOfRows('AutomationExists')>0 THEN
+                                
+                	LET vAPICallCounter = $(vAPICallCounter) + 1;
+
+                    LIB CONNECT TO '$(vu_rest_connection)';
+                                        
+                    RestConnectorMasterTable:
+                    SQL SELECT 
+                        "__KEY_root",
+                        (SELECT 
+                            "__FK_data",
+                            "__KEY_data",
+                            (SELECT 
+                                "error",
+                                "@Value",
+                                "__FK_error"
+                            FROM "error" FK "__FK_error" ArrayValueAlias "@Value")
+                        FROM "data" PK "__KEY_data" FK "__FK_data")
+                    FROM JSON (wrap on) "root" PK "__KEY_root"
+                    WITH CONNECTION (  
+                      URL "https://$(vu_tenant_fqdn)/api/v1/automations/$(vAutomationFailedId)/runs?filter=(status%20eq%20%22failed%22%20and%20startTime%20eq%20%22$(vAutomationFailedRunStartTime)%22)"
+                    );
+
+                    [AutomationRunErrors]:
+                    LOAD	
+                        '$(vAutomationFailedRunId)' AS AutomationRunId,
+                        If(Len([error] & [@Value])>0,[error] & [@Value],'[Could not parse error. Click error link to view.]') AS AutomationRunError,
+                        'True' AS AutomationErrorCanBeViewed,
+                        If(WildMatch([error] & [@Value],'*Maximum execution time of*'),1,0) AS AutomationRunMaxTimeHit,
+                    	If(WildMatch([error] & [@Value],'*Maximum execution time of*'),Num(TextBetween([error] & [@Value],'Maximum execution time of ',' seconds'))) AS AutomationRunMaxTimeHitDuration
+                    RESIDENT RestConnectorMasterTable
+                    WHERE NOT IsNull([__FK_error]);
+
+                    DROP TABLE RestConnectorMasterTable;
+
+                ELSE
+
+                    [AutomationRunErrors]:
+                    LOAD	
+                        '$(vAutomationFailedRunId)' AS AutomationRunId,
+                        'False' AS AutomationErrorCanBeViewed,
+                        '[Unknown. Automation was deleted before the error could be fetched.]' AS AutomationRunError,
+                        Null() AS AutomationRunMaxTimeHit,
+                    	Null() AS AutomationRunMaxTimeHitDuration
+                    AUTOGENERATE 1;
+
+                END IF
+
+                DROP TABLE AutomationExists;
+
+            ELSE
+
+                [AutomationRunErrors]:
+                LOAD	
+                    '$(vAutomationFailedRunId)' AS AutomationRunId,
+                    'False' AS AutomationErrorCanBeViewed,
+                    '[Unknown. Failed automation run is older than 30 days and the error cannot be fetched.]' AS AutomationRunError,
+                    Null() AS AutomationRunMaxTimeHit,
+                    Null() AS AutomationRunMaxTimeHitDuration
+                AUTOGENERATE 1;
+
+            END IF
+
+        NEXT i;
+
+        DROP TABLE AutomationFailedRunIds;
+
+    ELSE
+
+        TRACE There are no automation runs in this tenant yet. Dropping all tables and halting...;
+
+        LET vNumTables = NoOfTables();
+
+        FOR i = NoOfTables() - 1 TO 0 STEP - 1
+            LET vTable = TableName($(i));
+            TRACE Dropping table '$(vTable)';
+            DROP TABLES [$(vTable)];
+        NEXT
+
+        TRACE All finished. Please try reloading again.;
+
+        exit script;
+        
+    END IF
+
+END SUB
+
+
+
+
+
+
+
+
+
+
+
+
+
+///$tab QVDs
+SUB incremental
+    
+    If $(vIncrementalQVDsAvailable)=1 THEN
+    
+    	LET qvd_name = '$(vOutputQVDName(AutomationRuns,$(app_version)))';
+
+        TRACE Looking to load: $(qvd_name).;
+        LET file_size = If(IsNull(FileSize('$(qvd_name)')),0,FileSize('$(qvd_name)'));
+
+        IF file_size > 0 THEN
+        
+            TRACE File size is $(file_size) bytes;
+            TRACE Fetching data from: $(qvd_name);
+            
+            AutomationRuns:
+            LOAD DISTINCT 
+                * 
+            FROM '$(qvd_name)'(qvd)
+            WHERE ApplyMap('Map_NewAutomationRunIds',AutomationRunId)<>1
+            AND AutomationRunStopTime >= Date('$(vMaxAutomationRunAge)');
+            
+            Map_LoadedAutomationRunIds:
+            MAPPING LOAD DISTINCT
+            	AutomationRunId,
+                1
+            RESIDENT AutomationRuns;
+
+        ELSE
+        
+            TRACE Could not find file: $(qvd_name).;
+            
+        END IF
+        
+    	LET qvd_name = '$(vOutputQVDName(AutomationRunBlocks,$(app_version)))';
+
+        TRACE Looking to load: $(qvd_name).;
+        LET file_size = If(IsNull(FileSize('$(qvd_name)')),0,FileSize('$(qvd_name)'));
+
+        IF file_size > 0 THEN
+        
+            TRACE File size is $(file_size) bytes;
+            TRACE Fetching data from: $(qvd_name);
+            
+            AutomationRunBlocks:
+            LOAD DISTINCT 
+                * 
+            FROM '$(qvd_name)'(qvd)
+            WHERE ApplyMap('Map_LoadedAutomationRunIds',AutomationRunId)=1;
+
+        ELSE
+        
+            TRACE Could not find file: $(qvd_name).;
+            
+        END IF
+        
+    	LET qvd_name = '$(vOutputQVDName(AutomationRunErrors,$(app_version)))';
+
+        TRACE Looking to load: $(qvd_name).;
+        LET file_size = If(IsNull(FileSize('$(qvd_name)')),0,FileSize('$(qvd_name)'));
+
+        IF file_size > 0 THEN
+        
+            TRACE File size is $(file_size) bytes;
+            TRACE Fetching data from: $(qvd_name);
+            
+            AutomationRunErrors:
+            LOAD DISTINCT 
+                * 
+            FROM '$(qvd_name)'(qvd)
+            WHERE ApplyMap('Map_LoadedAutomationRunIds',AutomationRunId)=1;
+
+        ELSE
+        
+            TRACE Could not find file: $(qvd_name).;
+            
+        END IF
+
+    END IF
+    
+    FOR EACH data_table IN 'AutomationRuns','AutomationRunBlocks','AutomationRunErrors'
+        LET qvd_name = '$(vOutputQVDName($(data_table),$(app_version)))';
+        STORE $(data_table) INTO '$(qvd_name)'(qvd);
+        LET file_size_$(data_table) = FileSize('$(qvd_name)');
+    NEXT data_table
+
+END SUB
+///$tab Transformation Logic
+Sub load_transformation_logic
+
+	// For OEM Dashboard. Convert temp map tables into mapping tables so they include all tenant data
+	LET vTableNames =;
+	
+    FOR i = 0 TO NoOfTables()-1
+        LET vTableNames = '$(vTableNames)' & Chr(39) & TableName($(i)) & Chr(39) & Chr(44);
+    NEXT i
+    
+    LET vTableNames = Left('$(vTableNames)',Len(Trim('$(vTableNames)')) - 1);
+    
+    FOR EACH TableName IN $(vTableNames)
+    
+    	LET vTableName = '$(TableName)';
+        TRACE $(vTableName);
+        IF Left('$(vTableName)',4)='Map_' THEN
+        	IF $(vu_multi_tenant_enabled)=1 AND $(vu_is_parent_app)=1 THEN
+                RENAME TABLE "$(vTableName)" TO "$(vTableName)_TEMP";
+                
+                "$(vTableName)":
+                MAPPING LOAD DISTINCT
+                    *
+                RESIDENT "$(vTableName)_TEMP";
+
+                DROP TABLE "$(vTableName)_TEMP";
+            ELSE
+            	DROP TABLE "$(vTableName)";
+            END IF
+        END IF
+
+	NEXT TableName;
+
+	RENAME TABLE Automation TO TEMP;
+
+	Automation:
+	LOAD
+    	*,
+        ApplyMap('Map_AutomationOwner_UserSubject',AutomationOwnerId) AS AutomationOwnerSubject,
+        ApplyMap('Map_AutomationOwner_UserName',AutomationOwnerId) AS AutomationOwnerName,
+        ApplyMap('Map_AutomationOwner_UserEmail',AutomationOwnerId) AS AutomationOwnerEmail
+    RESIDENT TEMP;
+    DROP TABLE TEMP;
+    
+    RENAME TABLE Spaces TO TEMP;
+    
+    Spaces:
+    LEFT KEEP (Automation)
+    LOAD * RESIDENT TEMP;
+    
+    CONCATENATE (Spaces)
+    LOAD DISTINCT
+        '[Unknown - Automation Deleted]' AS SpaceId,
+        '[Unknown - Automation Deleted]' AS SpaceName,
+        '[Unknown - Automation Deleted]' AS SpaceType,
+        '[Unknown - Automation Deleted]' AS SpaceOwnerId,
+        '[Unknown - Automation Deleted]' AS SpaceDescription,
+        '[Unknown - Automation Deleted]' AS SpaceCreatedTime,
+        '[Unknown - Automation Deleted]' AS SpaceCreatedBy
+    AUTOGENERATE 1;
+    
+    DROP TABLE TEMP;
+    
+    AutomationTimeLimits:
+    LOAD * INLINE [
+    	AutomationRunContext	,AutomationRunTimeLimit
+        api_sync				,$(vLimitTriggeredSync)
+        api_async				,$(vLimitScheduled)
+        webhook					,$(vLimitWebhook)
+        scheduler				,$(vLimitScheduled)
+        editor					,$(vLimitScheduled)
+    ];
+    
+    Map_AutomationRunId_AutomationRunMaxTimeHit:
+    MAPPING LOAD DISTINCT
+    	AutomationRunId,
+        1
+    RESIDENT AutomationRunErrors
+    WHERE AutomationRunMaxTimeHit=1;
+    
+    Map_AutomationTimeLimits:
+    MAPPING LOAD
+    	*
+    RESIDENT AutomationTimeLimits;
+    
+    Map_AutomationRunId_AutomationRunMaxTimeHitDuration:
+    MAPPING LOAD DISTINCT
+    	AutomationRunId,
+        AutomationRunMaxTimeHitDuration
+    RESIDENT AutomationRunErrors;
+    
+    Map_AutomationRunId_AutomationRunMaxTimeHit:
+    MAPPING LOAD DISTINCT
+    	AutomationRunId,
+        AutomationRunMaxTimeHit
+    RESIDENT AutomationRunErrors;
+    
+    RENAME FIELD AutomationRunMaxTimeHitDuration TO AutomationRunMaxTimeHitDurationTEMP;
+    RENAME FIELD AutomationRunMaxTimeHit TO AutomationRunMaxTimeHitTEMP;
+    
+    RENAME TABLE AutomationRuns TO TEMP;
+    
+    LET vSetNow = Now(1);
+
+    AutomationRuns:
+    LOAD
+    	*,
+        AutomationRunStartTime & '|' & AutomationRunStopTime AS _ExecutionConcurrencyKey
+    ;
+    LOAD 
+        AutomationRunContext,
+        AutomationRunIsArchived,
+        AutomationRunIsTestRun,
+        AutomationRunExecutingUserId,
+        ApplyMap('Map_AutomationOwner_UserName',AutomationRunExecutingUserId,'[Unknown - Automation Deleted]') AS AutomationRunExecutingUserName,
+        AutomationRunRXBytes,
+        AutomationRunTXBytes,
+        AutomationRunTotalAPICalls,
+        Capitalize(AutomationRunStatus) AS AutomationRunStatus,
+        Interval(AutomationRunStopTime - AutomationRunStartTime, 'hh:mm:ss') AS AutomationRunDuration,
+        Interval(AutomationRunStopTime - AutomationRunStartTime, 'ss') AS AutomationRunDurationSeconds,
+        AutomationRunTitle,
+        AutomationRunId,
+        If((Date('$(vSetNow)') - Date(AutomationRunStopTime)) < 30,AutomationId & '/runs?filter=(startTime%20eq%20%22' & Replace(Date(Timestamp(AutomationRunStartTime),'YYYY-MM-DD|hh:mm:ss.000000Z'),'|','T') & '%22)') AS AutomationRunPathURL,
+        Alt(ApplyMap('Map_AutomationRunId_AutomationRunMaxTimeHitDuration',AutomationRunId),0) AS AutomationRunMaxTimeHitDuration,
+        Alt(ApplyMap('Map_AutomationRunId_AutomationRunMaxTimeHit',AutomationRunId),0) AS AutomationRunMaxTimeHit,
+        If((Interval(AutomationRunStopTime - AutomationRunStartTime, 'hh:mm:ss') > Time(($(vu_automation_duration_alert_percent) * (ApplyMap('Map_AutomationTimeLimits',AutomationRunContext)/86400)))) AND ApplyMap('Map_AutomationRunId_AutomationRunMaxTimeHit',AutomationRunId)<>1,1,0) AS AutomationRunTimeLimitAlertThresholdHit,
+        AutomationId,
+        Timestamp(Timestamp([AutomationRunStartTime]) + $(vReloadTimeDiffFromGMT)) as AutomationRunStartTime,
+        Date(Floor(Timestamp(Timestamp([AutomationRunStartTime]) + $(vReloadTimeDiffFromGMT)))) AS AutomationRunStartDate,
+        Timestamp(Timestamp([AutomationRunStopTime]) + $(vReloadTimeDiffFromGMT)) as AutomationRunStopTime,
+        Timestamp(Timestamp([AutomationRunScheduledStartTime]) + $(vReloadTimeDiffFromGMT)) as AutomationRunScheduledStartTime,
+        Timestamp(Timestamp([AutomationRunCreatedAt]) + $(vReloadTimeDiffFromGMT)) as AutomationRunCreatedAt,
+        Timestamp(Timestamp([AutomationRunUpdatedAt]) + $(vReloadTimeDiffFromGMT)) as AutomationRunUpdatedAt
+    RESIDENT TEMP
+    ORDER BY AutomationRunStopTime DESC;
+
+    DROP TABLE TEMP;
+
+    IF NOT ($(vu_multi_tenant_enabled)=1 AND $(vu_is_parent_app)=1) THEN
+
+        AutomationRunMinMaxDates:
+        LOAD 
+            Min(AutomationRunStartTime) AS MinAutomationRunTime,
+            Max(AutomationRunStopTime) AS MaxAutomationRunTime
+        RESIDENT AutomationRuns
+        WHERE AutomationRunStartTime >= Timestamp('$(vConcurrencyDaysBack)');  
+
+        LET vAutomationRunMinDate = Num(Timestamp(Peek('MinAutomationRunTime',0,'AutomationRunMinMaxDates')));
+        LET vAutomationRunMaxDate = Num(Timestamp(Peek('MaxAutomationRunTime',0,'AutomationRunMinMaxDates')));
+                
+        DROP TABLE AutomationRunMinMaxDates;
+
+        LET vSeconds = Ceil(($(vAutomationRunMaxDate)-$(vAutomationRunMinDate))*24*(3600/$(vConcurrencySeconds)));
+
+        ConcurrencySecondsTemp:
+        LOAD DISTINCT
+            Date($(vAutomationRunMinDate)+((1/24/(3600/$(vConcurrencySeconds)))*RowNo())) AS ConcurrencySecond
+        AUTOGENERATE $(vSeconds);
+
+        LEFT JOIN
+        INTERVALMATCH (ConcurrencySecond) 
+        LOAD 
+            AutomationRunStartTime,
+            AutomationRunStopTime
+        RESIDENT AutomationRuns;
+
+        ConcurrencySeconds:
+        LEFT KEEP (AutomationRuns)
+        LOAD
+            ConcurrencySecond AS ConcurrencySecond,
+        	AutomationRunStartTime & '|' & AutomationRunStopTime AS _ExecutionConcurrencyKey
+        RESIDENT ConcurrencySecondsTemp
+        WHERE AutomationRunStartTime >= Timestamp('$(vConcurrencyDaysBack)');
+
+        DROP TABLE ConcurrencySecondsTemp;
+
+    END IF
+
+    AUTONUMBER 
+    	_AutomationConnectionLink
+        ,_ExecutionConcurrencyKey
+    ;
+    
+    DROP FIELDS  
+    	AutomationRunMaxTimeHitDurationTEMP
+    	,AutomationRunMaxTimeHitTEMP;
+            
+    LEFT JOIN(Automation)
+    LOAD
+    	AutomationId,
+        Dual(AutomationName,AutoNumber(AutomationId)) AS AutomationNameUnique
+    RESIDENT Automation;
+        
+    CONCATENATE(Automation)
+    LOAD DISTINCT
+    	'$(vTenantID)' AS TenantID,
+        'True' AS AutomationIsDeleted,
+        AutomationId,
+        '[Unknown - Automation Deleted]' AS _AutomationConnectionLink,
+        '[Unknown - Automation Deleted]' AS SpaceId,
+        '[Unknown - Automation Deleted]' AS AutomationOwnerId,
+        '[Unknown - Automation Deleted]' AS AutomationName,
+        '[Unknown - Automation Deleted]' AS AutomationState,
+        '[Unknown - Automation Deleted]' AS AutomationDescription,
+        '[Unknown - Automation Deleted]' AS AutomationLastRunStatus,
+        '[Unknown - Automation Deleted]' AS AutomationRunMode,
+        '[Unknown - Automation Deleted]' AS AutomationCreatedAt,
+        '[Unknown - Automation Deleted]' AS AutomationUpdatedAt,
+        '[Unknown - Automation Deleted]' AS AutomationLastRunAt,
+        '[Unknown - Automation Deleted]' AS AutomationLastRunOver30DaysAgo,
+		'[Unknown - Automation Deleted]' AS AutomationLastRunOver60DaysAgo,
+		'[Unknown - Automation Deleted]' AS AutomationLastRunOver90DaysAgo,
+        '[Unknown - Automation Deleted]' AS AutomationOwnerSubject,
+        '[Unknown - Automation Deleted]' AS AutomationOwnerName,
+        '[Unknown - Automation Deleted]' AS AutomationOwnerEmail,
+        '[Unknown - Automation Deleted]' AS AutomationNameUnique
+    RESIDENT AutomationRuns
+    WHERE ApplyMap('Map_ExistingAutomations',AutomationId)<>1;
+    
+END SUB
+///$tab Calendar
+SUB calendars
+
+    TRACE Working on Master Calendar based on Start Time;
+
+    AutomationRun_Calendar:
+    LOAD DISTINCT 
+        AutomationRunStartDate,
+        Date(MonthStart(Date(Floor(AutomationRunStartTime))), 'MMM YYYY') 						AS AutomationRunMonth,
+        Year(Floor(AutomationRunStartTime))														AS AutomationRunYear,
+        Dual(Month(Floor(AutomationRunStartTime))&' '&Year( Floor(AutomationRunStartTime)),Num(MonthEnd(AutomationRunStartTime))) AS AutomationRunMonthText, 
+        Date(monthstart(floor(AutomationRunStartTime)), 'MMM YYYY')								AS  AutomationRunMonthNum,
+        WeekStart(AutomationRunStartTime) 														AS [AutomationRunWeekStart],
+        WeekName(AutomationRunStartTime) 														AS  AutomationRunWeek,
+        Day(AutomationRunStartTime)																AS  AutomationRunDay,
+        Date(Floor(AutomationRunStartTime))														AS  AutomationRunDate,
+        If(InMonth(AutomationRunStartTime,'$(vStartTime)',0),1,0) 								AS 	AutomationRunInCurrentMTD,
+        If(InMonth(AutomationRunStopTime,'$(vStartTime)',-1),1,0) 								AS 	AutomationRunInPriorMonth,
+        If(InMonthToDate(AutomationRunStopTime,'$(vStartTime)',-1),1,0) 						AS  AutomationRunInPriorMTD,
+        If(AutomationRunStartTime>=$(vLast24Hours),1) 											AS  AutomationRunlast24hours,
+        If(AutomationRunStartTime>=$(vLast7Days),1) 											AS  AutomationRunlast7days,
+        If(AutomationRunStartTime>=$(vLast30Days),1) 											AS  AutomationRunlast30days,
+        If(AutomationRunStartTime>=$(vLast60Days),1)											AS  AutomationRunlast60days,
+        If(AutomationRunStartTime>=$(vLast90Days),1)											AS  AutomationRunlast90days,
+        If(AutomationRunStartTime<$(vLast30Days) and AutomationRunStartTime>=$(vLast60Days),1) 	AS [AutomationRunlast30-60days],
+        If(AutomationRunStartTime<$(vLast60Days) and AutomationRunStartTime>=$(vLast90Days),1) 	AS [AutomationRunlast60-90days]
+    RESIDENT AutomationRuns
+    ORDER BY AutomationRunStartTime DESC;
+
+    timeframe_temp:
+    LOAD * INLINE [
+        Timeframe 
+        Last 24 Hours
+        Last 7 Days
+        Last 30 Days
+        Last 60 Days
+        Last 90 Days
+        Last 30-60 Days
+        Last 60-90 Days
+    ];
+
+    Last_UsageTime:
+    NOCONCATENATE 					LOAD DISTINCT AutomationRunStartDate, 'Last 24 Hours' 	AS [AutomationRunTimeframe] RESIDENT AutomationRun_Calendar WHERE AutomationRunlast24hours =1;
+    CONCATENATE (Last_UsageTime ) 	LOAD DISTINCT AutomationRunStartDate, 'Last 7 Days'  	AS [AutomationRunTimeframe] RESIDENT AutomationRun_Calendar WHERE AutomationRunlast7days =1;
+    CONCATENATE (Last_UsageTime ) 	LOAD DISTINCT AutomationRunStartDate, 'Last 30 Days' 	AS [AutomationRunTimeframe] RESIDENT AutomationRun_Calendar WHERE AutomationRunlast30days =1;
+    CONCATENATE (Last_UsageTime ) 	LOAD DISTINCT AutomationRunStartDate, 'Last 60 Days' 	AS [AutomationRunTimeframe] RESIDENT AutomationRun_Calendar WHERE AutomationRunlast60days =1;
+    CONCATENATE (Last_UsageTime ) 	LOAD DISTINCT AutomationRunStartDate, 'Last 90 Days' 	AS [AutomationRunTimeframe] RESIDENT AutomationRun_Calendar WHERE AutomationRunlast90days =1;
+    CONCATENATE (Last_UsageTime ) 	LOAD DISTINCT AutomationRunStartDate, 'Last 30-60 Days' AS [AutomationRunTimeframe] RESIDENT AutomationRun_Calendar WHERE [AutomationRunlast30-60days]=1;
+    CONCATENATE (Last_UsageTime ) 	LOAD DISTINCT AutomationRunStartDate, 'Last 60-90 Days' AS [AutomationRunTimeframe] RESIDENT AutomationRun_Calendar WHERE [AutomationRunlast60-90days]=1;
+
+    DROP FIELDS AutomationRunlast24hours, AutomationRunlast7days, AutomationRunlast30days, AutomationRunlast60days, AutomationRunlast90days, [AutomationRunlast30-60days], [AutomationRunlast60-90days] ;
+    DROP TABLE timeframe_temp;
+    
+END SUB
+///$tab Helper Functions
+SUB execute_sub(sub_routine)
+
+  TRACE Working on $(sub_routine);
+  LET sub_start = Num(Now(1));
+  CALL $(sub_routine)
+  LET sub_finish = Num(Now(1));
+  LET sub_duration = Num(Round((sub_finish-sub_start)*86400),'#,##0');
+  TRACE $(sub_routine) completed after $(sub_duration) seconds.;
+  
+END SUB
+///$tab Reload Logic 
+LET reload_start = Now(1);
+
+//// App Variables & Messaging
+SET ahora=; 
+SET msg=; 
+SET startMsg=; 
+SET comp=;
+LET vTenants = 0;
+
+SET app_name		= 'Automation Analyzer';
+SET app_version		= '1.0.1';
+LET comp 			= ComputerName(); 
+LET EngineVer 		= PurgeChar(EngineVersion(),Chr(39)); 
+LET startMsg 		= 'Reloading $(app_name) $(app_version) from $(comp) running QIX Engine version $(EngineVer)';
+
+TRACE $(startMsg);
+
+SUB load_core_data
+
+    TRACE Loading data...;
+    FOR EACH sub_routine IN 'check_version','get_tenant_metadata','get_users','get_spaces','get_automations','get_automation_events','incremental'
+        CALL execute_sub(sub_routine)
+    NEXT sub_routine
+    
+END SUB
+
+SUB transform_data
+
+    TRACE Transforming data...;
+    FOR EACH sub_routine IN 'load_transformation_logic','calendars'
+        CALL execute_sub(sub_routine)
+    NEXT sub_routine
+    
+END SUB
+
+IF $(vu_multi_tenant_enabled)=1 THEN
+
+    IF $(vu_is_parent_app)=1 THEN
+    
+        TRACE This application is configured for a Multi-Tenant setup and has been designated as a **Parent** app.;
+        TRACE This application will attempt to load all of the QVDs that have been generated for the $(app_name) within the "QlikMetaCollection" folder found within "$(vu_qlik_meta_collection_parent_dir)";
+        TRACE This application will then store all resulting QVDs to a "CompiledTenants" directory.;
+        
+        CALL execute_sub('variables')
+        CALL execute_sub('load_multi_tenant_qvds(''$(vu_qlik_meta_collection_parent_dir)'',''Monitoring'',''$(app_name)'')')
+
+        IF $(vTenants)>0 THEN
+           CALL transform_data
+        END IF
+        
+        TRACE This application will attempt to store all of the tables from this model to the "QlikMetaCollection/CompiledTenants" folder found within $(vu_qlik_meta_collection_parent_dir);
+  		CALL execute_sub('write_tenant_qvds(''$(vu_qlik_meta_collection_parent_dir)'',''Monitoring'',''$(app_name)'',1)')
+        
+        TRACE Data fetched from $(vTenants) tenants.;
+        
+    ELSE
+    
+        TRACE This application is configured for a Multi-Tenant setup and has been designated as a **Child** app.;
+        TRACE This application will attempt to store all of the tables from this model to the "QlikMetaCollection" folder found within "$(vu_qlik_meta_collection_parent_dir)";
+		
+        CALL execute_sub('variables')
+        CALL load_core_data
+        CALL execute_sub('write_tenant_qvds(''$(vu_qlik_meta_collection_parent_dir)'',''Monitoring'',''$(app_name)'',0)')
+        CALL transform_data
+        
+    END IF
+    
+ELSE
+
+    CALL execute_sub('variables')
+    CALL load_core_data
+    CALL transform_data
+
+    TRACE Data fetched from $(vu_tenant_fqdn);
+    
+END IF
+
+LET reload_end = Now(1);
+LET reload_duration = Num(Ceil((reload_end-reload_start)*86400),'#,##0');
+LET reload_message = 'At $(reload_end), $(app_name) v$(app_version) finished reloading on $(comp) (QIX Engine $(EngineVer)) after $(reload_duration) seconds.';
+LET vLastReloadTime = Date('$(reload_end)');
+
+TRACE $(reload_message);
+
+
+
+
+
+
+
+
+
+

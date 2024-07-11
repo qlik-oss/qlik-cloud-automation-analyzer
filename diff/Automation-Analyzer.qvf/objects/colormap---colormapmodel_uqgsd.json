@@ -1,0 +1,45 @@
+{
+  "qInfo": {
+    "qId": "ColorMapModel_uqGsd",
+    "qType": "ColorMap"
+  },
+  "qMetaDef": {},
+  "colorMap": {
+    "colors": [
+      {
+        "value": "Failed",
+        "baseColor": {
+          "color": "#d63031",
+          "index": -1
+        }
+      },
+      {
+        "value": "Finished",
+        "baseColor": {
+          "color": "#19426C",
+          "index": -1
+        }
+      },
+      {
+        "value": "Stopped",
+        "baseColor": {
+          "color": "#54565A",
+          "index": -1
+        }
+      },
+      {
+        "value": "Finished With Warnings",
+        "baseColor": {
+          "color": "#EDC83A",
+          "index": -1
+        }
+      }
+    ],
+    "nul": null,
+    "oth": null,
+    "pal": null,
+    "single": null,
+    "usePal": true,
+    "autoFill": true
+  }
+}
