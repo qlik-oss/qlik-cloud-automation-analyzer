@@ -60,11 +60,9 @@ TRACE Optional Configuration;
 ////////////////////////////////////////////////////////////////////////////////////////
 // Optional Configuration (No need to change these unless you desire) 
 
-// Optional Configuration (No need to change these unless you desire)
-
-SET vu_GMT_offset = 0; // The timezone difference from GMT. Modifies the reload times to desired GMT offset (this is written to QVDs)
+SET vu_GMT_offset = 0; // The timezone difference from GMT. Modifies the automation times to desired GMT offset
 //	Example 1: -5
-//	Example 2: +5
+//	Example 2: 5
 
 SET vu_automation_rolling_range = 365; // Maximum days back to store automation data in QVDs -- default 365
 
@@ -149,12 +147,7 @@ SUB variables
 
   	//// Run-time variables
     LET vStartTime 					= Now(1);
-    LET vLast24Hours 				= Num(TimeStamp('$(vStartTime)'-1));
-    LET vLast72Hours 				= Num(TimeStamp('$(vStartTime)'-3));
-    LET vLast7Days 					= Num(TimeStamp('$(vStartTime)'-7));
-    LET vLast30Days	 				= Num(TimeStamp('$(vStartTime)'-30));
-    LET vLast60Days 				= Num(TimeStamp('$(vStartTime)'-60));
-    LET vLast90Days 				= Num(TimeStamp('$(vStartTime)'-90)); 
+    
     LET vu_GMT_offset 				= Replace(vu_GMT_offset,'+','');
     LET vReloadDiffFromGMTString	= If(vu_GMT_offset=0,'GMT-00:00',
         If(vu_GMT_offset<0,'GMT-' & Right('0' & Replace(vu_GMT_offset,'-',''),2) & ':00',
@@ -180,6 +173,15 @@ SUB variables
     LET vConcurrencyMinutes 		= 1; // The width of the concurrency buckets for analyzing consumption concurrency. Default 1.
     LET v90BackGMT				 	= Date(Today(1) - 90);
     LET vInitialDaysBack			= If($(vu_initial_days_back)>0 AND $(vu_initial_days_back)<=90,Date(Today(1) - $(vu_initial_days_back)),$(v90BackGMT)); // If there is an initial days back setting that is between 0 and 90, set it, otherwise set it to 90
+
+  //// Calendar Variables
+
+    LET vLast24Hours 				= Num(Floor(TimeStamp('$(vStartTime)'-1) + $(vReloadTimeDiffFromGMT)));
+    LET vLast72Hours 				= Num(Floor(TimeStamp('$(vStartTime)'-3) + $(vReloadTimeDiffFromGMT)));
+    LET vLast7Days 					= Num(Floor(TimeStamp('$(vStartTime)'-7) + $(vReloadTimeDiffFromGMT)));
+    LET vLast30Days	 				= Num(Floor(TimeStamp('$(vStartTime)'-30) + $(vReloadTimeDiffFromGMT)));
+    LET vLast60Days 				= Num(Floor(TimeStamp('$(vStartTime)'-60) + $(vReloadTimeDiffFromGMT)));
+    LET vLast90Days 				= Num(Floor(TimeStamp('$(vStartTime)'-90) + $(vReloadTimeDiffFromGMT)));
 
   //// Colors
     SET c_light_gray			= 'RGB(240,240,240)';
@@ -1471,6 +1473,7 @@ Sub load_transformation_logic
     LOAD
     	*,
         AutomationRunStartTime & '|' & AutomationRunStopTime AS _ExecutionConcurrencyKey
+    WHERE AutomationRunStartTime>=Date('$(vInitialDaysBack)');
     ;
     LOAD 
         AutomationRunContext,
@@ -1509,7 +1512,7 @@ Sub load_transformation_logic
             Min(AutomationRunStartTime) AS MinAutomationRunTime,
             Max(AutomationRunStopTime) AS MaxAutomationRunTime
         RESIDENT AutomationRuns
-        WHERE AutomationRunStartTime >= Timestamp('$(vConcurrencyDaysBack)');  
+        WHERE AutomationRunStartTime >= Timestamp(Timestamp('$(vConcurrencyDaysBack)') + $(vReloadTimeDiffFromGMT));  
 
         LET vAutomationRunMinDate = Num(Timestamp(Peek('MinAutomationRunTime',0,'AutomationRunMinMaxDates')));
         LET vAutomationRunMaxDate = Num(Timestamp(Peek('MaxAutomationRunTime',0,'AutomationRunMinMaxDates')));
@@ -1536,7 +1539,7 @@ Sub load_transformation_logic
             ConcurrencySecond AS ConcurrencySecond,
         	AutomationRunStartTime & '|' & AutomationRunStopTime AS _ExecutionConcurrencyKey
         RESIDENT ConcurrencySecondsTemp
-        WHERE AutomationRunStartTime >= Timestamp('$(vConcurrencyDaysBack)');
+        WHERE AutomationRunStartTime >= Timestamp(Timestamp('$(vConcurrencyDaysBack)') + $(vReloadTimeDiffFromGMT));
 
         DROP TABLE ConcurrencySecondsTemp;
 
@@ -1587,31 +1590,31 @@ END SUB
 ///$tab Calendar
 SUB calendars
 
-    TRACE Working on Master Calendar based on Start Time;
+    TRACE Working on Master Calendar based on Start Date;
 
     AutomationRun_Calendar:
     LOAD DISTINCT 
         AutomationRunStartDate,
-        Date(MonthStart(Date(Floor(AutomationRunStartTime))), 'MMM YYYY') 						AS AutomationRunMonth,
-        Year(Floor(AutomationRunStartTime))														AS AutomationRunYear,
-        Dual(Month(Floor(AutomationRunStartTime))&' '&Year( Floor(AutomationRunStartTime)),Num(MonthEnd(AutomationRunStartTime))) AS AutomationRunMonthText, 
-        Date(monthstart(floor(AutomationRunStartTime)), 'MMM YYYY')								AS  AutomationRunMonthNum,
-        WeekStart(AutomationRunStartTime) 														AS [AutomationRunWeekStart],
-        WeekName(AutomationRunStartTime) 														AS  AutomationRunWeek,
-        Day(AutomationRunStartTime)																AS  AutomationRunDay,
-        Date(Floor(AutomationRunStartTime))														AS  AutomationRunDate,
-        If(InMonth(AutomationRunStartTime,'$(vStartTime)',0),1,0) 								AS 	AutomationRunInCurrentMTD,
-        If(InMonth(AutomationRunStopTime,'$(vStartTime)',-1),1,0) 								AS 	AutomationRunInPriorMonth,
-        If(InMonthToDate(AutomationRunStopTime,'$(vStartTime)',-1),1,0) 						AS  AutomationRunInPriorMTD,
-        If(AutomationRunStartTime>=$(vLast24Hours),1) 											AS  AutomationRunlast24hours,
-        If(AutomationRunStartTime>=$(vLast7Days),1) 											AS  AutomationRunlast7days,
-        If(AutomationRunStartTime>=$(vLast30Days),1) 											AS  AutomationRunlast30days,
-        If(AutomationRunStartTime>=$(vLast60Days),1)											AS  AutomationRunlast60days,
-        If(AutomationRunStartTime>=$(vLast90Days),1)											AS  AutomationRunlast90days,
-        If(AutomationRunStartTime<$(vLast30Days) and AutomationRunStartTime>=$(vLast60Days),1) 	AS [AutomationRunlast30-60days],
-        If(AutomationRunStartTime<$(vLast60Days) and AutomationRunStartTime>=$(vLast90Days),1) 	AS [AutomationRunlast60-90days]
+        Date(MonthStart(AutomationRunStartDate), 'MMM YYYY') 									AS AutomationRunMonth,
+        Year(Floor(AutomationRunStartDate))														AS AutomationRunYear,
+        Dual(Month(AutomationRunStartDate)&' '&Year(AutomationRunStartDate),Num(MonthEnd(AutomationRunStartDate))) AS AutomationRunMonthText, 
+        Date(MonthStart(AutomationRunStartDate), 'MMM YYYY')									AS  AutomationRunMonthNum,
+        WeekStart(AutomationRunStartDate) 														AS  AutomationRunWeekStart,
+        WeekName(AutomationRunStartDate) 														AS  AutomationRunWeek,
+        Day(AutomationRunStartDate)																AS  AutomationRunDay,
+        Date((AutomationRunStartDate))															AS  AutomationRunDate,
+        If(InMonth(AutomationRunStartDate,'$(vStartTime)',0),1,0) 								AS 	AutomationRunInCurrentMTD,
+        If(InMonth(AutomationRunStartDate,'$(vStartTime)',-1),1,0) 								AS 	AutomationRunInPriorMonth,
+        If(InMonthToDate(AutomationRunStartDate,'$(vStartTime)',-1),1,0) 						AS  AutomationRunInPriorMTD,
+        If(AutomationRunStartDate>=$(vLast24Hours),1) 											AS  AutomationRunlast24hours,
+        If(AutomationRunStartDate>=$(vLast7Days),1) 											AS  AutomationRunlast7days,
+        If(AutomationRunStartDate>=$(vLast30Days),1) 											AS  AutomationRunlast30days,
+        If(AutomationRunStartDate>=$(vLast60Days),1)											AS  AutomationRunlast60days,
+        If(AutomationRunStartDate>=$(vLast90Days),1)											AS  AutomationRunlast90days,
+        If(AutomationRunStartDate<$(vLast30Days) and AutomationRunStartDate>=$(vLast60Days),1) 	AS [AutomationRunlast30-60days],
+        If(AutomationRunStartDate<$(vLast60Days) and AutomationRunStartDate>=$(vLast90Days),1) 	AS [AutomationRunlast60-90days]
     RESIDENT AutomationRuns
-    ORDER BY AutomationRunStartTime DESC;
+    ORDER BY AutomationRunStartDate DESC;
 
     timeframe_temp:
     LOAD * INLINE [
@@ -1660,7 +1663,7 @@ SET comp=;
 LET vTenants = 0;
 
 SET app_name		= 'Automation Analyzer';
-SET app_version		= '1.0.1';
+SET app_version		= '1.1.0';
 LET comp 			= ComputerName(); 
 LET EngineVer 		= PurgeChar(EngineVersion(),Chr(39)); 
 LET startMsg 		= 'Reloading $(app_name) $(app_version) from $(comp) running QIX Engine version $(EngineVer)';
