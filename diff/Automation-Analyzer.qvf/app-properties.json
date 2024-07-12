@@ -1,9 +1,9 @@
 {
-  "qTitle": "Automation Analyzer v1.0.1",
+  "qTitle": "Automation Analyzer v1.1.0",
   "qThumbnail": {
     "qUrl": "/api/v1/apps/<appId>/media/files/automationsanalyzer.png"
   },
-  "description": "The Automation Analyzer provides a comprehensive dashboard to analyze automation run metadata across a Qlik Sense tenant(s), providing developers and administrators a holistic view of the automations used. \n\nCreated by Daniel Pilla, Master Principal Analytics Platform Architect, Qlik\n\n{v1.0.1}",
+  "description": "The Automation Analyzer provides a comprehensive dashboard to analyze automation run metadata across a Qlik Sense tenant(s), providing developers and administrators a holistic view of the automations used. \n\nCreated by Daniel Pilla, Master Principal Analytics Platform Architect, Qlik\n\n{v1.1.0}",
   "qUsage": "ANALYTICS",
   "published": false,
   "hassectionaccess": false
