@@ -8,7 +8,7 @@
       "title": "Dashboard",
       "description": ""
     },
-    "rank": 0.000000,
+    "rank": 0,
     "thumbnail": {
       "qStaticContentUrlDef": {
         "qUrl": "/api/v1/apps/<appId>/media/files/1.png"
@@ -12573,7 +12573,9 @@
                 "bgImage": {
                   "mode": "media",
                   "mediaUrl": {
-                    "qStaticContentUrlDef": {}
+                    "qStaticContentUrlDef": {
+                      "qUrl": "/api/v1/apps/<appId>/media/files/filter-44.png"
+                    }
                   },
                   "sizing": "fitHeight"
                 }

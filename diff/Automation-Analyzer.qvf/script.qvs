@@ -1663,7 +1663,7 @@ SET comp=;
 LET vTenants = 0;
 
 SET app_name		= 'Automation Analyzer';
-SET app_version		= '1.1.0';
+SET app_version		= '1.1.1';
 LET comp 			= ComputerName(); 
 LET EngineVer 		= PurgeChar(EngineVersion(),Chr(39)); 
 LET startMsg 		= 'Reloading $(app_name) $(app_version) from $(comp) running QIX Engine version $(EngineVer)';
