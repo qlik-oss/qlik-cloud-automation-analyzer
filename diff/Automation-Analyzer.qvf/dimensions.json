@@ -1,6 +1,85 @@
 [
   {
     "qInfo": {
+      "qId": "jAJpmR",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "AutomationConcurrencySecondStatus"
+      ],
+      "qFieldLabels": [
+        "Automation Concurrency Second Status"
+      ],
+      "qAlias": "Automation Concurrency Second Status",
+      "title": "Automation Concurrency Second Status",
+      "coloring": {
+        "changeHash": "0.4380883535849114",
+        "hasValueColors": true,
+        "colorMapRef": "jAJpmR"
+      }
+    },
+    "qMetaDef": {
+      "title": "Automation Concurrency Second Status",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "ABrjH",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "AutomationRunIsBillable"
+      ],
+      "qFieldLabels": [
+        "Run Is Billable"
+      ],
+      "qAlias": "Run Is Billable",
+      "title": "Run Is Billable",
+      "coloring": {
+        "changeHash": "0.7402046956216242",
+        "hasValueColors": false
+      }
+    },
+    "qMetaDef": {
+      "title": "Run Is Billable",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "mEHUw",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "AutomationContainsBillable"
+      ],
+      "qFieldLabels": [
+        "Automation Contains Billable"
+      ],
+      "qAlias": "Automation Contains Billable",
+      "title": "Automation Contains Billable",
+      "coloring": {
+        "changeHash": "0.9449816032879885",
+        "hasValueColors": false
+      }
+    },
+    "qMetaDef": {
+      "title": "Automation Contains Billable",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
       "qId": "wzFmWwm",
       "qType": "dimension"
     },

@@ -8,7 +8,7 @@
       "title": "Cleanup Consideration",
       "description": ""
     },
-    "rank": 2,
+    "rank": 2.250000,
     "thumbnail": {
       "qStaticContentUrlDef": {
         "qUrl": "/api/v1/apps/<appId>/media/files/3.png"
@@ -2837,12 +2837,12 @@
               "qNoOfLeftDims": -1,
               "qMaxStackedCells": 5000,
               "qCalcCond": {
-                "qv": "Count({\u003cAutomationLastRunOver90DaysAgo={1}\u003e}DISTINCT AutomationId)\u003e0"
+                "qv": "=Count({\u003cAutomationState={'Disabled'}\u003e}DISTINCT AutomationId)\u003e0"
               },
               "qTitle": {},
               "qCalcCondition": {
                 "qCond": {
-                  "qv": "Count({\u003cAutomationLastRunOver90DaysAgo={1}\u003e}DISTINCT AutomationId)\u003e0"
+                  "qv": "=Count({\u003cAutomationState={'Disabled'}\u003e}DISTINCT AutomationId)\u003e0"
                 },
                 "qMsg": {
                   "qv": "='There are no automations within the selection state that are disabled.'"
@@ -4181,6 +4181,57 @@
                 },
                 "histogram": true,
                 "frequencyMax": "fetch"
+              },
+              "qChildren": []
+            },
+            {
+              "qProperty": {
+                "qInfo": {
+                  "qId": "e00ce7b5-458f-4c0c-b714-fddc179197c2",
+                  "qType": "listbox"
+                },
+                "qMetaDef": {},
+                "qListObjectDef": {
+                  "qLibraryId": "ABrjH",
+                  "qDef": {
+                    "qGrouping": "N",
+                    "qFieldDefs": [],
+                    "qFieldLabels": [],
+                    "qSortCriterias": [
+                      {
+                        "qSortByState": 1,
+                        "qSortByNumeric": 1,
+                        "qSortByAscii": 1,
+                        "qSortByLoadOrder": 1,
+                        "qExpression": {}
+                      }
+                    ],
+                    "qNumberPresentations": [],
+                    "qActiveField": 0,
+                    "autoSort": true,
+                    "cId": "DymhYY"
+                  },
+                  "qFrequencyMode": "N",
+                  "qShowAlternatives": true,
+                  "qInitialDataFetch": [],
+                  "qExpressions": [],
+                  "showTitles": true,
+                  "title": "",
+                  "subtitle": "",
+                  "footnote": "",
+                  "disableNavMenu": false,
+                  "showDetails": true,
+                  "showDetailsExpression": false,
+                  "qOtherTotalSpec": {}
+                },
+                "showTitles": true,
+                "title": "Run Is Billable",
+                "subtitle": "",
+                "footnote": "",
+                "disableNavMenu": false,
+                "showDetails": true,
+                "showDetailsExpression": false,
+                "visualization": "listbox"
               },
               "qChildren": []
             },

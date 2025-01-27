@@ -1,0 +1,38 @@
+{
+  "qInfo": {
+    "qId": "ColorMapModel_jAJpmR",
+    "qType": "ColorMap"
+  },
+  "qMetaDef": {},
+  "colorMap": {
+    "colors": [
+      {
+        "value": "RELOADING",
+        "baseColor": {
+          "color": "#19426C",
+          "index": -1
+        }
+      },
+      {
+        "value": "QUEUED",
+        "baseColor": {
+          "color": "#AEAEAF",
+          "index": -1
+        }
+      },
+      {
+        "value": "RUNNING",
+        "baseColor": {
+          "color": "#19426C",
+          "index": -1
+        }
+      }
+    ],
+    "nul": null,
+    "oth": null,
+    "pal": null,
+    "single": null,
+    "usePal": true,
+    "autoFill": true
+  }
+}
