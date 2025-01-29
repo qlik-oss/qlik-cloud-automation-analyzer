@@ -165,7 +165,7 @@ SUB variables
     LET vConcurrencyDaysBack 		= TimeStamp(MonthStart(AddMonths(Now(1),-1))); // Calculate the monthstart of the previous month for concurrency calcs
     SET vIncremental 				= 1;  // Incremental load flag -- default = 1 (active). This can be disabled by setting to 0 (why do that?)
     SET vu_personal_space_user_list = 'id','name','subject','email';
-    LET vAutomationRunsQVD 			= '$(vOutputQVDName(AutomationRuns,$(app_version)))';
+    LET vAutomationRunsQVD 			= '$(vOutputQVDName(AutomationRuns,$(app_schema_version)))';
     LET vIncrementalQVDsAvailable	= If(Len(FileTime('$(vAutomationRunsQVD)'))>0,1,0);  // Check to see that incremental QVDs are available
     LET vIncrementalMessage 		= If($(vIncrementalQVDsAvailable)=1,'Incremental QVDs found','No Incremental QVDs found. Do not panic. I can fix that.');
     LET vLastReloadTime 			= TimeStamp(ReloadTime());
@@ -331,6 +331,71 @@ SUB get_tenant_metadata
 	LET vTenantName = Peek('TenantName',0,'TenantMetadata');
     
 END SUB
+///$tab Get License Quotas
+SUB get_license_quotas
+
+	LIB CONNECT TO '$(vu_rest_connection)';
+    
+    RestConnectorMasterTable:
+    SQL SELECT 
+        "__KEY_root",
+        (SELECT 
+            "name" AS "name_u0",
+            "valid",
+            "__KEY_parameters",
+            "__FK_parameters",
+            (SELECT 
+                "action",
+                "periodType",
+                "quantity",
+                "resourceType",
+                "scope",
+                "title",
+                "visible",
+                "value",
+                "toggle",
+                "count",
+                "overageQuantity",
+                "unlimited",
+                "unit",
+                "geoanalytics",
+                "jwt_auth_enabled",
+                "saas_alerting",
+                "enabled",
+                "__FK_values"
+            FROM "values" FK "__FK_values")
+        FROM "parameters" PK "__KEY_parameters" FK "__FK_parameters")
+	FROM JSON (wrap on) "root" PK "__KEY_root"
+		WITH CONNECTION (  
+		URL "https://$(vu_tenant_fqdn)/api/v1/licenses/overview"
+	);
+
+    [LicenseQuotas]:
+    LOAD
+    	'$(vTenantID)' AS TenantID,
+        [name_u0] AS AutomationQuotaType,
+        [__KEY_parameters]
+    RESIDENT RestConnectorMasterTable
+    WHERE Match([name_u0],'standardAutomationRuns','3rdPartyAutomationRuns','maxConcurrentAutomationRuns');
+
+    LEFT JOIN (LicenseQuotas)
+    LOAD	
+        [quantity] AS AutomationQuota,
+        [__FK_values] AS [__KEY_parameters]
+    RESIDENT RestConnectorMasterTable
+    WHERE NOT IsNull([__FK_values]);
+
+    DROP TABLE RestConnectorMasterTable;
+
+    DROP FIELD [__KEY_parameters];
+    
+    LET vCheckForStandardRunsLicense = Len(Lookup('AutomationQuotaType','AutomationQuotaType','standardAutomationRuns','LicenseQuotas'))>0;
+    LET vCheckForThirdPartyRunsLicense = Len(Lookup('AutomationQuotaType','AutomationQuotaType','3rdPartyAutomationRuns','LicenseQuotas'))>0;
+    LET vCheckForConcurrentRunsLicense = Len(Lookup('AutomationQuotaType','AutomationQuotaType','maxConcurrentAutomationRuns','LicenseQuotas'))>0;
+    	 
+END SUB
+
+
 ///$tab Get User Field
 SUB get_user_field
 
@@ -764,6 +829,7 @@ SUB get_automations
                 "createdAt",
                 "updatedAt",
                 "lastRunAt",
+                "containsBillable",
                 "__KEY_data",
                 "__FK_data",
                 (SELECT 
@@ -793,7 +859,8 @@ SUB get_automations
             [snippetIds] AS AutomationSnippetIds,
             [endpointIds] AS AutomationEndpointIds,
             [workspace] AS AutomationWorkspace,
-            [name] AS AutomationName, 
+            [name] AS AutomationName,
+            Capitalize(If(Len([containsBillable])>0,[containsBillable],'false')) AS AutomationContainsBillable,
             Capitalize([state]) AS AutomationState,
             [description] AS AutomationDescription,
             If(Len([lastRunStatus])>0,Capitalize([lastRunStatus]),'[Never Run]') AS AutomationLastRunStatus,
@@ -894,6 +961,7 @@ SUB get_automation_events
                 (SELECT 
                     "context",
                     "createdAt",
+                    "billable",
                     "id",
                     "isArchived",
                     "isTestRun",
@@ -1016,6 +1084,7 @@ SUB get_automation_events
             Timestamp([stopTime]) AS AutomationRunStopTime,
             [title] AS AutomationRunTitle,
             Timestamp([updatedAt]) AS AutomationRunUpdatedAt,
+            If(Len([billable])>0,[billable],'False') AS AutomationRunIsBillable,
             [__KEY_data_u0] & '|' & $(vCounter) & '|' & '$(vUniqueKey)' AS [_KeyAutomationRunMetrics],
             [__FK_data_u0] & '|' & $(vCounter) & '|' & '$(vUniqueKey)' AS [_KeyAutomationRun]
         RESIDENT RestConnectorMasterTable
@@ -1283,7 +1352,7 @@ SUB incremental
     
     If $(vIncrementalQVDsAvailable)=1 THEN
     
-    	LET qvd_name = '$(vOutputQVDName(AutomationRuns,$(app_version)))';
+    	LET qvd_name = '$(vOutputQVDName(AutomationRuns,$(app_schema_version)))';
 
         TRACE Looking to load: $(qvd_name).;
         LET file_size = If(IsNull(FileSize('$(qvd_name)')),0,FileSize('$(qvd_name)'));
@@ -1312,7 +1381,7 @@ SUB incremental
             
         END IF
         
-    	LET qvd_name = '$(vOutputQVDName(AutomationRunBlocks,$(app_version)))';
+    	LET qvd_name = '$(vOutputQVDName(AutomationRunBlocks,$(app_schema_version)))';
 
         TRACE Looking to load: $(qvd_name).;
         LET file_size = If(IsNull(FileSize('$(qvd_name)')),0,FileSize('$(qvd_name)'));
@@ -1334,7 +1403,7 @@ SUB incremental
             
         END IF
         
-    	LET qvd_name = '$(vOutputQVDName(AutomationRunErrors,$(app_version)))';
+    	LET qvd_name = '$(vOutputQVDName(AutomationRunErrors,$(app_schema_version)))';
 
         TRACE Looking to load: $(qvd_name).;
         LET file_size = If(IsNull(FileSize('$(qvd_name)')),0,FileSize('$(qvd_name)'));
@@ -1359,7 +1428,7 @@ SUB incremental
     END IF
     
     FOR EACH data_table IN 'AutomationRuns','AutomationRunBlocks','AutomationRunErrors'
-        LET qvd_name = '$(vOutputQVDName($(data_table),$(app_version)))';
+        LET qvd_name = '$(vOutputQVDName($(data_table),$(app_schema_version)))';
         STORE $(data_table) INTO '$(qvd_name)'(qvd);
         LET file_size_$(data_table) = FileSize('$(qvd_name)');
     NEXT data_table
@@ -1472,13 +1541,14 @@ Sub load_transformation_logic
     AutomationRuns:
     LOAD
     	*,
-        AutomationRunStartTime & '|' & AutomationRunStopTime AS _ExecutionConcurrencyKey
-    WHERE AutomationRunStartTime>=Date('$(vInitialDaysBack)');
+        AutomationRunCreatedAt & '|' & AutomationRunStopTime AS _ExecutionConcurrencyKey
+    WHERE AutomationRunCreatedAt>=Date('$(vInitialDaysBack)');
     ;
     LOAD 
         AutomationRunContext,
         AutomationRunIsArchived,
         AutomationRunIsTestRun,
+        AutomationRunIsBillable,
         AutomationRunExecutingUserId,
         ApplyMap('Map_AutomationOwner_UserName',AutomationRunExecutingUserId,'[Unknown - Automation Deleted]') AS AutomationRunExecutingUserName,
         AutomationRunRXBytes,
@@ -1509,10 +1579,10 @@ Sub load_transformation_logic
 
         AutomationRunMinMaxDates:
         LOAD 
-            Min(AutomationRunStartTime) AS MinAutomationRunTime,
+            Min(AutomationRunCreatedAt) AS MinAutomationRunTime,
             Max(AutomationRunStopTime) AS MaxAutomationRunTime
         RESIDENT AutomationRuns
-        WHERE AutomationRunStartTime >= Timestamp(Timestamp('$(vConcurrencyDaysBack)') + $(vReloadTimeDiffFromGMT));  
+        WHERE AutomationRunCreatedAt >= Timestamp(Timestamp('$(vConcurrencyDaysBack)') + $(vReloadTimeDiffFromGMT));  
 
         LET vAutomationRunMinDate = Num(Timestamp(Peek('MinAutomationRunTime',0,'AutomationRunMinMaxDates')));
         LET vAutomationRunMaxDate = Num(Timestamp(Peek('MaxAutomationRunTime',0,'AutomationRunMinMaxDates')));
@@ -1529,7 +1599,7 @@ Sub load_transformation_logic
         LEFT JOIN
         INTERVALMATCH (ConcurrencySecond) 
         LOAD 
-            AutomationRunStartTime,
+            AutomationRunCreatedAt,
             AutomationRunStopTime
         RESIDENT AutomationRuns;
 
@@ -1537,17 +1607,35 @@ Sub load_transformation_logic
         LEFT KEEP (AutomationRuns)
         LOAD
             ConcurrencySecond AS ConcurrencySecond,
-        	AutomationRunStartTime & '|' & AutomationRunStopTime AS _ExecutionConcurrencyKey
+        	AutomationRunCreatedAt & '|' & AutomationRunStopTime AS _ExecutionConcurrencyKey
         RESIDENT ConcurrencySecondsTemp
-        WHERE AutomationRunStartTime >= Timestamp(Timestamp('$(vConcurrencyDaysBack)') + $(vReloadTimeDiffFromGMT));
+        WHERE AutomationRunCreatedAt >= Timestamp(Timestamp('$(vConcurrencyDaysBack)') + $(vReloadTimeDiffFromGMT));
+
+        LEFT JOIN (ConcurrencySeconds)
+        LOAD
+            AutomationRunId,
+            _ExecutionConcurrencyKey,
+            AutomationRunCreatedAt,
+            AutomationRunStartTime
+        RESIDENT AutomationRuns;
 
         DROP TABLE ConcurrencySecondsTemp;
+        
+        RENAME TABLE ConcurrencySeconds TO TEMP;
+
+        AutomationConcurrencyMinutes:
+        LOAD
+            AutomationRunId,
+            ConcurrencySecond,
+            If(ConcurrencySecond<AutomationRunStartTime,Dual('QUEUED',2),Dual('RUNNING',1)) AS AutomationConcurrencySecondStatus
+        RESIDENT TEMP;
+
+        DROP TABLE TEMP;
 
     END IF
 
     AUTONUMBER 
     	_AutomationConnectionLink
-        ,_ExecutionConcurrencyKey
     ;
     
     DROP FIELDS  
@@ -1574,6 +1662,7 @@ Sub load_transformation_logic
         '[Unknown - Automation Deleted]' AS AutomationLastRunStatus,
         '[Unknown - Automation Deleted]' AS AutomationRunMode,
         '[Unknown - Automation Deleted]' AS AutomationCreatedAt,
+        '[Unknown - Automation Deleted]' AS AutomationContainsBillable,
         '[Unknown - Automation Deleted]' AS AutomationUpdatedAt,
         '[Unknown - Automation Deleted]' AS AutomationLastRunAt,
         '[Unknown - Automation Deleted]' AS AutomationLastRunOver30DaysAgo,
@@ -1589,6 +1678,8 @@ Sub load_transformation_logic
 END SUB
 ///$tab Calendar
 SUB calendars
+
+	LET vMaxRunDate = Today(1);
 
     TRACE Working on Master Calendar based on Start Date;
 
@@ -1612,7 +1703,8 @@ SUB calendars
         If(AutomationRunStartDate>=$(vLast60Days),1)											AS  AutomationRunlast60days,
         If(AutomationRunStartDate>=$(vLast90Days),1)											AS  AutomationRunlast90days,
         If(AutomationRunStartDate<$(vLast30Days) and AutomationRunStartDate>=$(vLast60Days),1) 	AS [AutomationRunlast30-60days],
-        If(AutomationRunStartDate<$(vLast60Days) and AutomationRunStartDate>=$(vLast90Days),1) 	AS [AutomationRunlast60-90days]
+        If(AutomationRunStartDate<$(vLast60Days) and AutomationRunStartDate>=$(vLast90Days),1) 	AS [AutomationRunlast60-90days],
+        If(AutomationRunStartDate>=MonthStart('$(vMaxRunDate)'),0) 								AS AutomationRunForecastFlag
     RESIDENT AutomationRuns
     ORDER BY AutomationRunStartDate DESC;
 
@@ -1640,6 +1732,18 @@ SUB calendars
     DROP FIELDS AutomationRunlast24hours, AutomationRunlast7days, AutomationRunlast30days, AutomationRunlast60days, AutomationRunlast90days, [AutomationRunlast30-60days], [AutomationRunlast60-90days] ;
     DROP TABLE timeframe_temp;
     
+    // Concatenate on remaining days of the month for forecasting analysis
+    
+    CONCATENATE(AutomationRun_Calendar)
+    LOAD
+    	AutomationRunStartDate,
+    	If(AutomationRunStartDate<=Date('$(vMaxRunDate)'),0,1) AS AutomationRunForecastFlag
+    ;
+    LOAD
+        Date(MonthStart(Date('$(vMaxRunDate)'))+RecNo()-1) AS AutomationRunStartDate
+    AUTOGENERATE Floor(MonthEnd(Date('$(vMaxRunDate)'))-MonthStart(Date('$(vMaxRunDate)')))+1
+    WHERE NOT EXISTS(AutomationRunStartDate,Date(MonthStart(Date('$(vMaxRunDate)'))+RecNo()-1));
+    
 END SUB
 ///$tab Helper Functions
 SUB execute_sub(sub_routine)
@@ -1662,18 +1766,19 @@ SET startMsg=;
 SET comp=;
 LET vTenants = 0;
 
-SET app_name		= 'Automation Analyzer';
-SET app_version		= '1.1.1';
-LET comp 			= ComputerName(); 
-LET EngineVer 		= PurgeChar(EngineVersion(),Chr(39)); 
-LET startMsg 		= 'Reloading $(app_name) $(app_version) from $(comp) running QIX Engine version $(EngineVer)';
+SET app_name			= 'Automation Analyzer';
+SET app_version			= '1.2.4';
+SET app_schema_version	= 'sv_1.0.0';
+LET comp 				= ComputerName(); 
+LET EngineVer 			= PurgeChar(EngineVersion(),Chr(39)); 
+LET startMsg 			= 'Reloading $(app_name) $(app_version) from $(comp) running QIX Engine version $(EngineVer)';
 
 TRACE $(startMsg);
 
 SUB load_core_data
 
     TRACE Loading data...;
-    FOR EACH sub_routine IN 'check_version','get_tenant_metadata','get_users','get_spaces','get_automations','get_automation_events','incremental'
+    FOR EACH sub_routine IN 'check_version','get_tenant_metadata','get_license_quotas','get_users','get_spaces','get_automations','get_automation_events','incremental'
         CALL execute_sub(sub_routine)
     NEXT sub_routine
     
@@ -1736,13 +1841,3 @@ LET reload_message = 'At $(reload_end), $(app_name) v$(app_version) finished rel
 LET vLastReloadTime = Date('$(reload_end)');
 
 TRACE $(reload_message);
-
-
-
-
-
-
-
-
-
-

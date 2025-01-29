@@ -753,7 +753,7 @@
       "qnDec": 10,
       "qUseThou": 0
     },
-    "qDefinition": "1"
+    "qDefinition": "0"
   },
   {
     "qInfo": {
@@ -767,7 +767,7 @@
       "qnDec": 10,
       "qUseThou": 0
     },
-    "qDefinition": "1"
+    "qDefinition": "0"
   },
   {
     "qInfo": {
@@ -782,76 +782,6 @@
       "qUseThou": 0
     },
     "qDefinition": "1"
-  },
-  {
-    "qInfo": {
-      "qId": "617de253-9fe6-4cd4-b81a-20c9eab11631",
-      "qType": "variable"
-    },
-    "qMetaDef": {},
-    "qName": "vAutomationFailedRunOlderThan30Days",
-    "qNumberPresentation": {
-      "qType": "U",
-      "qnDec": 10,
-      "qUseThou": 0
-    },
-    "qDefinition": "1"
-  },
-  {
-    "qInfo": {
-      "qId": "91809a9c-bdf2-4203-873e-76f14faedd3c",
-      "qType": "variable"
-    },
-    "qMetaDef": {},
-    "qName": "vAutomationFailedId",
-    "qNumberPresentation": {
-      "qType": "U",
-      "qnDec": 10,
-      "qUseThou": 0
-    },
-    "qDefinition": "2c378102-0969-43eb-ab32-55cf87463366"
-  },
-  {
-    "qInfo": {
-      "qId": "f14bc540-26e7-4190-a8a5-5b274b5a0603",
-      "qType": "variable"
-    },
-    "qMetaDef": {},
-    "qName": "vAutomationFailedRunStartTime",
-    "qNumberPresentation": {
-      "qType": "U",
-      "qnDec": 10,
-      "qUseThou": 0
-    },
-    "qDefinition": "2024-05-01T15:22:53.000000Z"
-  },
-  {
-    "qInfo": {
-      "qId": "86878937-8335-4337-ac0e-89f3f94f6216",
-      "qType": "variable"
-    },
-    "qMetaDef": {},
-    "qName": "vAutomationFailedRunId",
-    "qNumberPresentation": {
-      "qType": "U",
-      "qnDec": 10,
-      "qUseThou": 0
-    },
-    "qDefinition": "95431ef9-8a70-4229-a8bf-dda449c26543"
-  },
-  {
-    "qInfo": {
-      "qId": "99a53f11-dffc-461e-94d1-3ae9cfdca9a5",
-      "qType": "variable"
-    },
-    "qMetaDef": {},
-    "qName": "vAutomationFailedRunOwnerId",
-    "qNumberPresentation": {
-      "qType": "U",
-      "qnDec": 10,
-      "qUseThou": 0
-    },
-    "qDefinition": "Kxn7FT5eqdMCamH9vPAD_iTwZZ3RhqWZ"
   },
   {
     "qInfo": {
@@ -882,5 +812,211 @@
     },
     "qDefinition": "Never Run",
     "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "629547b2-3c6a-4777-ad18-28d44f5ff43f",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vMaxAutomationRunsBillable",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=Max(\r\n        Aggr(\n        [Runs Billable],\n        AutomationId\n    )\n)",
+    "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "423b8b69-0831-45d4-8596-b02cc731df02",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vForecastRunMax",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=Max({1}\r\n\tAggr(\n    \tRangesum(Above(([Runs Standard CMTD] + Sum({1}0)) + If(Only({1}AutomationRunStartDate)\u003eDate('$(vMaxRunDate)'),$(vAvgRunsPerDay),0), 0, RowNo())),\n        AutomationRunStartDate\n    )\n)",
+    "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "4d6dfdb6-e679-4427-a2c3-890da831abd9",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vAvgRunsPerDay",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=[Runs Standard CMTD] / Count(DISTINCT {1\u003cAutomationRunForecastFlag={0}\u003e} AutomationRunStartDate)",
+    "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "53606c63-8d42-4c7c-9046-59996f0a3358",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vForecastRunCount",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=$(vForecastRunMax) - [Runs Standard CMTD]",
+    "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "3cb01082-eefd-4403-8f6c-7bec4d3d4932",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vForecastRunBillableMax",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=Max({1}\r\n\tAggr(\n    \tRangesum(Above(([Runs Billable CMTD] + Sum({1}0)) + If(Only({1}AutomationRunStartDate)\u003eDate('$(vMaxRunDate)'),$(vAvgRunsBillablePerDay),0), 0, RowNo())),\n        AutomationRunStartDate\n    )\n)",
+    "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "202e2c2b-f81d-490e-af6c-e92ef4da6053",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vAvgRunsBillablePerDay",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=[Runs Billable CMTD] / Count(DISTINCT {1\u003cAutomationRunForecastFlag={0}\u003e} AutomationRunStartDate)",
+    "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "ee265839-5081-49e6-a0a0-297024ee1aa4",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vForecastRunBillableCount",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=$(vForecastRunBillableMax) - [Runs Billable CMTD]",
+    "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "71626134-43e2-40c1-b211-631672a729d4",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vAvgRunsBillablePerDayCMTD",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=[Runs Billable CMTD] / Count(DISTINCT {1\u003cAutomationRunForecastFlag={0}\u003e} AutomationRunStartDate)",
+    "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "d91644ba-57c4-4bec-beca-c3ec6807a878",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vAvgRunsPerDayCMTD",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=[Runs Standard CMTD] / Count(DISTINCT {1\u003cAutomationRunForecastFlag={0}\u003e} AutomationRunStartDate)",
+    "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "6baf22f1-8e39-4364-9f2d-498dc12af95a",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vMaxAutomationRunsStandard",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=Max(\r\n        Aggr(\n        [Runs Standard],\n        AutomationId\n    )\n)",
+    "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "8bb24625-8d4e-4977-aa04-628ebedf25e1",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vFullLocation",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "lib://:DataFiles/Test/QlikMetaCollection/CompiledTenants/Monitoring/Automation Analyzer"
+  },
+  {
+    "qInfo": {
+      "qId": "f56d730a-c588-4ad9-a536-4dbd4b6060a2",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vDirLocation",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "lib://:DataFiles/Test"
+  },
+  {
+    "qInfo": {
+      "qId": "bf3c95d3-c6a2-4a7b-8946-dad1ffffa364",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "Dir",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "lib://:DataFiles/Test/QlikMetaCollection/Tenants/gG6VuTFH1_BZ23z2M2M1uml9uf3FTGQo"
+  },
+  {
+    "qInfo": {
+      "qId": "7db2bfb6-c807-4466-8a51-90712cf15c8a",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vFolder",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "lib://:DataFiles/Test/QlikMetaCollection/Tenants/gG6VuTFH1_BZ23z2M2M1uml9uf3FTGQoMonitoring/Automation Analyzer/"
   }
 ]

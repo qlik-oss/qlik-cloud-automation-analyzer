@@ -32,11 +32,14 @@
         },
         "qMetaDef": {},
         "qListObjectDef": {
-          "qLibraryId": "uqGsd",
           "qDef": {
             "qGrouping": "N",
-            "qFieldDefs": [],
-            "qFieldLabels": [],
+            "qFieldDefs": [
+              "AutomationRunIsBillable"
+            ],
+            "qFieldLabels": [
+              "AutomationRunIsBillable"
+            ],
             "qSortCriterias": [
               {
                 "qSortByState": 1,
@@ -48,6 +51,7 @@
             ],
             "qNumberPresentations": [],
             "qActiveField": 0,
+            "qAlias": "Run Status",
             "autoSort": true
           },
           "qFrequencyMode": "V",
@@ -56,13 +60,17 @@
           "qExpressions": [],
           "frequencyEnabled": true
         },
-        "title": "Run Status",
+        "title": "Run Is Billable",
         "visualization": "listbox",
         "layoutOptions": {
           "dense": true
         },
         "histogram": true,
-        "frequencyMax": "fetch"
+        "frequencyMax": {
+          "qValueExpression": {
+            "qExpr": "Max(AGGR(Count([AutomationRunIsBillable]), [AutomationRunIsBillable]))"
+          }
+        }
       },
       "qChildren": []
     }

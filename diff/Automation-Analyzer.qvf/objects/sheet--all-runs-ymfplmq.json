@@ -329,6 +329,68 @@
               }
             },
             {
+              "qLibraryId": "ABrjH",
+              "qDef": {
+                "qGrouping": "N",
+                "qFieldDefs": [],
+                "qFieldLabels": [],
+                "qSortCriterias": [
+                  {
+                    "qSortByNumeric": 1,
+                    "qSortByAscii": 1,
+                    "qSortByLoadOrder": 1,
+                    "qExpression": {}
+                  }
+                ],
+                "qNumberPresentations": [],
+                "qActiveField": 0,
+                "autoSort": true,
+                "cId": "aCzZRx",
+                "othersLabel": "Others",
+                "textAlign": {
+                  "auto": true,
+                  "align": "left"
+                },
+                "representation": {
+                  "type": "text",
+                  "urlPosition": "dimension",
+                  "urlLabel": "",
+                  "linkUrl": "",
+                  "imageSetting": "label",
+                  "imageLabel": "",
+                  "imageUrl": "",
+                  "imageSize": "fitHeight",
+                  "imagePosition": "topCenter"
+                }
+              },
+              "qOtherTotalSpec": {
+                "qOtherMode": "OTHER_OFF",
+                "qOtherCounted": {
+                  "qv": "10"
+                },
+                "qOtherLimit": {
+                  "qv": "0"
+                },
+                "qOtherLimitMode": "OTHER_GE_LIMIT",
+                "qForceBadValueKeeping": true,
+                "qApplyEvenWhenPossiblyWrongResult": true,
+                "qOtherSortMode": "OTHER_SORT_DESCENDING",
+                "qTotalMode": "TOTAL_OFF",
+                "qReferencedExpression": {}
+              },
+              "qOtherLabel": {
+                "qv": "Others"
+              },
+              "qTotalLabel": {},
+              "qCalcCond": {},
+              "qAttributeExpressions": [],
+              "qAttributeDimensions": [],
+              "qCalcCondition": {
+                "qCond": {},
+                "qMsg": {}
+              }
+            },
+            {
               "qLibraryId": "Bmpqu",
               "qDef": {
                 "qGrouping": "N",
@@ -1052,21 +1114,22 @@
           ],
           "qMeasures": [],
           "qInterColumnSortOrder": [
-            5,
-            9,
+            6,
+            10,
             0,
             1,
-            7,
-            12,
-            3,
-            13,
-            14,
-            10,
             8,
-            6,
-            4,
+            13,
+            3,
+            14,
+            15,
+            11,
+            9,
+            7,
+            5,
             2,
-            11
+            12,
+            4
           ],
           "qSuppressMissing": true,
           "qInitialDataFetch": [
@@ -1109,7 +1172,8 @@
             11,
             12,
             13,
-            14
+            14,
+            15
           ],
           "qExpansionState": [],
           "qDynamicScript": [],
@@ -1128,13 +1192,15 @@
             11,
             12,
             13,
-            14
+            14,
+            15
           ],
           "columnWidths": [
             223,
             116,
             -1,
             162,
+            -1,
             96,
             96,
             60,
