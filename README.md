@@ -39,7 +39,7 @@ Endpoints:
 
 ## Installing/ updating
 
-A PDF containing installation instructions is attached to each [release](/../../releases).
+This application can be installed via an interactive Qlik Automate [installer](https://community.qlik.com/t5/Official-Support-Articles/Qlik-Cloud-Monitoring-Apps-Workflow-Guide/ta-p/2134140) or [manually](/../../releases) using the PDF guide.
 
 ## Support policy
 
