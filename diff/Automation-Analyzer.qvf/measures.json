@@ -1,40 +1,12 @@
 [
   {
     "qInfo": {
-      "qId": "27aaee02-c77e-4ccd-858c-7bbcfb6d8390",
+      "qId": "03d955f3-5475-4fc2-8fa5-8b83a325d184",
       "qType": "measure"
     },
     "qMeasure": {
-      "qLabel": "Runs Standard",
-      "qDef": "Count({\u003cAutomationRunIsBillable={'False'}\u003e}DISTINCT AutomationRunId)",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "F",
-        "qnDec": 2,
-        "qUseThou": 0,
-        "qFmt": "#,##0",
-        "qDec": ".",
-        "qThou": ","
-      },
-      "coloring": {},
-      "isCustomFormatted": false
-    },
-    "qMetaDef": {
-      "title": "Runs Standard",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "9661e0cf-fed7-4f54-b340-8707b42a48e2",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Runs Standard CMTD vs PMTD (Indicator)",
-      "qDef": "If(\r\n\tLen([Runs Standard CMTD vs PMTD])\u003e=1,\n    Sign([Runs Standard CMTD vs PMTD]),\n    0\n)",
+      "qLabel": "Median Duration CMTD",
+      "qDef": "Interval(Median({\u003cAutomationRunInCurrentMTD={1}\u003e}AutomationRunDuration),'hh:mm:ss')",
       "qGrouping": "N",
       "qExpressions": [],
       "qActiveExpression": 0,
@@ -43,163 +15,27 @@
         "qnDec": 10,
         "qUseThou": 0
       },
-      "coloring": {}
-    },
-    "qMetaDef": {
-      "title": "Runs Standard CMTD vs PMTD (Indicator)",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "f641d1ab-71e7-4318-a1c4-7fba078cbb92",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Runs Standard CMTD vs PMTD",
-      "qDef": "[Runs Standard CMTD] - [Runs Standard PMTD]",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "U",
-        "qnDec": 10,
-        "qUseThou": 0
-      },
-      "coloring": {}
-    },
-    "qMetaDef": {
-      "title": "Runs Standard CMTD vs PMTD",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "134d8e78-ef73-4c82-9a13-58c346c72af6",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Runs Standard CMTD vs PMTD (Indicator)",
-      "qDef": "If(\r\n\tLen([Runs Standard CMTD vs PMTD])\u003e=1,\n    Sign([Runs Standard CMTD vs PMTD]),\n    0\n)",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "U",
-        "qnDec": 10,
-        "qUseThou": 0
-      },
-      "coloring": {}
-    },
-    "qMetaDef": {
-      "title": "Runs Standard CMTD vs PMTD (Indicator)",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "LXGXx",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Queued (Bar)",
-      "qDef": "Count({\u003cAutomationConcurrencySecondStatus={'QUEUED'}\u003e}DISTINCT AutomationRunId)",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "U",
-        "qnDec": 10,
-        "qUseThou": 0
-      },
-      "numFormatFromTemplate": true,
       "coloring": {
         "baseColor": {
-          "color": "#AEAEAF",
+          "color": "#19426c",
           "index": -1
         }
       }
     },
     "qMetaDef": {
-      "title": "Queued (Bar)",
+      "title": "Median Duration CMTD",
       "description": "",
       "tags": []
     }
   },
   {
     "qInfo": {
-      "qId": "TSegDL",
+      "qId": "070c458f-0264-438d-9c9e-d4e2785c83df",
       "qType": "measure"
     },
     "qMeasure": {
-      "qLabel": "Running (Bar)",
-      "qDef": "Count({\u003cAutomationConcurrencySecondStatus={'RUNNING'}\u003e}DISTINCT AutomationRunId)",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "U",
-        "qnDec": 10,
-        "qUseThou": 0
-      },
-      "numFormatFromTemplate": true,
-      "coloring": {
-        "baseColor": {
-          "color": "#19426C",
-          "index": -1
-        }
-      }
-    },
-    "qMetaDef": {
-      "title": "Running (Bar)",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "vumyxM",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Runs Standard Remaining (Bar)",
-      "qDef": "RangeMax(\r\n\tOnly({\u003cAutomationQuotaType={'standardAutomationRuns'}\u003e} AutomationQuota) - [Runs Standard CMTD] - $(vForecastRunCount),\n    0\n)",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "F",
-        "qnDec": 2,
-        "qUseThou": 0,
-        "qFmt": "#,##0",
-        "qDec": ".",
-        "qThou": ","
-      },
-      "isCustomFormatted": false,
-      "coloring": {
-        "baseColor": {
-          "color": "#D9D9D9",
-          "index": -1
-        }
-      }
-    },
-    "qMetaDef": {
-      "title": "Runs Standard Remaining (Bar)",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "cJJzWbL",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Forecast Standard (Bar)",
-      "qDef": "$(vForecastRunCount)",
+      "qLabel": "Median Duration PMTD",
+      "qDef": "Interval(Median({\u003cAutomationRunInPriorMTD={1}\u003e}AutomationRunDuration),'hh:mm:ss')",
       "qGrouping": "N",
       "qExpressions": [],
       "qActiveExpression": 0,
@@ -210,58 +46,25 @@
       },
       "coloring": {
         "baseColor": {
-          "color": "#10cfc9",
+          "color": "#19426c",
           "index": -1
         }
       }
     },
     "qMetaDef": {
-      "title": "Forecast Standard (Bar)",
+      "title": "Median Duration PMTD",
       "description": "",
       "tags": []
     }
   },
   {
     "qInfo": {
-      "qId": "e330674f-4be8-42f3-90f2-b5af8b0b7dd7",
+      "qId": "0a5be5f6-73d4-4488-ae53-842cbca3f781",
       "qType": "measure"
     },
     "qMeasure": {
-      "qLabel": "Runs Standard PMTD",
-      "qDef": "Count({\u003cAutomationRunInPriorMTD={1},AutomationRunIsBillable={'False'}\u003e}DISTINCT AutomationRunId)",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "F",
-        "qnDec": 2,
-        "qUseThou": 0,
-        "qFmt": "#,##0",
-        "qDec": ".",
-        "qThou": ","
-      },
-      "coloring": {
-        "baseColor": {
-          "color": "#94579C",
-          "index": -1
-        }
-      },
-      "isCustomFormatted": false
-    },
-    "qMetaDef": {
-      "title": "Runs Standard PMTD",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "7584275d-1603-44d4-9258-6f42618cf29b",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Runs Standard CMTD",
-      "qDef": "Count({\u003cAutomationRunInCurrentMTD={1},AutomationRunIsBillable={'False'}\u003e}DISTINCT AutomationRunId)",
+      "qLabel": "Failed Runs PMTD",
+      "qDef": "Count({\u003cAutomationRunInPriorMTD={1},AutomationRunStatus={'Failed'}\u003e}DISTINCT AutomationRunId)",
       "qGrouping": "N",
       "qExpressions": [],
       "qActiveExpression": 0,
@@ -282,303 +85,19 @@
       "isCustomFormatted": false
     },
     "qMetaDef": {
-      "title": "Runs Standard CMTD",
+      "title": "Failed Runs PMTD",
       "description": "",
       "tags": []
     }
   },
   {
     "qInfo": {
-      "qId": "mHmHsE",
+      "qId": "0b95b2b9-824b-4906-bbcb-fa68b74e7f99",
       "qType": "measure"
     },
     "qMeasure": {
-      "qLabel": "Runs Standard PMTD % Quota",
-      "qDef": "[Runs Standard PMTD] / Only({\u003cAutomationQuotaType={'3rdPartyAutomationRuns'}\u003e} AutomationQuota)",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "F",
-        "qnDec": 2,
-        "qUseThou": 0,
-        "qFmt": "0.0%",
-        "qDec": ".",
-        "qThou": ","
-      },
-      "isCustomFormatted": false,
-      "numFormatFromTemplate": true,
-      "coloring": {}
-    },
-    "qMetaDef": {
-      "title": "Runs Standard PMTD % Quota",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "QVfTXdA",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Runs Standard CMTD % Quota",
-      "qDef": "[Runs Standard CMTD] / Only({\u003cAutomationQuotaType={'standardAutomationRuns'}\u003e} AutomationQuota)",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "F",
-        "qnDec": 2,
-        "qUseThou": 0,
-        "qFmt": "0.0%",
-        "qDec": ".",
-        "qThou": ","
-      },
-      "isCustomFormatted": false,
-      "numFormatFromTemplate": true,
-      "coloring": {}
-    },
-    "qMetaDef": {
-      "title": "Runs Standard CMTD % Quota",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "BNCNjK",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Runs Standard CMTD (Bar)",
-      "qDef": "[Runs Standard CMTD]",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "U",
-        "qnDec": 10,
-        "qUseThou": 0
-      },
-      "coloring": {
-        "baseColor": {
-          "color": "#006580",
-          "index": -1
-        }
-      }
-    },
-    "qMetaDef": {
-      "title": "Runs Standard CMTD (Bar)",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "fdb77dbb-6d1e-4307-bba7-c92b7db2bace",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Runs Billable Remaining (Bar)",
-      "qDef": "RangeMax(\r\n\tOnly({\u003cAutomationQuotaType={'3rdPartyAutomationRuns'}\u003e} AutomationQuota) - [Runs Billable CMTD] - $(vForecastRunBillableCount),\n    0\n)",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "F",
-        "qnDec": 2,
-        "qUseThou": 0,
-        "qFmt": "#,##0",
-        "qDec": ".",
-        "qThou": ","
-      },
-      "isCustomFormatted": false,
-      "coloring": {
-        "baseColor": {
-          "color": "#D9D9D9",
-          "index": -1
-        }
-      }
-    },
-    "qMetaDef": {
-      "title": "Runs Billable Remaining (Bar)",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "f7b683a0-e802-4939-ac90-ff2dd3453fe5",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Runs Billable CMTD (Bar)",
-      "qDef": "[Runs Billable CMTD]",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "U",
-        "qnDec": 10,
-        "qUseThou": 0
-      },
-      "coloring": {
-        "baseColor": {
-          "color": "#006580",
-          "index": -1
-        }
-      }
-    },
-    "qMetaDef": {
-      "title": "Runs Billable CMTD (Bar)",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "25543d2c-b851-48a2-9864-e713fea9d812",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Forecast Billable (Bar)",
-      "qDef": "$(vForecastRunBillableCount)",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "U",
-        "qnDec": 10,
-        "qUseThou": 0
-      },
-      "coloring": {
-        "baseColor": {
-          "color": "#10cfc9",
-          "index": -1
-        }
-      }
-    },
-    "qMetaDef": {
-      "title": "Forecast Billable (Bar)",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "bpsWF",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Runs Billable PMTD % Quota",
-      "qDef": "[Runs Billable PMTD] / Only({\u003cAutomationQuotaType={'3rdPartyAutomationRuns'}\u003e} AutomationQuota)",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "F",
-        "qnDec": 2,
-        "qUseThou": 0,
-        "qFmt": "0.00%",
-        "qDec": ".",
-        "qThou": ","
-      },
-      "isCustomFormatted": false,
-      "numFormatFromTemplate": true,
-      "coloring": {}
-    },
-    "qMetaDef": {
-      "title": "Runs Billable PMTD % Quota",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "YrmYNP",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Runs Billable CMTD % Quota",
-      "qDef": "[Runs Billable CMTD] / Only({\u003cAutomationQuotaType={'3rdPartyAutomationRuns'}\u003e} AutomationQuota)",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "F",
-        "qnDec": 2,
-        "qUseThou": 0,
-        "qFmt": "0.00%",
-        "qDec": ".",
-        "qThou": ","
-      },
-      "isCustomFormatted": false,
-      "numFormatFromTemplate": true,
-      "coloring": {}
-    },
-    "qMetaDef": {
-      "title": "Runs Billable CMTD % Quota",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "92767dc1-e4ef-4a4e-9a37-0ec18072cc12",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Runs Billable CMTD vs PMTD (Indicator)",
-      "qDef": "If(\r\n\tLen([Runs Billable CMTD vs PMTD])\u003e=1,\n    Sign([Runs Billable CMTD vs PMTD]),\n    0\n)",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "U",
-        "qnDec": 10,
-        "qUseThou": 0
-      },
-      "coloring": {}
-    },
-    "qMetaDef": {
-      "title": "Runs Billable CMTD vs PMTD (Indicator)",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "f9cc3b42-4516-4b6d-809c-17d72d1fdb6b",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Runs Billable CMTD vs PMTD",
-      "qDef": "[Runs Billable CMTD] - [Runs Billable PMTD]",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "U",
-        "qnDec": 10,
-        "qUseThou": 0
-      },
-      "coloring": {}
-    },
-    "qMetaDef": {
-      "title": "Runs Billable CMTD vs PMTD",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "cc9a02e8-a294-4bc6-875b-96f5deed058d",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Runs Billable PMTD",
-      "qDef": "Count({\u003cAutomationRunInPriorMTD={1},AutomationRunIsBillable={'True'}\u003e}DISTINCT AutomationRunId)",
+      "qLabel": "Runs PMTD",
+      "qDef": "Count({\u003cAutomationRunInPriorMTD={1}\u003e}DISTINCT AutomationRunId)",
       "qGrouping": "N",
       "qExpressions": [],
       "qActiveExpression": 0,
@@ -599,7 +118,7 @@
       "isCustomFormatted": false
     },
     "qMetaDef": {
-      "title": "Runs Billable PMTD",
+      "title": "Runs PMTD",
       "description": "",
       "tags": []
     }
@@ -639,69 +158,12 @@
   },
   {
     "qInfo": {
-      "qId": "3d35d004-c304-47ae-ae3b-5713e1dc4f8e",
+      "qId": "134d8e78-ef73-4c82-9a13-58c346c72af6",
       "qType": "measure"
     },
     "qMeasure": {
-      "qLabel": "Automations Contain Billable",
-      "qDef": "Count({\u003cAutomationContainsBillable={'True'}\u003e}DISTINCT AutomationId)",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "U",
-        "qnDec": 10,
-        "qUseThou": 0
-      },
-      "coloring": {
-        "baseColor": {
-          "color": "#19426C",
-          "index": -1
-        }
-      }
-    },
-    "qMetaDef": {
-      "title": "Automations Contain Billable",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "cc251e7f-2e7e-424f-944b-f765e9c0882d",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Runs Billable",
-      "qDef": "Count({\u003cAutomationRunIsBillable={'True'}\u003e}DISTINCT AutomationRunId)",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "F",
-        "qnDec": 2,
-        "qUseThou": 0,
-        "qFmt": "#,##0",
-        "qDec": ".",
-        "qThou": ","
-      },
-      "coloring": {},
-      "isCustomFormatted": false
-    },
-    "qMetaDef": {
-      "title": "Runs Billable",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "futeE",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Runs Editor",
-      "qDef": "Count({\u003cAutomationRunContext={'editor'}\u003e}DISTINCT AutomationRunId)",
+      "qLabel": "Runs Standard CMTD vs PMTD (Indicator)",
+      "qDef": "If(\r\n\tLen([Runs Standard CMTD vs PMTD])\u003e=1,\n    Sign([Runs Standard CMTD vs PMTD]),\n    0\n)",
       "qGrouping": "N",
       "qExpressions": [],
       "qActiveExpression": 0,
@@ -713,214 +175,7 @@
       "coloring": {}
     },
     "qMetaDef": {
-      "title": "Runs Editor",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "aJctN",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Runs Scheduler",
-      "qDef": "Count({\u003cAutomationRunContext={'scheduler'}\u003e}DISTINCT AutomationRunId)",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "U",
-        "qnDec": 10,
-        "qUseThou": 0
-      },
-      "coloring": {}
-    },
-    "qMetaDef": {
-      "title": "Runs Scheduler",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "jjKUrep",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Runs Webhook",
-      "qDef": "Count({\u003cAutomationRunContext={'webhook'}\u003e}DISTINCT AutomationRunId)",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "U",
-        "qnDec": 10,
-        "qUseThou": 0
-      },
-      "coloring": {}
-    },
-    "qMetaDef": {
-      "title": "Runs Webhook",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "LVSvrbS",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Runs Async",
-      "qDef": "Count({\u003cAutomationRunContext={'api_async'}\u003e}DISTINCT AutomationRunId)",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "U",
-        "qnDec": 10,
-        "qUseThou": 0
-      },
-      "coloring": {}
-    },
-    "qMetaDef": {
-      "title": "Runs Async",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "JMVMAfU",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Runs Sync",
-      "qDef": "Count({\u003cAutomationRunContext={'api_sync'}\u003e}DISTINCT AutomationRunId)",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "U",
-        "qnDec": 10,
-        "qUseThou": 0
-      },
-      "coloring": {}
-    },
-    "qMetaDef": {
-      "title": "Runs Sync",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "070c458f-0264-438d-9c9e-d4e2785c83df",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Median Duration PMTD",
-      "qDef": "Interval(Median({\u003cAutomationRunInPriorMTD={1}\u003e}AutomationRunDuration),'hh:mm:ss')",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "U",
-        "qnDec": 10,
-        "qUseThou": 0
-      },
-      "coloring": {
-        "baseColor": {
-          "color": "#19426c",
-          "index": -1
-        }
-      }
-    },
-    "qMetaDef": {
-      "title": "Median Duration PMTD",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "74bfd07d-5aa5-48b8-b3aa-fef2ae43acd3",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Max Duration PMTD",
-      "qDef": "Interval(Max({\u003cAutomationRunInPriorMTD={1}\u003e}AutomationRunDuration),'hh:mm:ss')",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "U",
-        "qnDec": 10,
-        "qUseThou": 0
-      },
-      "coloring": {
-        "baseColor": {
-          "color": "#19426c",
-          "index": -1
-        }
-      }
-    },
-    "qMetaDef": {
-      "title": "Max Duration PMTD",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "03d955f3-5475-4fc2-8fa5-8b83a325d184",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Median Duration CMTD",
-      "qDef": "Interval(Median({\u003cAutomationRunInCurrentMTD={1}\u003e}AutomationRunDuration),'hh:mm:ss')",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "U",
-        "qnDec": 10,
-        "qUseThou": 0
-      },
-      "coloring": {
-        "baseColor": {
-          "color": "#19426c",
-          "index": -1
-        }
-      }
-    },
-    "qMetaDef": {
-      "title": "Median Duration CMTD",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "e0a6001c-89d1-408c-b2df-7624a7d5b59d",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Max Run Time Hit CMTD vs PMTD",
-      "qDef": "Interval([Max Run Time Hit CMTD] - [Max Run Time Hit PMTD],'hh:mm:ss')",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "U",
-        "qnDec": 10,
-        "qUseThou": 0
-      },
-      "coloring": {}
-    },
-    "qMetaDef": {
-      "title": "Max Run Time Hit CMTD vs PMTD",
+      "title": "Runs Standard CMTD vs PMTD (Indicator)",
       "description": "",
       "tags": []
     }
@@ -980,31 +235,364 @@
   },
   {
     "qInfo": {
-      "qId": "AcmehH",
+      "qId": "2414e5e2-814e-4d01-a6ed-9fa74063109c",
       "qType": "measure"
     },
     "qMeasure": {
-      "qLabel": "Avg Duration",
-      "qDef": "Interval(Avg(AutomationRunDuration),'hh:mm:ss')",
+      "qLabel": "Max Run Time Hit PMTD",
+      "qDef": "Sum({\u003cAutomationRunInPriorMTD={1}\u003e}AutomationRunMaxTimeHit)",
       "qGrouping": "N",
       "qExpressions": [],
       "qActiveExpression": 0,
       "qNumFormat": {
-        "qType": "IV",
+        "qType": "U",
+        "qnDec": 10,
+        "qUseThou": 0
+      },
+      "coloring": {}
+    },
+    "qMetaDef": {
+      "title": "Max Run Time Hit PMTD",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "25543d2c-b851-48a2-9864-e713fea9d812",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Forecast Billable (Bar)",
+      "qDef": "$(vForecastRunBillableCount)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "U",
+        "qnDec": 10,
+        "qUseThou": 0
+      },
+      "coloring": {
+        "baseColor": {
+          "color": "#10cfc9",
+          "index": -1
+        }
+      }
+    },
+    "qMetaDef": {
+      "title": "Forecast Billable (Bar)",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "27aaee02-c77e-4ccd-858c-7bbcfb6d8390",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Runs Standard",
+      "qDef": "Count({\u003cAutomationRunIsBillable={'False'}\u003e}DISTINCT AutomationRunId)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "F",
         "qnDec": 2,
         "qUseThou": 0,
-        "qFmt": "h:mm:ss"
+        "qFmt": "#,##0",
+        "qDec": ".",
+        "qThou": ","
+      },
+      "coloring": {},
+      "isCustomFormatted": false
+    },
+    "qMetaDef": {
+      "title": "Runs Standard",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "39e7ac77-a01a-4db7-b299-c8dfb09e4c44",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Runs CMTD vs PMTD",
+      "qDef": "[Runs CMTD] - [Runs PMTD]",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "U",
+        "qnDec": 10,
+        "qUseThou": 0
+      },
+      "coloring": {}
+    },
+    "qMetaDef": {
+      "title": "Runs CMTD vs PMTD",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "3d35d004-c304-47ae-ae3b-5713e1dc4f8e",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Automations Contain Billable",
+      "qDef": "Count({\u003cAutomationContainsBillable={'True'}\u003e}DISTINCT AutomationId)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "U",
+        "qnDec": 10,
+        "qUseThou": 0
+      },
+      "coloring": {
+        "baseColor": {
+          "color": "#19426C",
+          "index": -1
+        }
+      }
+    },
+    "qMetaDef": {
+      "title": "Automations Contain Billable",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "438d4d48-0a8e-4f7f-977b-a07b84f74c57",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Max Duration CMTD vs PMTD (Indicator)",
+      "qDef": "If(\r\n\tLen([Max Duration CMTD vs PMTD])\u003e=1,\n    Sign([Max Duration CMTD vs PMTD]),\n    0\n)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "U",
+        "qnDec": 10,
+        "qUseThou": 0
+      },
+      "coloring": {}
+    },
+    "qMetaDef": {
+      "title": "Max Duration CMTD vs PMTD (Indicator)",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "459faac6-1a41-4034-9a3f-55b01584076b",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Runs CMTD vs PMTD (Indicator)",
+      "qDef": "If(\r\n\tLen([Runs CMTD vs PMTD])\u003e=1,\n    Sign([Runs CMTD vs PMTD]),\n    0\n)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "U",
+        "qnDec": 10,
+        "qUseThou": 0
+      },
+      "coloring": {}
+    },
+    "qMetaDef": {
+      "title": "Runs CMTD vs PMTD (Indicator)",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "45ef2c78-deac-4991-bf03-f1f00067844b",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Alert Threshold Hit",
+      "qDef": "Sum(AutomationRunTimeLimitAlertThresholdHit)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "U",
+        "qnDec": 10,
+        "qUseThou": 0
+      },
+      "coloring": {}
+    },
+    "qMetaDef": {
+      "title": "Alert Threshold Hit",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "5f4ad4e8-c5d9-4f0e-ae82-2108d7a968d7",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Avg Duration CMTD vs PMTD",
+      "qDef": "Interval([Avg Duration CMTD] - [Avg Duration PMTD],'hh:mm:ss.fff')",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "U",
+        "qnDec": 10,
+        "qUseThou": 0
+      },
+      "coloring": {}
+    },
+    "qMetaDef": {
+      "title": "Avg Duration CMTD vs PMTD",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "61bded32-edcb-4e18-8d7f-e7a5e8f380c9",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Max Run Time Hit CMTD",
+      "qDef": "Sum({\u003cAutomationRunInCurrentMTD={1}\u003e}AutomationRunMaxTimeHit)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "U",
+        "qnDec": 10,
+        "qUseThou": 0
+      },
+      "coloring": {}
+    },
+    "qMetaDef": {
+      "title": "Max Run Time Hit CMTD",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "68b1b9ec-46c1-4f7a-aac1-20476588dd69",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Alert Threshold Hit CMTD vs PMTD (Indicator)",
+      "qDef": "If(\r\n\tLen([Alert Threshold Hit CMTD vs PMTD])\u003e=1,\n    Sign([Alert Threshold Hit CMTD vs PMTD]),\n    0\n)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "U",
+        "qnDec": 10,
+        "qUseThou": 0
+      },
+      "coloring": {}
+    },
+    "qMetaDef": {
+      "title": "Alert Threshold Hit CMTD vs PMTD (Indicator)",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "708f8814-b87f-42a7-ad01-802b6c3293e0",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Failed Runs CMTD vs PMTD (Indicator)",
+      "qDef": "If(\r\n\tLen([Failed Runs CMTD vs PMTD])\u003e=1,\n    Sign([Failed Runs CMTD vs PMTD]),\n    0\n)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "U",
+        "qnDec": 10,
+        "qUseThou": 0
+      },
+      "coloring": {}
+    },
+    "qMetaDef": {
+      "title": "Failed Runs CMTD vs PMTD (Indicator)",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "74bfd07d-5aa5-48b8-b3aa-fef2ae43acd3",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Max Duration PMTD",
+      "qDef": "Interval(Max({\u003cAutomationRunInPriorMTD={1}\u003e}AutomationRunDuration),'hh:mm:ss')",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "U",
+        "qnDec": 10,
+        "qUseThou": 0
       },
       "coloring": {
         "baseColor": {
           "color": "#19426c",
           "index": -1
         }
+      }
+    },
+    "qMetaDef": {
+      "title": "Max Duration PMTD",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "7584275d-1603-44d4-9258-6f42618cf29b",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Runs Standard CMTD",
+      "qDef": "Count({\u003cAutomationRunInCurrentMTD={1},AutomationRunIsBillable={'False'}\u003e}DISTINCT AutomationRunId)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "F",
+        "qnDec": 2,
+        "qUseThou": 0,
+        "qFmt": "#,##0",
+        "qDec": ".",
+        "qThou": ","
+      },
+      "coloring": {
+        "baseColor": {
+          "color": "#19426C",
+          "index": -1
+        }
       },
       "isCustomFormatted": false
     },
     "qMetaDef": {
-      "title": "Avg Duration",
+      "title": "Runs Standard CMTD",
       "description": "",
       "tags": []
     }
@@ -1040,492 +628,6 @@
   },
   {
     "qInfo": {
-      "qId": "b1b92952-e16e-4bf3-8916-d211b1bd4889",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Avg Duration CMTD",
-      "qDef": "Interval(Avg({\u003cAutomationRunInCurrentMTD={1}\u003e}AutomationRunDuration),'hh:mm:ss')",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "U",
-        "qnDec": 10,
-        "qUseThou": 0
-      },
-      "coloring": {
-        "baseColor": {
-          "color": "#19426c",
-          "index": -1
-        }
-      }
-    },
-    "qMetaDef": {
-      "title": "Avg Duration CMTD",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "UqQykE",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Successful Runs",
-      "qDef": "Count(DISTINCT {\u003cAutomationRunStatus={'Finished','Finished With Warnings'}\u003e} AutomationRunId)",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "U",
-        "qnDec": 10,
-        "qUseThou": 0
-      },
-      "coloring": {
-        "baseColor": {
-          "color": "#19426C",
-          "index": -1
-        }
-      }
-    },
-    "qMetaDef": {
-      "title": "Successful Runs",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "e5f9cdff-5671-4c73-a3c2-05a09a9f646e",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Runs Prior Month",
-      "qDef": "Count({\u003cAutomationRunInPriorMonth={1}\u003e}DISTINCT AutomationRunId)",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "F",
-        "qnDec": 2,
-        "qUseThou": 0,
-        "qFmt": "#,##0",
-        "qDec": ".",
-        "qThou": ","
-      },
-      "coloring": {
-        "baseColor": {
-          "color": "#94579C",
-          "index": -1
-        }
-      },
-      "isCustomFormatted": false
-    },
-    "qMetaDef": {
-      "title": "Runs Prior Month",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "0b95b2b9-824b-4906-bbcb-fa68b74e7f99",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Runs PMTD",
-      "qDef": "Count({\u003cAutomationRunInPriorMTD={1}\u003e}DISTINCT AutomationRunId)",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "F",
-        "qnDec": 2,
-        "qUseThou": 0,
-        "qFmt": "#,##0",
-        "qDec": ".",
-        "qThou": ","
-      },
-      "coloring": {
-        "baseColor": {
-          "color": "#94579C",
-          "index": -1
-        }
-      },
-      "isCustomFormatted": false
-    },
-    "qMetaDef": {
-      "title": "Runs PMTD",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "uMNNtc",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Runs CMTD",
-      "qDef": "Count({\u003cAutomationRunInCurrentMTD={1}\u003e}DISTINCT AutomationRunId)",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "F",
-        "qnDec": 2,
-        "qUseThou": 0,
-        "qFmt": "#,##0",
-        "qDec": ".",
-        "qThou": ","
-      },
-      "coloring": {
-        "baseColor": {
-          "color": "#19426C",
-          "index": -1
-        }
-      },
-      "isCustomFormatted": false
-    },
-    "qMetaDef": {
-      "title": "Runs CMTD",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "fHLjNz",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Runs",
-      "qDef": "Count(AutomationRunId)",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "F",
-        "qnDec": 2,
-        "qUseThou": 0,
-        "qFmt": "#,##0",
-        "qDec": ".",
-        "qThou": ","
-      },
-      "coloring": {
-        "baseColor": {
-          "color": "#19426C",
-          "index": -1
-        }
-      },
-      "isCustomFormatted": false
-    },
-    "qMetaDef": {
-      "title": "Runs",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "0a5be5f6-73d4-4488-ae53-842cbca3f781",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Failed Runs PMTD",
-      "qDef": "Count({\u003cAutomationRunInPriorMTD={1},AutomationRunStatus={'Failed'}\u003e}DISTINCT AutomationRunId)",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "F",
-        "qnDec": 2,
-        "qUseThou": 0,
-        "qFmt": "#,##0",
-        "qDec": ".",
-        "qThou": ","
-      },
-      "coloring": {
-        "baseColor": {
-          "color": "#19426C",
-          "index": -1
-        }
-      },
-      "isCustomFormatted": false
-    },
-    "qMetaDef": {
-      "title": "Failed Runs PMTD",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "d895d251-a5ef-4a67-9b36-0d9c91b9fdce",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Failed Runs CMTD",
-      "qDef": "Count({\u003cAutomationRunInCurrentMTD={1},AutomationRunStatus={'Failed'}\u003e}DISTINCT AutomationRunId)",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "F",
-        "qnDec": 2,
-        "qUseThou": 0,
-        "qFmt": "#,##0",
-        "qDec": ".",
-        "qThou": ","
-      },
-      "coloring": {
-        "baseColor": {
-          "color": "#19426C",
-          "index": -1
-        }
-      },
-      "isCustomFormatted": false
-    },
-    "qMetaDef": {
-      "title": "Failed Runs CMTD",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "eQVzq",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Failed Runs",
-      "qDef": "Count({\u003cAutomationRunStatus={'Failed'}\u003e} AutomationRunId)",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "U",
-        "qnDec": 10,
-        "qUseThou": 0
-      },
-      "coloring": {
-        "baseColor": {
-          "color": "#d63031",
-          "index": -1
-        }
-      }
-    },
-    "qMetaDef": {
-      "title": "Failed Runs",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "wCbGE",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Concurrent Runs per Second",
-      "qDef": "Count({\u003cConcurrencySecond={*}\u003e}AutomationRunId)",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "U",
-        "qnDec": 10,
-        "qUseThou": 0
-      },
-      "coloring": {
-        "baseColor": {
-          "color": "#19426C",
-          "index": -1
-        }
-      }
-    },
-    "qMetaDef": {
-      "title": "Concurrent Runs per Second",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "LRbxvb",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "% Failed Runs",
-      "qDef": "Count({\u003cAutomationRunStatus={'Finished'}\u003e} AutomationRunId)/Count(AutomationRunId)",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "F",
-        "qnDec": 2,
-        "qUseThou": 0,
-        "qFmt": "0.0%",
-        "qDec": ".",
-        "qThou": ","
-      },
-      "isCustomFormatted": false,
-      "coloring": {}
-    },
-    "qMetaDef": {
-      "title": "% Failed Runs",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "QeePC",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Alert Threshold Hit CMTD vs PMTD",
-      "qDef": "[Alert Threshold Hit CMTD] - [Alert Threshold Hit PMTD]",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "U",
-        "qnDec": 10,
-        "qUseThou": 0
-      },
-      "coloring": {}
-    },
-    "qMetaDef": {
-      "title": "Alert Threshold Hit CMTD vs PMTD",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "d4105608-aa1c-44f8-b3f8-2cac1d738838",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Failed Runs CMTD vs PMTD",
-      "qDef": "[Failed Runs CMTD] - [Failed Runs PMTD]",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "U",
-        "qnDec": 10,
-        "qUseThou": 0
-      },
-      "coloring": {}
-    },
-    "qMetaDef": {
-      "title": "Failed Runs CMTD vs PMTD",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "708f8814-b87f-42a7-ad01-802b6c3293e0",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Failed Runs CMTD vs PMTD (Indicator)",
-      "qDef": "If(\r\n\tLen([Failed Runs CMTD vs PMTD])\u003e=1,\n    Sign([Failed Runs CMTD vs PMTD]),\n    0\n)",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "U",
-        "qnDec": 10,
-        "qUseThou": 0
-      },
-      "coloring": {}
-    },
-    "qMetaDef": {
-      "title": "Failed Runs CMTD vs PMTD (Indicator)",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "5f4ad4e8-c5d9-4f0e-ae82-2108d7a968d7",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Avg Duration CMTD vs PMTD",
-      "qDef": "Interval([Avg Duration CMTD] - [Avg Duration PMTD],'hh:mm:ss.fff')",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "U",
-        "qnDec": 10,
-        "qUseThou": 0
-      },
-      "coloring": {}
-    },
-    "qMetaDef": {
-      "title": "Avg Duration CMTD vs PMTD",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "459faac6-1a41-4034-9a3f-55b01584076b",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Runs CMTD vs PMTD (Indicator)",
-      "qDef": "If(\r\n\tLen([Runs CMTD vs PMTD])\u003e=1,\n    Sign([Runs CMTD vs PMTD]),\n    0\n)",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "U",
-        "qnDec": 10,
-        "qUseThou": 0
-      },
-      "coloring": {}
-    },
-    "qMetaDef": {
-      "title": "Runs CMTD vs PMTD (Indicator)",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "39e7ac77-a01a-4db7-b299-c8dfb09e4c44",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Runs CMTD vs PMTD",
-      "qDef": "[Runs CMTD] - [Runs PMTD]",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "U",
-        "qnDec": 10,
-        "qUseThou": 0
-      },
-      "coloring": {}
-    },
-    "qMetaDef": {
-      "title": "Runs CMTD vs PMTD",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
       "qId": "9149a318-1c18-4c26-a30b-4dfd1801c12c",
       "qType": "measure"
     },
@@ -1550,12 +652,12 @@
   },
   {
     "qInfo": {
-      "qId": "2414e5e2-814e-4d01-a6ed-9fa74063109c",
+      "qId": "92767dc1-e4ef-4a4e-9a37-0ec18072cc12",
       "qType": "measure"
     },
     "qMeasure": {
-      "qLabel": "Max Run Time Hit PMTD",
-      "qDef": "Sum({\u003cAutomationRunInPriorMTD={1}\u003e}AutomationRunMaxTimeHit)",
+      "qLabel": "Runs Billable CMTD vs PMTD (Indicator)",
+      "qDef": "If(\r\n\tLen([Runs Billable CMTD vs PMTD])\u003e=1,\n    Sign([Runs Billable CMTD vs PMTD]),\n    0\n)",
       "qGrouping": "N",
       "qExpressions": [],
       "qActiveExpression": 0,
@@ -1567,19 +669,19 @@
       "coloring": {}
     },
     "qMetaDef": {
-      "title": "Max Run Time Hit PMTD",
+      "title": "Runs Billable CMTD vs PMTD (Indicator)",
       "description": "",
       "tags": []
     }
   },
   {
     "qInfo": {
-      "qId": "61bded32-edcb-4e18-8d7f-e7a5e8f380c9",
+      "qId": "9661e0cf-fed7-4f54-b340-8707b42a48e2",
       "qType": "measure"
     },
     "qMeasure": {
-      "qLabel": "Max Run Time Hit CMTD",
-      "qDef": "Sum({\u003cAutomationRunInCurrentMTD={1}\u003e}AutomationRunMaxTimeHit)",
+      "qLabel": "Runs Standard CMTD vs PMTD (Indicator)",
+      "qDef": "If(\r\n\tLen([Runs Standard CMTD vs PMTD])\u003e=1,\n    Sign([Runs Standard CMTD vs PMTD]),\n    0\n)",
       "qGrouping": "N",
       "qExpressions": [],
       "qActiveExpression": 0,
@@ -1591,43 +693,50 @@
       "coloring": {}
     },
     "qMetaDef": {
-      "title": "Max Run Time Hit CMTD",
+      "title": "Runs Standard CMTD vs PMTD (Indicator)",
       "description": "",
       "tags": []
     }
   },
   {
     "qInfo": {
-      "qId": "ae9b328d-90cc-4a1e-b2c9-2c6cab88215e",
+      "qId": "AcmehH",
       "qType": "measure"
     },
     "qMeasure": {
-      "qLabel": "Max Run Time Hit",
-      "qDef": "Sum(AutomationRunMaxTimeHit)",
+      "qLabel": "Avg Duration",
+      "qDef": "Interval(Avg(AutomationRunDuration),'hh:mm:ss')",
       "qGrouping": "N",
       "qExpressions": [],
       "qActiveExpression": 0,
       "qNumFormat": {
-        "qType": "U",
-        "qnDec": 10,
-        "qUseThou": 0
+        "qType": "IV",
+        "qnDec": 2,
+        "qUseThou": 0,
+        "qFmt": "h:mm:ss"
       },
-      "coloring": {}
+      "coloring": {
+        "baseColor": {
+          "color": "#19426c",
+          "index": -1
+        }
+      },
+      "isCustomFormatted": false
     },
     "qMetaDef": {
-      "title": "Max Run Time Hit",
+      "title": "Avg Duration",
       "description": "",
       "tags": []
     }
   },
   {
     "qInfo": {
-      "qId": "TALuJj",
+      "qId": "BNCNjK",
       "qType": "measure"
     },
     "qMeasure": {
-      "qLabel": "Days of Data",
-      "qDef": "Round(Max(AutomationRunStartTime)-Min(AutomationRunStartTime))",
+      "qLabel": "Runs Standard CMTD (Bar)",
+      "qDef": "[Runs Standard CMTD]",
       "qGrouping": "N",
       "qExpressions": [],
       "qActiveExpression": 0,
@@ -1638,13 +747,37 @@
       },
       "coloring": {
         "baseColor": {
-          "color": "#19426C",
+          "color": "#006580",
           "index": -1
         }
       }
     },
     "qMetaDef": {
-      "title": "Days of Data",
+      "title": "Runs Standard CMTD (Bar)",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "JMVMAfU",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Runs Sync",
+      "qDef": "Count({\u003cAutomationRunContext={'api_sync'}\u003e}DISTINCT AutomationRunId)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "U",
+        "qnDec": 10,
+        "qUseThou": 0
+      },
+      "coloring": {}
+    },
+    "qMetaDef": {
+      "title": "Runs Sync",
       "description": "",
       "tags": []
     }
@@ -1680,12 +813,40 @@
   },
   {
     "qInfo": {
-      "qId": "myqYgup",
+      "qId": "LRbxvb",
       "qType": "measure"
     },
     "qMeasure": {
-      "qLabel": "Alert Threshold Hit PMTD",
-      "qDef": "Sum({\u003cAutomationRunInPriorMTD={1}\u003e}AutomationRunTimeLimitAlertThresholdHit)",
+      "qLabel": "% Failed Runs",
+      "qDef": "Count({\u003cAutomationRunStatus={'Finished'}\u003e} AutomationRunId)/Count(AutomationRunId)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "F",
+        "qnDec": 2,
+        "qUseThou": 0,
+        "qFmt": "0.0%",
+        "qDec": ".",
+        "qThou": ","
+      },
+      "isCustomFormatted": false,
+      "coloring": {}
+    },
+    "qMetaDef": {
+      "title": "% Failed Runs",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "LVSvrbS",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Runs Async",
+      "qDef": "Count({\u003cAutomationRunContext={'api_async'}\u003e}DISTINCT AutomationRunId)",
       "qGrouping": "N",
       "qExpressions": [],
       "qActiveExpression": 0,
@@ -1697,19 +858,78 @@
       "coloring": {}
     },
     "qMetaDef": {
-      "title": "Alert Threshold Hit PMTD",
+      "title": "Runs Async",
       "description": "",
       "tags": []
     }
   },
   {
     "qInfo": {
-      "qId": "68b1b9ec-46c1-4f7a-aac1-20476588dd69",
+      "qId": "LXGXx",
       "qType": "measure"
     },
     "qMeasure": {
-      "qLabel": "Alert Threshold Hit CMTD vs PMTD (Indicator)",
-      "qDef": "If(\r\n\tLen([Alert Threshold Hit CMTD vs PMTD])\u003e=1,\n    Sign([Alert Threshold Hit CMTD vs PMTD]),\n    0\n)",
+      "qLabel": "Queued (Bar)",
+      "qDef": "Count({\u003cAutomationConcurrencySecondStatus={'QUEUED'}\u003e}DISTINCT AutomationRunId)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "U",
+        "qnDec": 10,
+        "qUseThou": 0
+      },
+      "numFormatFromTemplate": true,
+      "coloring": {
+        "baseColor": {
+          "color": "#AEAEAF",
+          "index": -1
+        }
+      }
+    },
+    "qMetaDef": {
+      "title": "Queued (Bar)",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "QVfTXdA",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Runs Standard CMTD % Quota",
+      "qDef": "[Runs Standard CMTD] / Only({\u003cAutomationQuotaType={'standardAutomationRuns'}\u003e} AutomationQuota)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "F",
+        "qnDec": 2,
+        "qUseThou": 0,
+        "qFmt": "0.0%",
+        "qDec": ".",
+        "qThou": ","
+      },
+      "isCustomFormatted": false,
+      "numFormatFromTemplate": true,
+      "coloring": {}
+    },
+    "qMetaDef": {
+      "title": "Runs Standard CMTD % Quota",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "QZkbMeG",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Avg Duration CMTD vs PMTD (Indicator)",
+      "qDef": "If(\r\n\tLen([Avg Duration CMTD vs PMTD])\u003e=1,\n    Sign([Avg Duration CMTD vs PMTD]),\n    0\n)",
       "qGrouping": "N",
       "qExpressions": [],
       "qActiveExpression": 0,
@@ -1721,19 +941,19 @@
       "coloring": {}
     },
     "qMetaDef": {
-      "title": "Alert Threshold Hit CMTD vs PMTD (Indicator)",
+      "title": "Avg Duration CMTD vs PMTD (Indicator)",
       "description": "",
       "tags": []
     }
   },
   {
     "qInfo": {
-      "qId": "pEpaVUK",
+      "qId": "QeePC",
       "qType": "measure"
     },
     "qMeasure": {
-      "qLabel": "Alert Threshold Hit CMTD",
-      "qDef": "Sum({\u003cAutomationRunInCurrentMTD={1}\u003e}AutomationRunTimeLimitAlertThresholdHit)",
+      "qLabel": "Alert Threshold Hit CMTD vs PMTD",
+      "qDef": "[Alert Threshold Hit CMTD] - [Alert Threshold Hit PMTD]",
       "qGrouping": "N",
       "qExpressions": [],
       "qActiveExpression": 0,
@@ -1745,43 +965,19 @@
       "coloring": {}
     },
     "qMetaDef": {
-      "title": "Alert Threshold Hit CMTD",
+      "title": "Alert Threshold Hit CMTD vs PMTD",
       "description": "",
       "tags": []
     }
   },
   {
     "qInfo": {
-      "qId": "45ef2c78-deac-4991-bf03-f1f00067844b",
+      "qId": "TALuJj",
       "qType": "measure"
     },
     "qMeasure": {
-      "qLabel": "Alert Threshold Hit",
-      "qDef": "Sum(AutomationRunTimeLimitAlertThresholdHit)",
-      "qGrouping": "N",
-      "qExpressions": [],
-      "qActiveExpression": 0,
-      "qNumFormat": {
-        "qType": "U",
-        "qnDec": 10,
-        "qUseThou": 0
-      },
-      "coloring": {}
-    },
-    "qMetaDef": {
-      "title": "Alert Threshold Hit",
-      "description": "",
-      "tags": []
-    }
-  },
-  {
-    "qInfo": {
-      "qId": "f22352be-c4e3-46f2-9416-242085701ba6",
-      "qType": "measure"
-    },
-    "qMeasure": {
-      "qLabel": "Median Duration",
-      "qDef": "Interval(Median(AutomationRunDuration))",
+      "qLabel": "Days of Data",
+      "qDef": "Round(Max(AutomationRunStartTime)-Min(AutomationRunStartTime))",
       "qGrouping": "N",
       "qExpressions": [],
       "qActiveExpression": 0,
@@ -1792,25 +988,25 @@
       },
       "coloring": {
         "baseColor": {
-          "color": "#19426c",
+          "color": "#19426C",
           "index": -1
         }
       }
     },
     "qMetaDef": {
-      "title": "Median Duration",
+      "title": "Days of Data",
       "description": "",
       "tags": []
     }
   },
   {
     "qInfo": {
-      "qId": "438d4d48-0a8e-4f7f-977b-a07b84f74c57",
+      "qId": "TSegDL",
       "qType": "measure"
     },
     "qMeasure": {
-      "qLabel": "Max Duration CMTD vs PMTD (Indicator)",
-      "qDef": "If(\r\n\tLen([Max Duration CMTD vs PMTD])\u003e=1,\n    Sign([Max Duration CMTD vs PMTD]),\n    0\n)",
+      "qLabel": "Running (Bar)",
+      "qDef": "Count({\u003cAutomationConcurrencySecondStatus={'RUNNING'}\u003e}DISTINCT AutomationRunId)",
       "qGrouping": "N",
       "qExpressions": [],
       "qActiveExpression": 0,
@@ -1819,10 +1015,74 @@
         "qnDec": 10,
         "qUseThou": 0
       },
+      "numFormatFromTemplate": true,
+      "coloring": {
+        "baseColor": {
+          "color": "#19426C",
+          "index": -1
+        }
+      }
+    },
+    "qMetaDef": {
+      "title": "Running (Bar)",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "UqQykE",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Successful Runs",
+      "qDef": "Count(DISTINCT {\u003cAutomationRunStatus={'Finished','Finished With Warnings'}\u003e} AutomationRunId)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "U",
+        "qnDec": 10,
+        "qUseThou": 0
+      },
+      "coloring": {
+        "baseColor": {
+          "color": "#19426C",
+          "index": -1
+        }
+      }
+    },
+    "qMetaDef": {
+      "title": "Successful Runs",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "YrmYNP",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Runs Billable CMTD % Quota",
+      "qDef": "[Runs Billable CMTD] / Only({\u003cAutomationQuotaType={'3rdPartyAutomationRuns'}\u003e} AutomationQuota)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "F",
+        "qnDec": 2,
+        "qUseThou": 0,
+        "qFmt": "0.00%",
+        "qDec": ".",
+        "qThou": ","
+      },
+      "isCustomFormatted": false,
+      "numFormatFromTemplate": true,
       "coloring": {}
     },
     "qMetaDef": {
-      "title": "Max Duration CMTD vs PMTD (Indicator)",
+      "title": "Runs Billable CMTD % Quota",
       "description": "",
       "tags": []
     }
@@ -1877,12 +1137,12 @@
   },
   {
     "qInfo": {
-      "qId": "QZkbMeG",
+      "qId": "aJctN",
       "qType": "measure"
     },
     "qMeasure": {
-      "qLabel": "Avg Duration CMTD vs PMTD (Indicator)",
-      "qDef": "If(\r\n\tLen([Avg Duration CMTD vs PMTD])\u003e=1,\n    Sign([Avg Duration CMTD vs PMTD]),\n    0\n)",
+      "qLabel": "Runs Scheduler",
+      "qDef": "Count({\u003cAutomationRunContext={'scheduler'}\u003e}DISTINCT AutomationRunId)",
       "qGrouping": "N",
       "qExpressions": [],
       "qActiveExpression": 0,
@@ -1894,7 +1154,236 @@
       "coloring": {}
     },
     "qMetaDef": {
-      "title": "Avg Duration CMTD vs PMTD (Indicator)",
+      "title": "Runs Scheduler",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "ae9b328d-90cc-4a1e-b2c9-2c6cab88215e",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Max Run Time Hit",
+      "qDef": "Sum(AutomationRunMaxTimeHit)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "U",
+        "qnDec": 10,
+        "qUseThou": 0
+      },
+      "coloring": {}
+    },
+    "qMetaDef": {
+      "title": "Max Run Time Hit",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "b1b92952-e16e-4bf3-8916-d211b1bd4889",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Avg Duration CMTD",
+      "qDef": "Interval(Avg({\u003cAutomationRunInCurrentMTD={1}\u003e}AutomationRunDuration),'hh:mm:ss')",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "U",
+        "qnDec": 10,
+        "qUseThou": 0
+      },
+      "coloring": {
+        "baseColor": {
+          "color": "#19426c",
+          "index": -1
+        }
+      }
+    },
+    "qMetaDef": {
+      "title": "Avg Duration CMTD",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "bpsWF",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Runs Billable PMTD % Quota",
+      "qDef": "[Runs Billable PMTD] / Only({\u003cAutomationQuotaType={'3rdPartyAutomationRuns'}\u003e} AutomationQuota)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "F",
+        "qnDec": 2,
+        "qUseThou": 0,
+        "qFmt": "0.00%",
+        "qDec": ".",
+        "qThou": ","
+      },
+      "isCustomFormatted": false,
+      "numFormatFromTemplate": true,
+      "coloring": {}
+    },
+    "qMetaDef": {
+      "title": "Runs Billable PMTD % Quota",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "cJJzWbL",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Forecast Standard (Bar)",
+      "qDef": "$(vForecastRunCount)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "U",
+        "qnDec": 10,
+        "qUseThou": 0
+      },
+      "coloring": {
+        "baseColor": {
+          "color": "#10cfc9",
+          "index": -1
+        }
+      }
+    },
+    "qMetaDef": {
+      "title": "Forecast Standard (Bar)",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "cc251e7f-2e7e-424f-944b-f765e9c0882d",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Runs Billable",
+      "qDef": "Count({\u003cAutomationRunIsBillable={'True'}\u003e}DISTINCT AutomationRunId)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "F",
+        "qnDec": 2,
+        "qUseThou": 0,
+        "qFmt": "#,##0",
+        "qDec": ".",
+        "qThou": ","
+      },
+      "coloring": {},
+      "isCustomFormatted": false
+    },
+    "qMetaDef": {
+      "title": "Runs Billable",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "cc9a02e8-a294-4bc6-875b-96f5deed058d",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Runs Billable PMTD",
+      "qDef": "Count({\u003cAutomationRunInPriorMTD={1},AutomationRunIsBillable={'True'}\u003e}DISTINCT AutomationRunId)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "F",
+        "qnDec": 2,
+        "qUseThou": 0,
+        "qFmt": "#,##0",
+        "qDec": ".",
+        "qThou": ","
+      },
+      "coloring": {
+        "baseColor": {
+          "color": "#94579C",
+          "index": -1
+        }
+      },
+      "isCustomFormatted": false
+    },
+    "qMetaDef": {
+      "title": "Runs Billable PMTD",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "d4105608-aa1c-44f8-b3f8-2cac1d738838",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Failed Runs CMTD vs PMTD",
+      "qDef": "[Failed Runs CMTD] - [Failed Runs PMTD]",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "U",
+        "qnDec": 10,
+        "qUseThou": 0
+      },
+      "coloring": {}
+    },
+    "qMetaDef": {
+      "title": "Failed Runs CMTD vs PMTD",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "d895d251-a5ef-4a67-9b36-0d9c91b9fdce",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Failed Runs CMTD",
+      "qDef": "Count({\u003cAutomationRunInCurrentMTD={1},AutomationRunStatus={'Failed'}\u003e}DISTINCT AutomationRunId)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "F",
+        "qnDec": 2,
+        "qUseThou": 0,
+        "qFmt": "#,##0",
+        "qDec": ".",
+        "qThou": ","
+      },
+      "coloring": {
+        "baseColor": {
+          "color": "#19426C",
+          "index": -1
+        }
+      },
+      "isCustomFormatted": false
+    },
+    "qMetaDef": {
+      "title": "Failed Runs CMTD",
       "description": "",
       "tags": []
     }
@@ -1924,6 +1413,517 @@
     },
     "qMetaDef": {
       "title": "Max Duration",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "e0a6001c-89d1-408c-b2df-7624a7d5b59d",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Max Run Time Hit CMTD vs PMTD",
+      "qDef": "Interval([Max Run Time Hit CMTD] - [Max Run Time Hit PMTD],'hh:mm:ss')",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "U",
+        "qnDec": 10,
+        "qUseThou": 0
+      },
+      "coloring": {}
+    },
+    "qMetaDef": {
+      "title": "Max Run Time Hit CMTD vs PMTD",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "e330674f-4be8-42f3-90f2-b5af8b0b7dd7",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Runs Standard PMTD",
+      "qDef": "Count({\u003cAutomationRunInPriorMTD={1},AutomationRunIsBillable={'False'}\u003e}DISTINCT AutomationRunId)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "F",
+        "qnDec": 2,
+        "qUseThou": 0,
+        "qFmt": "#,##0",
+        "qDec": ".",
+        "qThou": ","
+      },
+      "coloring": {
+        "baseColor": {
+          "color": "#94579C",
+          "index": -1
+        }
+      },
+      "isCustomFormatted": false
+    },
+    "qMetaDef": {
+      "title": "Runs Standard PMTD",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "e5f9cdff-5671-4c73-a3c2-05a09a9f646e",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Runs Prior Month",
+      "qDef": "Count({\u003cAutomationRunInPriorMonth={1}\u003e}DISTINCT AutomationRunId)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "F",
+        "qnDec": 2,
+        "qUseThou": 0,
+        "qFmt": "#,##0",
+        "qDec": ".",
+        "qThou": ","
+      },
+      "coloring": {
+        "baseColor": {
+          "color": "#94579C",
+          "index": -1
+        }
+      },
+      "isCustomFormatted": false
+    },
+    "qMetaDef": {
+      "title": "Runs Prior Month",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "eQVzq",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Failed Runs",
+      "qDef": "Count({\u003cAutomationRunStatus={'Failed'}\u003e} AutomationRunId)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "U",
+        "qnDec": 10,
+        "qUseThou": 0
+      },
+      "coloring": {
+        "baseColor": {
+          "color": "#d63031",
+          "index": -1
+        }
+      }
+    },
+    "qMetaDef": {
+      "title": "Failed Runs",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "f22352be-c4e3-46f2-9416-242085701ba6",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Median Duration",
+      "qDef": "Interval(Median(AutomationRunDuration))",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "U",
+        "qnDec": 10,
+        "qUseThou": 0
+      },
+      "coloring": {
+        "baseColor": {
+          "color": "#19426c",
+          "index": -1
+        }
+      }
+    },
+    "qMetaDef": {
+      "title": "Median Duration",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "f641d1ab-71e7-4318-a1c4-7fba078cbb92",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Runs Standard CMTD vs PMTD",
+      "qDef": "[Runs Standard CMTD] - [Runs Standard PMTD]",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "U",
+        "qnDec": 10,
+        "qUseThou": 0
+      },
+      "coloring": {}
+    },
+    "qMetaDef": {
+      "title": "Runs Standard CMTD vs PMTD",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "f7b683a0-e802-4939-ac90-ff2dd3453fe5",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Runs Billable CMTD (Bar)",
+      "qDef": "[Runs Billable CMTD]",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "U",
+        "qnDec": 10,
+        "qUseThou": 0
+      },
+      "coloring": {
+        "baseColor": {
+          "color": "#006580",
+          "index": -1
+        }
+      }
+    },
+    "qMetaDef": {
+      "title": "Runs Billable CMTD (Bar)",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "f9cc3b42-4516-4b6d-809c-17d72d1fdb6b",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Runs Billable CMTD vs PMTD",
+      "qDef": "[Runs Billable CMTD] - [Runs Billable PMTD]",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "U",
+        "qnDec": 10,
+        "qUseThou": 0
+      },
+      "coloring": {}
+    },
+    "qMetaDef": {
+      "title": "Runs Billable CMTD vs PMTD",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "fHLjNz",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Runs",
+      "qDef": "Count(AutomationRunId)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "F",
+        "qnDec": 2,
+        "qUseThou": 0,
+        "qFmt": "#,##0",
+        "qDec": ".",
+        "qThou": ","
+      },
+      "coloring": {
+        "baseColor": {
+          "color": "#19426C",
+          "index": -1
+        }
+      },
+      "isCustomFormatted": false
+    },
+    "qMetaDef": {
+      "title": "Runs",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "fdb77dbb-6d1e-4307-bba7-c92b7db2bace",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Runs Billable Remaining (Bar)",
+      "qDef": "RangeMax(\r\n\tOnly({\u003cAutomationQuotaType={'3rdPartyAutomationRuns'}\u003e} AutomationQuota) - [Runs Billable CMTD] - $(vForecastRunBillableCount),\n    0\n)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "F",
+        "qnDec": 2,
+        "qUseThou": 0,
+        "qFmt": "#,##0",
+        "qDec": ".",
+        "qThou": ","
+      },
+      "isCustomFormatted": false,
+      "coloring": {
+        "baseColor": {
+          "color": "#D9D9D9",
+          "index": -1
+        }
+      }
+    },
+    "qMetaDef": {
+      "title": "Runs Billable Remaining (Bar)",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "futeE",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Runs Editor",
+      "qDef": "Count({\u003cAutomationRunContext={'editor'}\u003e}DISTINCT AutomationRunId)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "U",
+        "qnDec": 10,
+        "qUseThou": 0
+      },
+      "coloring": {}
+    },
+    "qMetaDef": {
+      "title": "Runs Editor",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "jjKUrep",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Runs Webhook",
+      "qDef": "Count({\u003cAutomationRunContext={'webhook'}\u003e}DISTINCT AutomationRunId)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "U",
+        "qnDec": 10,
+        "qUseThou": 0
+      },
+      "coloring": {}
+    },
+    "qMetaDef": {
+      "title": "Runs Webhook",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "mHmHsE",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Runs Standard PMTD % Quota",
+      "qDef": "[Runs Standard PMTD] / Only({\u003cAutomationQuotaType={'3rdPartyAutomationRuns'}\u003e} AutomationQuota)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "F",
+        "qnDec": 2,
+        "qUseThou": 0,
+        "qFmt": "0.0%",
+        "qDec": ".",
+        "qThou": ","
+      },
+      "isCustomFormatted": false,
+      "numFormatFromTemplate": true,
+      "coloring": {}
+    },
+    "qMetaDef": {
+      "title": "Runs Standard PMTD % Quota",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "myqYgup",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Alert Threshold Hit PMTD",
+      "qDef": "Sum({\u003cAutomationRunInPriorMTD={1}\u003e}AutomationRunTimeLimitAlertThresholdHit)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "U",
+        "qnDec": 10,
+        "qUseThou": 0
+      },
+      "coloring": {}
+    },
+    "qMetaDef": {
+      "title": "Alert Threshold Hit PMTD",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "pEpaVUK",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Alert Threshold Hit CMTD",
+      "qDef": "Sum({\u003cAutomationRunInCurrentMTD={1}\u003e}AutomationRunTimeLimitAlertThresholdHit)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "U",
+        "qnDec": 10,
+        "qUseThou": 0
+      },
+      "coloring": {}
+    },
+    "qMetaDef": {
+      "title": "Alert Threshold Hit CMTD",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "uMNNtc",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Runs CMTD",
+      "qDef": "Count({\u003cAutomationRunInCurrentMTD={1}\u003e}DISTINCT AutomationRunId)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "F",
+        "qnDec": 2,
+        "qUseThou": 0,
+        "qFmt": "#,##0",
+        "qDec": ".",
+        "qThou": ","
+      },
+      "coloring": {
+        "baseColor": {
+          "color": "#19426C",
+          "index": -1
+        }
+      },
+      "isCustomFormatted": false
+    },
+    "qMetaDef": {
+      "title": "Runs CMTD",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "vumyxM",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Runs Standard Remaining (Bar)",
+      "qDef": "RangeMax(\r\n\tOnly({\u003cAutomationQuotaType={'standardAutomationRuns'}\u003e} AutomationQuota) - [Runs Standard CMTD] - $(vForecastRunCount),\n    0\n)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "F",
+        "qnDec": 2,
+        "qUseThou": 0,
+        "qFmt": "#,##0",
+        "qDec": ".",
+        "qThou": ","
+      },
+      "isCustomFormatted": false,
+      "coloring": {
+        "baseColor": {
+          "color": "#D9D9D9",
+          "index": -1
+        }
+      }
+    },
+    "qMetaDef": {
+      "title": "Runs Standard Remaining (Bar)",
+      "description": "",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
+      "qId": "wCbGE",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Concurrent Runs per Second",
+      "qDef": "Count({\u003cConcurrencySecond={*}\u003e}AutomationRunId)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "U",
+        "qnDec": 10,
+        "qUseThou": 0
+      },
+      "coloring": {
+        "baseColor": {
+          "color": "#19426C",
+          "index": -1
+        }
+      }
+    },
+    "qMetaDef": {
+      "title": "Concurrent Runs per Second",
       "description": "",
       "tags": []
     }

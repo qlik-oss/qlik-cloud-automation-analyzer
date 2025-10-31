@@ -7,16 +7,19 @@
     _  ___ / /_/ // /_ / /_/ /  / / / / / /_/ // /_ _  / / /_/ /  / / /     _  ___ |  / / / /_/ /_  / _  /_/ /__  /_/  __/  /    
     /_/  |_\__,_/ \__/ \____//_/ /_/ /_/\__,_/ \__/ /_/  \____//_/ /_/      /_/  |_/_/ /_/\__,_/ /_/  _\__, / _____/\___//_/     
                                                                                                       /____/                     
-    Copyright 2024 QlikTech International
-    Daniel Pilla, Master Principal Analytics Platform Architect, Qlik
-    Konstantinos Mertzianis, Customer First Leader EMEA, Qlik
     
-    The Automation Analyzer provides a comprehensive dashboard to analyze automation run metadata across a Qlik Sense tenant(s),
-    providing developers and administrators a holistic view of the automations used. 
+    For updates and support, please visit https://github.com/qlik-oss/qlik-cloud-automation-analyzer.
 
-    Enjoy!    
+    The Automation Analyzer provides analysis of automation run metadata across Qlik Cloud tenants,
+    providing developers and administrators a holistic view of their Qlik Automate usage.
     
-*/    
+    Originally created by:
+    	Daniel Pilla, Master Principal Analytics Platform Architect, Qlik
+    	Konstantinos Mertzianis, Customer First Leader EMEA, Qlik
+
+    Enjoy!
+
+*/
 ///$tab ** Configuration **
 TRACE Configuration;
 
@@ -313,14 +316,18 @@ SUB get_tenant_metadata
     WHERE NOT IsNull([__FK_hostnames]);
 
     [TenantMetadata]:
+    LOAD
+    	*,
+        coalesce(AliasHostname,Hostname)AS PrimaryHostname;
     LOAD	
-        [id] AS TenantID,
-        [name] AS TenantName,
-        [datacenter] AS TenantDataCenter,
-        Date([created]) AS TenantCreatedDate,
-        [status] AS TenantStatus,
-        Peek('Hostname',0,'Hostname') AS Hostname,
-        TimeStamp('$(vStartTime)') AS LastReloadStartTime
+        [id] 							AS TenantID,
+        [name] 							AS TenantName,
+        [datacenter] 					AS TenantDataCenter,
+        Date([created]) 				AS TenantCreatedDate,
+        [status] 						AS TenantStatus,
+        Peek('Hostname',0,'Hostname') 	AS Hostname,
+        Peek('Hostname',1,'Hostname') 	AS AliasHostname,
+        TimeStamp('$(vStartTime)') 		AS LastReloadStartTime
     RESIDENT RestConnectorMasterTable
     WHERE NOT IsNull([__FK_data]);
 
@@ -329,6 +336,8 @@ SUB get_tenant_metadata
 
     LET vTenantID = Peek('TenantID',0,'TenantMetadata');
 	LET vTenantName = Peek('TenantName',0,'TenantMetadata');
+    LET vTenantHostname = Peek('PrimaryHostname',0,'TenantMetadata');
+    LET vTenantAutomationPath = 'https://' & vTenantHostname & '/analytics/automations/editor/';
     
 END SUB
 ///$tab Get License Quotas
@@ -403,9 +412,9 @@ SUB get_user_field
     LOAD * INLINE [
         UserVariable	,FieldName
         id				,userId
-        subject			,userSubject
-        email			,email
-        name			,name
+        subject			,AutomationUserSubject
+        email			,AutomationUserEmail
+        name			,AutomationUserName
     ];
 
     IF Match(Lower('$(vu_personal_space_user_field)'),$(vu_personal_space_user_list)) THEN
@@ -420,7 +429,7 @@ SUB get_user_field
         TRACE The value found was: '$(vu_personal_space_user_field)';
         TRACE Defaulting to 'Subject';
 
-        SET vPersonalUserField = 'userSubject';
+        SET vPersonalUserField = 'AutomationUserSubject';
 
     END IF
     
@@ -469,10 +478,22 @@ SUB load_multi_tenant_qvds(location, sub_dir, name)
           		LET vTenantFileFound = 1;
           
 	      		LET vTableName = TextBetween(Subfield('$(file)','/',-1),Null(),'.qvd');
-                "$(vTableName)":
-                LOAD DISTINCT
-                    *
-                FROM [$(file)](qvd);
+                
+                // Check if the table already exists
+                Set vExists = '';
+                For i = 0 to NoOfTables()-1
+                    If TableName($(i)) = '$(vTableName)' THEN
+                        Set vExists = '1';
+                    EndIf
+                Next i
+
+                If '$(vExists)' = '1' THEN
+                    Concatenate ($(vTableName))
+                    LOAD Distinct * FROM [$(file)] (qvd);
+                Else
+                    '$(vTableName)':
+                    LOAD Distinct * FROM [$(file)] (qvd);
+                EndIf
 
         	END IF
       NEXT file
@@ -564,6 +585,7 @@ SUB get_users
     		// Date([lastUpdated]) AS AutomationUserLastUpdatedDate,
             Capitalize([status]) AS AutomationUserStatus,
             name,
+            id	AS userId,	// Added to avoid naming collision on mapping load for personal space names
             [name] AS AutomationUserName,
             [subject] AS AutomationUserSubject,
             [email] AS AutomationUserEmail,
@@ -1347,6 +1369,42 @@ END SUB
 
 
 
+///$tab Automation Connectors
+SUB get_automation_connectors
+
+	// No pagination since there are fewer than 100 connectors (76 at time of addition)
+    
+    LET vAPICallCounter = $(vAPICallCounter) + 1;
+    
+    LIB CONNECT TO '$(vu_rest_connection)';
+
+    RestConnectorMasterTable:
+    SQL SELECT 
+        "__KEY_root",
+        (SELECT 
+            "id",
+            "name",
+            "billable",
+            "__FK_data"
+        FROM "data" FK "__FK_data")
+    FROM JSON (wrap on) "root" PK "__KEY_root"
+    WITH CONNECTION (  
+          URL "https://$(vu_tenant_fqdn)/api/v1/automation-connectors?limit=100"
+        );
+
+    AutomationRunBlockConnectors:
+    LOAD	
+    	id				AS AutomationConnectorId,
+        name			AS AutomationRunConnector,
+        billable		AS AutomationRunConnectorIsBillable
+    RESIDENT RestConnectorMasterTable
+    WHERE NOT IsNull([__FK_data]) AND Exists(AutomationConnectorId, id)
+    ;
+
+    DROP TABLE RestConnectorMasterTable;
+
+END SUB
+
 ///$tab QVDs
 SUB incremental
     
@@ -1428,6 +1486,16 @@ SUB incremental
     END IF
     
     FOR EACH data_table IN 'AutomationRuns','AutomationRunBlocks','AutomationRunErrors'
+        LET qvd_name = '$(vOutputQVDName($(data_table),$(app_schema_version)))';
+        STORE $(data_table) INTO '$(qvd_name)'(qvd);
+        LET file_size_$(data_table) = FileSize('$(qvd_name)');
+    NEXT data_table
+
+END SUB
+
+SUB full
+    
+    FOR EACH data_table IN 'AutomationRunBlockConnectors'
         LET qvd_name = '$(vOutputQVDName($(data_table),$(app_schema_version)))';
         STORE $(data_table) INTO '$(qvd_name)'(qvd);
         LET file_size_$(data_table) = FileSize('$(qvd_name)');
@@ -1778,7 +1846,7 @@ TRACE $(startMsg);
 SUB load_core_data
 
     TRACE Loading data...;
-    FOR EACH sub_routine IN 'check_version','get_tenant_metadata','get_license_quotas','get_users','get_spaces','get_automations','get_automation_events','incremental'
+    FOR EACH sub_routine IN 'check_version','get_tenant_metadata','get_license_quotas','get_users','get_spaces','get_automations','get_automation_events','incremental','get_automation_connectors','full'
         CALL execute_sub(sub_routine)
     NEXT sub_routine
     
