@@ -261,6 +261,32 @@
   },
   {
     "qInfo": {
+      "qId": "FmWMcA",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "AutomationRunExecutingUserId"
+      ],
+      "qFieldLabels": [
+        "Executing User Id"
+      ],
+      "qAlias": "Executing User Id",
+      "title": "Executing User Id",
+      "coloring": {
+        "changeHash": "0.6806192848422957",
+        "hasValueColors": false
+      }
+    },
+    "qMetaDef": {
+      "title": "Executing User Id",
+      "description": "The user ID of the user who executed the automation run.",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
       "qId": "FwFmwE",
       "qType": "dimension"
     },

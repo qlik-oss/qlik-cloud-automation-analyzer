@@ -156,12 +156,12 @@ SUB variables
         If(vu_GMT_offset<0,'GMT-' & Right('0' & Replace(vu_GMT_offset,'-',''),2) & ':00',
         If(vu_GMT_offset>0,'GMT+' & Right('0' & vu_GMT_offset,2) & ':00')));  
     LET vReloadTimeDiffFromGMT		= ConvertToLocalTime('$(vStartTime)','$(vReloadDiffFromGMTString)') - GMT();
-    LET vMaxAutomationRunAge			= TimeStamp(Date(Today(1)) - $(vu_automation_rolling_range));
+    LET vMaxAutomationRunAge		= TimeStamp(Date(Today(1)) - $(vu_automation_rolling_range));
     
     
-    LET vAppQVDName			= Lower(Replace('$(app_name)',' ','_'));
-    SET vOutputQVDName		= '$(vu_qvd_storage_connection)/$(vAppQVDName)_$1_$2.qvd';
-    LET vAPICallCounter 	= 0;
+    LET vAppQVDName					= Lower(Replace('$(app_name)',' ','_'));
+    SET vOutputQVDName				= '$(vu_qvd_storage_connection)/$(vAppQVDName)_$1_$2.qvd';
+    LET vAPICallCounter 			= 0;
 
     LET vDashSelection				= '$(vu_dashboard_panel_chart_default)';
     LET vDashTableColumnFilter		= '$(vu_dashboard_automation_table_preset_filter)';

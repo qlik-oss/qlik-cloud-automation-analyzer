@@ -268,7 +268,7 @@
       "qnDec": 10,
       "qUseThou": 0
     },
-    "qDefinition": "=[Runs Standard CMTD] / Count(DISTINCT {1\u003cAutomationRunForecastFlag={0}\u003e} AutomationRunStartDate)",
+    "qDefinition": "=[Runs Standard CMTD] / Count(DISTINCT {\u003cAutomationRunForecastFlag={0}\u003e} AutomationRunStartDate)",
     "tags": []
   },
   {
@@ -311,7 +311,7 @@
       "qnDec": 10,
       "qUseThou": 0
     },
-    "qDefinition": "=[Runs Billable CMTD] / Count(DISTINCT {1\u003cAutomationRunForecastFlag={0}\u003e} AutomationRunStartDate)",
+    "qDefinition": "=[Runs Billable CMTD] / Count(DISTINCT {\u003cAutomationRunForecastFlag={0}\u003e} AutomationRunStartDate)",
     "tags": []
   },
   {

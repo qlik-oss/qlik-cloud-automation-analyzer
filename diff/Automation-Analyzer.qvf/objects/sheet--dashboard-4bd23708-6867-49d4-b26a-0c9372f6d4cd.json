@@ -7942,6 +7942,20 @@
             }
           },
           {
+            "childRefId": "pshgPEws",
+            "label": "Runs by executor",
+            "condition": {
+              "qValueExpression": {}
+            }
+          },
+          {
+            "childRefId": "pQxBtUHr",
+            "label": "Runs by space",
+            "condition": {
+              "qValueExpression": {}
+            }
+          },
+          {
             "childRefId": "pQFmrpaE",
             "label": "Duration distribution",
             "condition": {
@@ -8097,6 +8111,30 @@
             "qExtendsId": "f8d2eb1a-736b-49df-abde-fa50b3c88d93",
             "qMetaDef": {},
             "childRefId": "pSQvmTQp"
+          },
+          "qChildren": []
+        },
+        {
+          "qProperty": {
+            "qInfo": {
+              "qId": "0d7e8680-3dcf-4730-8ad8-06fe26b8bc13",
+              "qType": "childObject"
+            },
+            "qExtendsId": "61785f7a-22d7-4816-b07d-d81691d6554b",
+            "qMetaDef": {},
+            "childRefId": "pshgPEws"
+          },
+          "qChildren": []
+        },
+        {
+          "qProperty": {
+            "qInfo": {
+              "qId": "04c1c9c1-1ea2-4e09-9534-e735d5f0eb9c",
+              "qType": "childObject"
+            },
+            "qExtendsId": "dd82b478-d007-4564-877f-861aab45603e",
+            "qMetaDef": {},
+            "childRefId": "pQxBtUHr"
           },
           "qChildren": []
         }
