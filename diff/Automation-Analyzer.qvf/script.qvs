@@ -805,6 +805,38 @@ SUB get_spaces
   
 END SUB
 
+///$tab Automation Settings
+SUB get_automation_settings
+
+	LET vAPICallCounter = $(vAPICallCounter) + 1;
+    LIB CONNECT TO '$(vu_rest_connection)';
+    
+    RestConnectorMasterTable:
+    SQL SELECT 
+        "maxConcurrentRunsPerAutomation"
+    FROM JSON (wrap on) "root"
+    WITH CONNECTION (  
+    	URL "https://$(vu_tenant_fqdn)/api/v1/automations/settings"
+    );
+
+    [maxConcurrent]:
+    LOAD	
+    	[maxConcurrentRunsPerAutomation]
+    RESIDENT RestConnectorMasterTable;
+
+	// If not set in the tenant, is 1
+    IF NoOfRows('maxConcurrent') = 0 OR Len(Trim(Peek('maxConcurrentRunsPerAutomation', 0, 'maxConcurrent'))) = 0 THEN
+        LET vMaxConcurrentRunsPerAutomation = 1;
+    ELSE
+        LET vMaxConcurrentRunsPerAutomation = Peek('maxConcurrentRunsPerAutomation', 0, 'maxConcurrent');
+    ENDIF
+    
+    TRACE Maximum automation run concurrency is $(vMaxConcurrentRunsPerAutomation).;
+
+    DROP TABLE RestConnectorMasterTable;
+    DROP TABLE maxConcurrent;
+
+END SUB
 ///$tab Automations 
 SUB get_automations
     
@@ -846,12 +878,12 @@ SUB get_automations
                 "workspace",
                 "lastRun",
                 "lastRunStatus",
-                "executionToken",
                 "runMode",
                 "createdAt",
                 "updatedAt",
                 "lastRunAt",
                 "containsBillable",
+                "maxConcurrentRuns",
                 "__KEY_data",
                 "__FK_data",
                 (SELECT 
@@ -866,34 +898,35 @@ SUB get_automations
 
         CONCATENATE (Automation)
         LOAD
-            '$(vu_tenant_id)' AS TenantID,
-            'False' AS AutomationIsDeleted,
+            '$(vu_tenant_id)' 						AS TenantID,
+            'False' 								AS AutomationIsDeleted,
             //[id] AS _AutomationId,
-            [id] AS AutomationId,
+            [id] 									AS AutomationId,
             If(ApplyMap('AllSpacesMap',spaceId)<>1,
             	If(Len(ApplyMap('Map_UserId_$(vPersonalUserField)',ownerId))>0,
                 'Personal - ' & ApplyMap('Map_UserId_$(vPersonalUserField)',ownerId),
                 '[Staged]'
                	),
             spaceId
-            ) AS SpaceId,
-            [ownerId] AS AutomationOwnerId,
-            [snippetIds] AS AutomationSnippetIds,
-            [endpointIds] AS AutomationEndpointIds,
-            [workspace] AS AutomationWorkspace,
-            [name] AS AutomationName,
-            Capitalize(If(Len([containsBillable])>0,[containsBillable],'false')) AS AutomationContainsBillable,
-            Capitalize([state]) AS AutomationState,
-            [description] AS AutomationDescription,
-            If(Len([lastRunStatus])>0,Capitalize([lastRunStatus]),'[Never Run]') AS AutomationLastRunStatus,
-            Capitalize([runMode]) AS  AutomationRunMode,
-            Timestamp(Timestamp([createdAt]) + $(vReloadTimeDiffFromGMT)) AS AutomationCreatedAt,
-            Timestamp(Timestamp([updatedAt]) + $(vReloadTimeDiffFromGMT)) AS AutomationUpdatedAt,
-            Timestamp(Timestamp([lastRunAt]) + $(vReloadTimeDiffFromGMT)) AS AutomationLastRunAt,
+            ) 																		AS SpaceId,
+            [ownerId] 																AS AutomationOwnerId,
+            [snippetIds] 															AS AutomationSnippetIds,
+            [endpointIds] 															AS AutomationEndpointIds,
+            [workspace] 															AS AutomationWorkspace,
+            [name] 																	AS AutomationName,
+            Capitalize(If(Len([containsBillable])>0,[containsBillable],'false')) 	AS AutomationContainsBillable,
+            If(Len([maxConcurrentRuns])>0,maxConcurrentRuns,1)						AS AutomationMaxConcurrentRuns,
+            Capitalize([state]) 													AS AutomationState,
+            [description] 															AS AutomationDescription,
+            If(Len([lastRunStatus])>0,Capitalize([lastRunStatus]),'[Never Run]') 	AS AutomationLastRunStatus,
+            Capitalize([runMode]) 													AS  AutomationRunMode,
+            Timestamp(Timestamp([createdAt]) + $(vReloadTimeDiffFromGMT)) 			AS AutomationCreatedAt,
+            Timestamp(Timestamp([updatedAt]) + $(vReloadTimeDiffFromGMT)) 			AS AutomationUpdatedAt,
+            Timestamp(Timestamp([lastRunAt]) + $(vReloadTimeDiffFromGMT)) 			AS AutomationLastRunAt,
             If(Timestamp(Timestamp([lastRunAt]) + $(vReloadTimeDiffFromGMT))<$(vLast30Days),1,0) AS AutomationLastRunOver30DaysAgo,
         	If(Timestamp(Timestamp([lastRunAt]) + $(vReloadTimeDiffFromGMT))<$(vLast60Days),1,0) AS AutomationLastRunOver60DaysAgo,
         	If(Timestamp(Timestamp([lastRunAt]) + $(vReloadTimeDiffFromGMT))<$(vLast90Days),1,0) AS AutomationLastRunOver90DaysAgo,
-            [__KEY_data] & '|' & $(vAPICallCounter) & '|' & '$(vu_tenant_id)' AS _AutomationConnectionLink
+            [__KEY_data] & '|' & $(vAPICallCounter) & '|' & '$(vu_tenant_id)' 		AS _AutomationConnectionLink
         RESIDENT RestConnectorMasterTable
         WHERE NOT IsNull([__FK_data]);
 
@@ -1492,16 +1525,6 @@ SUB incremental
     NEXT data_table
 
 END SUB
-
-SUB full
-    
-    FOR EACH data_table IN 'AutomationRunBlockConnectors'
-        LET qvd_name = '$(vOutputQVDName($(data_table),$(app_schema_version)))';
-        STORE $(data_table) INTO '$(qvd_name)'(qvd);
-        LET file_size_$(data_table) = FileSize('$(qvd_name)');
-    NEXT data_table
-
-END SUB
 ///$tab Transformation Logic
 Sub load_transformation_logic
 
@@ -1835,7 +1858,7 @@ SET comp=;
 LET vTenants = 0;
 
 SET app_name			= 'Automation Analyzer';
-SET app_version			= '1.2.4';
+SET app_version			= '1.2.5';
 SET app_schema_version	= 'sv_1.0.0';
 LET comp 				= ComputerName(); 
 LET EngineVer 			= PurgeChar(EngineVersion(),Chr(39)); 
@@ -1846,7 +1869,7 @@ TRACE $(startMsg);
 SUB load_core_data
 
     TRACE Loading data...;
-    FOR EACH sub_routine IN 'check_version','get_tenant_metadata','get_license_quotas','get_users','get_spaces','get_automations','get_automation_events','incremental','get_automation_connectors','full'
+    FOR EACH sub_routine IN 'check_version','get_tenant_metadata','get_license_quotas','get_users','get_spaces','get_automation_settings','get_automations','get_automation_events','incremental','get_automation_connectors'
         CALL execute_sub(sub_routine)
     NEXT sub_routine
     

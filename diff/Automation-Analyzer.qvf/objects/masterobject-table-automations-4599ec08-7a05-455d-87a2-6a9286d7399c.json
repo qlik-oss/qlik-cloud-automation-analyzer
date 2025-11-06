@@ -475,6 +475,76 @@
         }
       },
       {
+        "qLibraryId": "TJEGbtp",
+        "qDef": {
+          "qGrouping": "N",
+          "qFieldDefs": [],
+          "qFieldLabels": [
+            "Max Concurrency"
+          ],
+          "qSortCriterias": [
+            {
+              "qSortByNumeric": 1,
+              "qSortByAscii": 1,
+              "qSortByLoadOrder": 1,
+              "qExpression": {}
+            }
+          ],
+          "qNumberPresentations": [],
+          "qActiveField": 0,
+          "autoSort": true,
+          "cId": "cwCmt",
+          "othersLabel": "Others",
+          "textAlign": {
+            "auto": true,
+            "align": "left"
+          },
+          "representation": {
+            "type": "text",
+            "urlPosition": "dimension",
+            "urlLabel": "",
+            "linkUrl": "",
+            "imageSetting": "label",
+            "imageLabel": "",
+            "imageUrl": "",
+            "imageSize": "fitHeight",
+            "imagePosition": "topCenter"
+          }
+        },
+        "qOtherTotalSpec": {
+          "qOtherMode": "OTHER_OFF",
+          "qOtherCounted": {
+            "qv": "10"
+          },
+          "qOtherLimit": {
+            "qv": "0"
+          },
+          "qOtherLimitMode": "OTHER_GE_LIMIT",
+          "qForceBadValueKeeping": true,
+          "qApplyEvenWhenPossiblyWrongResult": true,
+          "qOtherSortMode": "OTHER_SORT_DESCENDING",
+          "qTotalMode": "TOTAL_OFF",
+          "qReferencedExpression": {}
+        },
+        "qOtherLabel": {
+          "qv": "Others"
+        },
+        "qTotalLabel": {},
+        "qCalcCond": {},
+        "qAttributeExpressions": [
+          {
+            "qExpression": "$(c_blue_alpha(\r\n    ([Runs] * 255) /\n    IF([AutomationMaxConcurrentRuns] = 1,\n        1,\n        Max(TOTAL [AutomationMaxConcurrentRuns])\n    )\n))",
+            "qAttribute": true,
+            "id": "cellBackgroundColor"
+          }
+        ],
+        "qAttributeDimensions": [],
+        "qCalcCondition": {
+          "qCond": {},
+          "qMsg": {}
+        }
+      },
+      {
         "qDef": {
           "qGrouping": "N",
           "qFieldDefs": [
@@ -4647,46 +4717,47 @@
       }
     ],
     "qInterColumnSortOrder": [
-      11,
-      7,
-      14,
-      32,
-      23,
+      12,
+      8,
+      15,
+      33,
+      24,
+      22,
       21,
       20,
       19,
       18,
-      17,
-      15,
-      22,
-      31,
+      16,
+      23,
+      32,
       1,
       2,
-      37,
+      38,
+      35,
       34,
-      33,
       4,
       5,
-      9,
       10,
-      29,
+      11,
       30,
-      35,
+      31,
       36,
-      38,
+      37,
       39,
-      28,
-      25,
+      40,
+      29,
       26,
       27,
+      28,
       3,
-      24,
-      16,
-      8,
+      25,
+      17,
+      9,
       0,
-      13,
+      14,
       6,
-      12
+      13,
+      7
     ],
     "qSuppressMissing": true,
     "qInitialDataFetch": [
@@ -4716,7 +4787,6 @@
       4,
       5,
       6,
-      11,
       12,
       13,
       14,
@@ -4731,6 +4801,7 @@
       23,
       24,
       25,
+      7,
       26,
       27,
       28,
@@ -4745,10 +4816,11 @@
       37,
       38,
       39,
-      7,
+      40,
       8,
       9,
-      10
+      10,
+      11
     ],
     "qExpansionState": [],
     "qDynamicScript": [],
@@ -4760,7 +4832,6 @@
       4,
       5,
       6,
-      11,
       12,
       13,
       14,
@@ -4775,6 +4846,7 @@
       23,
       24,
       25,
+      7,
       26,
       27,
       28,
@@ -4789,10 +4861,11 @@
       37,
       38,
       39,
-      7,
+      40,
       8,
       9,
-      10
+      10,
+      11
     ],
     "columnWidths": [
       -1,
@@ -4801,6 +4874,7 @@
       116,
       87,
       50,
+      -1,
       -1,
       100,
       85,

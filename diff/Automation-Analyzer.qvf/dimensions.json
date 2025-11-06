@@ -544,6 +544,32 @@
   },
   {
     "qInfo": {
+      "qId": "TJEGbtp",
+      "qType": "dimension"
+    },
+    "qDim": {
+      "qGrouping": "N",
+      "qFieldDefs": [
+        "AutomationMaxConcurrentRuns"
+      ],
+      "qFieldLabels": [
+        "Automation Max Concurrency"
+      ],
+      "qAlias": "Automation Max Concurrency",
+      "title": "Automation Max Concurrency",
+      "coloring": {
+        "changeHash": "0.33079650011695594",
+        "hasValueColors": false
+      }
+    },
+    "qMetaDef": {
+      "title": "Automation Max Concurrency",
+      "description": "The maximum number of concurrent runs configured for this automation. Cannot exceed the value set on the tenant level.",
+      "tags": []
+    }
+  },
+  {
+    "qInfo": {
       "qId": "VYxJR",
       "qType": "dimension"
     },
