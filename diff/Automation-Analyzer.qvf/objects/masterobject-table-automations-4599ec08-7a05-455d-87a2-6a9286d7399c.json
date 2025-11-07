@@ -533,7 +533,7 @@
         "qCalcCond": {},
         "qAttributeExpressions": [
           {
-            "qExpression": "$(c_blue_alpha(\r\n    ([Runs] * 255) /\n    IF([AutomationMaxConcurrentRuns] = 1,\n        1,\n        Max(TOTAL [AutomationMaxConcurrentRuns])\n    )\n))",
+            "qExpression": "=If(\r\n  [AutomationMaxConcurrentRuns] \u003e 1,\n  $(c_blue_alpha(\n    Floor(\n      ([AutomationMaxConcurrentRuns] / $(vMaxConcurrentRunsPerAutomation)) * 255\n    )\n  )),\n  ARGB(0,0,0,0)\n)",
             "qAttribute": true,
             "id": "cellBackgroundColor"
           }
