@@ -553,17 +553,18 @@
         "AutomationMaxConcurrentRuns"
       ],
       "qFieldLabels": [
-        "Automation Max Concurrency"
+        "Automation Max Concurrency Setting"
       ],
-      "qAlias": "Automation Max Concurrency",
-      "title": "Automation Max Concurrency",
+      "qAlias": "Automation Max Concurrency Setting",
+      "title": "Automation Max Concurrency Setting",
       "coloring": {
-        "changeHash": "0.33079650011695594",
-        "hasValueColors": false
+        "changeHash": "0.47218893572171405",
+        "hasValueColors": false,
+        "colorMapRef": "TJEGbtp"
       }
     },
     "qMetaDef": {
-      "title": "Automation Max Concurrency",
+      "title": "Automation Max Concurrency Setting",
       "description": "The maximum number of concurrent runs configured for this automation. Cannot exceed the value set on the tenant level.",
       "tags": []
     }

@@ -1006,76 +1006,6 @@
   },
   {
     "qInfo": {
-      "qId": "fc0cdc94-a485-4591-978a-d6365d8c6b21",
-      "qType": "variable"
-    },
-    "qMetaDef": {},
-    "qName": "vAutomationFailedRunOlderThan30Days",
-    "qNumberPresentation": {
-      "qType": "U",
-      "qnDec": 10,
-      "qUseThou": 0
-    },
-    "qDefinition": "0"
-  },
-  {
-    "qInfo": {
-      "qId": "420d09ab-5951-4ffe-a13f-e7987dff2a49",
-      "qType": "variable"
-    },
-    "qMetaDef": {},
-    "qName": "vAutomationFailedRunOwnerId",
-    "qNumberPresentation": {
-      "qType": "U",
-      "qnDec": 10,
-      "qUseThou": 0
-    },
-    "qDefinition": "637390ef6541614d3a88d6c3"
-  },
-  {
-    "qInfo": {
-      "qId": "c50e1c11-1851-4832-b608-7de419b7c4dc",
-      "qType": "variable"
-    },
-    "qMetaDef": {},
-    "qName": "vAutomationFailedId",
-    "qNumberPresentation": {
-      "qType": "U",
-      "qnDec": 10,
-      "qUseThou": 0
-    },
-    "qDefinition": "0c1856b8-e321-461c-a11c-09426f639402"
-  },
-  {
-    "qInfo": {
-      "qId": "3647708f-9577-4062-93b5-7c84501fa1bc",
-      "qType": "variable"
-    },
-    "qMetaDef": {},
-    "qName": "vAutomationFailedRunStartTime",
-    "qNumberPresentation": {
-      "qType": "U",
-      "qnDec": 10,
-      "qUseThou": 0
-    },
-    "qDefinition": "2025-11-06T17:20:37.000000Z"
-  },
-  {
-    "qInfo": {
-      "qId": "99a2b009-4e50-46b8-aaf0-d7468652f447",
-      "qType": "variable"
-    },
-    "qMetaDef": {},
-    "qName": "vAutomationFailedRunId",
-    "qNumberPresentation": {
-      "qType": "U",
-      "qnDec": 10,
-      "qUseThou": 0
-    },
-    "qDefinition": "2b4de196-6cf8-49d8-beda-8d15c9977660"
-  },
-  {
-    "qInfo": {
       "qId": "9de3932e-82f5-467f-a58a-dd70c301bb04",
       "qType": "variable"
     },
@@ -1087,5 +1017,365 @@
       "qUseThou": 0
     },
     "qDefinition": "2905"
+  },
+  {
+    "qInfo": {
+      "qId": "5220eba1-7ca6-465b-902a-5ccc9fbd69e1",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vMaxAutomationRunsUser",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=Max(Aggr([Runs],AutomationRunExecutingUserId))",
+    "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "f632cdb7-9f5f-480b-bfdf-b06b6bf3c8ab",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vMaxAutomationRunsStandardUser",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=Max(Aggr([Runs Standard],AutomationRunExecutingUserId))",
+    "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "2a00bb03-06b5-46e1-8225-b38e154d1fd1",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vMaxAutomationRunsBillableUser",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=Max(Aggr([Runs Billable],AutomationRunExecutingUserId))",
+    "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "00b05f30-fd41-4eb4-9327-e726a03cf59d",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vMaxAutomationRunsCMTDUser",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=Max(Aggr([Runs CMTD],AutomationRunExecutingUserId))",
+    "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "a8813502-776a-4ef8-95f3-81a18c9a7d5d",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vMaxAutomationRunsPMTDUser",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=Max(Aggr([Runs PMTD],AutomationRunExecutingUserId))",
+    "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "a692e013-d9d1-4528-9c44-2fb9bf263555",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vMaxAutomationRunsPriorMonthUser",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=Max(Aggr([Runs Prior Month],AutomationRunExecutingUserId))",
+    "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "cd488639-7109-42fc-b3a9-ef37324bea8a",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vMaxAutomationRunsWebhookUser",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=Max(Aggr([Runs Webhook],AutomationRunExecutingUserId))",
+    "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "37fa9088-7cb1-4af2-ae40-84a89aaa895b",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vMaxAutomationRunsSchedulerUser",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=Max(Aggr([Runs Scheduler],AutomationRunExecutingUserId))",
+    "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "e3436bd2-b6af-4e98-93fc-678f42c11080",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vMaxAutomationRunsEditorUser",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=Max(Aggr([Runs Editor],AutomationRunExecutingUserId))",
+    "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "55ed8bef-6cfe-48af-8bde-62aab15d3ae4",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vMaxAutomationFailedRunsUser",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=Max(Aggr([Failed Runs],AutomationRunExecutingUserId))",
+    "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "80e3c919-eb4e-46be-a6e1-a47365d58a4a",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vMaxAutomationFailedRunsCMTDUser",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=Max(Aggr([Failed Runs CMTD],AutomationRunExecutingUserId))",
+    "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "d8ac1019-53c1-4f8b-9aa0-ee77ce490ef7",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vMaxAutomationFailedRunsPMTDUser",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=Max(Aggr([Failed Runs PMTD],AutomationRunExecutingUserId))",
+    "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "e89e4874-0685-4cbf-aea5-576bc9eab8b5",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vMaxAutomationFailedRunsSpace",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=Max(Aggr([Failed Runs],SpaceId))",
+    "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "1502dd12-6176-43ef-b7c5-077175be1c4d",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vMaxAutomationFailedRunsCMTDSpace",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=Max(Aggr([Failed Runs CMTD],SpaceId))",
+    "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "fcd842e0-96e2-47c1-9228-8fc3c3f888dd",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vMaxAutomationFailedRunsPMTDSpace",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=Max(Aggr([Failed Runs PMTD],SpaceId))",
+    "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "610b667d-f574-4905-9e7c-a1e9d88629ca",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vMaxAutomationRunsCMTDSpace",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=Max(Aggr([Runs CMTD],SpaceId))",
+    "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "a8cbea68-1848-4b20-bace-3fdeb8b70ebf",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vMaxAutomationRunsSpace",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=Max(Aggr([Runs],SpaceId))",
+    "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "40742312-f560-45aa-8bda-476cb8381cfc",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vMaxAutomationRunsStandardSpace",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=Max(Aggr([Runs Standard],SpaceId))",
+    "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "9c63e7b9-5e87-4f69-8bd8-ba5abeb36579",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vMaxAutomationRunsBillableSpace",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=Max(Aggr([Runs Billable],SpaceId))",
+    "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "4936c867-046e-4cc7-84d2-a8652a5b5d2e",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vMaxAutomationRunsPMTDSpace",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=Max(Aggr([Runs PMTD],SpaceId))",
+    "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "878fdadc-1144-4d5c-b6f8-c373507cec10",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vMaxAutomationRunsPriorMonthSpace",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=Max(Aggr([Runs Prior Month],SpaceId))",
+    "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "a01ad7a6-1cb7-4d97-b067-08fa6191ce7d",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vMaxAutomationRunsWebhookSpace",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=Max(Aggr([Runs Webhook],SpaceId))",
+    "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "4fe44dd0-c9d5-43f5-ad61-ee2b2b01b50c",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vMaxAutomationRunsSchedulerSpace",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=Max(Aggr([Runs Scheduler],SpaceId))",
+    "tags": []
+  },
+  {
+    "qInfo": {
+      "qId": "3a2cf765-6a2b-47c8-aade-ebd20da8db0a",
+      "qType": "variable"
+    },
+    "qMetaDef": {},
+    "qName": "vMaxAutomationRunsEditorSpace",
+    "qNumberPresentation": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "qDefinition": "=Max(Aggr([Runs Editor],SpaceId))",
+    "tags": []
   }
 ]

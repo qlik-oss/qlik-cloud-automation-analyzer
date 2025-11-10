@@ -294,7 +294,7 @@
         },
         "qAttributeExpressions": [
           {
-            "qExpression": "$(c_blue_alpha(([Runs] * 255) / $(vMaxAutomationRuns)))",
+            "qExpression": "$(c_blue_alpha(([Runs] * 255) / $(vMaxAutomationRunsUser)))",
             "qAttribute": true,
             "id": "cellBackgroundColor"
           }
@@ -302,9 +302,7 @@
         "qAttributeDimensions": [],
         "qCalcCond": {},
         "qCalcCondition": {
-          "qCond": {
-            "qv": "//Match('$(vDashTableColumnFilter)','All','Totals')"
-          },
+          "qCond": {},
           "qMsg": {}
         },
         "qTrendLines": [],
@@ -423,7 +421,7 @@
         },
         "qAttributeExpressions": [
           {
-            "qExpression": "$(c_blue_alpha(([Runs Standard] * 255) / $(vMaxAutomationRunsStandard)))",
+            "qExpression": "$(c_blue_alpha(([Runs Standard] * 255) / $(vMaxAutomationRunsStandardUser)))",
             "qAttribute": true,
             "id": "cellBackgroundColor"
           }
@@ -550,7 +548,7 @@
         },
         "qAttributeExpressions": [
           {
-            "qExpression": "$(c_blue_alpha(([Runs Billable] * 255) / $(vMaxAutomationRunsBillable)))",
+            "qExpression": "$(c_blue_alpha(([Runs Billable] * 255) / $(vMaxAutomationRunsBillableUser)))",
             "qAttribute": true,
             "id": "cellBackgroundColor"
           }
@@ -699,7 +697,7 @@
         },
         "qAttributeExpressions": [
           {
-            "qExpression": "$(c_blue_alpha(([Runs CMTD] * 255) / $(vMaxAutomationRunsCMTD)))",
+            "qExpression": "$(c_blue_alpha(([Runs CMTD] * 255) / $(vMaxAutomationRunsCMTDUser)))",
             "qAttribute": true,
             "id": "cellBackgroundColor"
           }
@@ -829,7 +827,7 @@
         },
         "qAttributeExpressions": [
           {
-            "qExpression": "$(c_blue_alpha(([Runs PMTD] * 255) / $(vMaxAutomationRunsPMTD)))",
+            "qExpression": "$(c_blue_alpha(([Runs PMTD] * 255) / $(vMaxAutomationRunsPMTDUser)))",
             "qAttribute": true,
             "id": "cellBackgroundColor"
           }
@@ -966,7 +964,7 @@
         },
         "qAttributeExpressions": [
           {
-            "qExpression": "$(c_blue_alpha(([Runs CMTD] * 255) / $(vMaxAutomationRunsCMTD)))",
+            "qExpression": "$(c_blue_alpha(([Runs CMTD] * 255) / $(vMaxAutomationRunsCMTDUser)))",
             "qAttribute": true,
             "id": "cellBackgroundColor"
           }
@@ -1096,7 +1094,7 @@
         },
         "qAttributeExpressions": [
           {
-            "qExpression": "$(c_blue_alpha(([Runs PMTD] * 255) / $(vMaxAutomationRunsPMTD)))",
+            "qExpression": "$(c_blue_alpha(([Runs PMTD] * 255) / $(vMaxAutomationRunsPMTDUser)))",
             "qAttribute": true,
             "id": "cellBackgroundColor"
           }
@@ -1467,7 +1465,7 @@
         },
         "qAttributeExpressions": [
           {
-            "qExpression": "$(c_blue_alpha(([Runs Prior Month] * 255) / $(vMaxAutomationRunsPriorMonth)))",
+            "qExpression": "$(c_blue_alpha(([Runs Prior Month] * 255) / $(vMaxAutomationRunsPriorMonthUser)))",
             "qAttribute": true,
             "id": "cellBackgroundColor"
           }
@@ -1596,7 +1594,7 @@
         },
         "qAttributeExpressions": [
           {
-            "qExpression": "$(c_blue_alpha(([Runs Webhook] * 255) / $(vMaxAutomationRunsWebhook)))",
+            "qExpression": "$(c_blue_alpha(([Runs Webhook] * 255) / $(vMaxAutomationRunsWebhookUser)))",
             "qAttribute": true,
             "id": "cellBackgroundColor"
           }
@@ -1725,7 +1723,7 @@
         },
         "qAttributeExpressions": [
           {
-            "qExpression": "$(c_blue_alpha(([Runs Scheduler] * 255) / $(vMaxAutomationRunsScheduler)))",
+            "qExpression": "$(c_blue_alpha(([Runs Scheduler] * 255) / $(vMaxAutomationRunsSchedulerUser)))",
             "qAttribute": true,
             "id": "cellBackgroundColor"
           }
@@ -1854,7 +1852,7 @@
         },
         "qAttributeExpressions": [
           {
-            "qExpression": "$(c_blue_alpha(([Runs Editor] * 255) / $(vMaxAutomationRunsEditor)))",
+            "qExpression": "$(c_blue_alpha(([Runs Editor] * 255) / $(vMaxAutomationRunsEditorUser)))",
             "qAttribute": true,
             "id": "cellBackgroundColor"
           }
@@ -1983,7 +1981,7 @@
         },
         "qAttributeExpressions": [
           {
-            "qExpression": "$(c_red_alpha(([Failed Runs] * 255) / $(vMaxAutomationFailedRuns)))",
+            "qExpression": "$(c_red_alpha(([Failed Runs] * 255) / $(vMaxAutomationFailedRunsUser)))",
             "qAttribute": true,
             "id": "cellBackgroundColor"
           }
@@ -2134,7 +2132,7 @@
         },
         "qAttributeExpressions": [
           {
-            "qExpression": "$(c_red_alpha(([Failed Runs CMTD] * 255) / $(vMaxAutomationFailedRunsCMTD)))",
+            "qExpression": "$(c_red_alpha(([Failed Runs CMTD] * 255) / $(vMaxAutomationFailedRunsCMTDUser)))",
             "qAttribute": true,
             "id": "cellBackgroundColor"
           }
@@ -2264,7 +2262,7 @@
         },
         "qAttributeExpressions": [
           {
-            "qExpression": "$(c_red_alpha(([Failed Runs PMTD] * 255) / $(vMaxAutomationFailedRunsPMTD)))",
+            "qExpression": "$(c_red_alpha(([Failed Runs PMTD] * 255) / $(vMaxAutomationFailedRunsPMTDUser)))",
             "qAttribute": true,
             "id": "cellBackgroundColor"
           }
@@ -2645,7 +2643,7 @@
             "segments": {
               "limits": [
                 {
-                  "value": 0.1,
+                  "value": -0.2,
                   "gradient": false
                 },
                 {
@@ -2671,6 +2669,10 @@
                 }
               ]
             }
+          },
+          "measureAxis": {
+            "min": -0.25,
+            "max": 32.05
           }
         },
         "qSortBy": {
@@ -2809,13 +2811,7 @@
           "qSortByLoadOrder": 1,
           "qExpression": {}
         },
-        "qAttributeExpressions": [
-          {
-            "qExpression": "If(AutomationRunMode='Triggered',\r\n\t$(c_red_alpha(([Avg Duration] * 86400  * 255) / $(vLimitTriggeredSync))),\nIf(AutomationRunMode='Webhook',\n\t$(c_red_alpha(([Avg Duration] * 86400  * 255) / $(vLimitWebhook))),\n\t$(c_red_alpha(([Avg Duration] * 86400  * 255) / $(vLimitScheduled)))\n))",
-            "qAttribute": true,
-            "id": "cellBackgroundColor"
-          }
-        ],
+        "qAttributeExpressions": [],
         "qAttributeDimensions": [],
         "qCalcCond": {},
         "qCalcCondition": {
@@ -2958,13 +2954,7 @@
           "qSortByLoadOrder": 1,
           "qExpression": {}
         },
-        "qAttributeExpressions": [
-          {
-            "qExpression": "If(AutomationRunMode='Triggered',\r\n\t$(c_red_alpha(([Avg Duration CMTD] * 86400  * 255) / $(vLimitTriggeredSync))),\nIf(AutomationRunMode='Webhook',\n\t$(c_red_alpha(([Avg Duration CMTD] * 86400  * 255) / $(vLimitWebhook))),\n\t$(c_red_alpha(([Avg Duration CMTD] * 86400  * 255) / $(vLimitScheduled)))\n))",
-            "qAttribute": true,
-            "id": "cellBackgroundColor"
-          }
-        ],
+        "qAttributeExpressions": [],
         "qAttributeDimensions": [],
         "qCalcCond": {},
         "qCalcCondition": {
@@ -3090,13 +3080,7 @@
           "qSortByLoadOrder": 1,
           "qExpression": {}
         },
-        "qAttributeExpressions": [
-          {
-            "qExpression": "If(AutomationRunMode='Triggered',\r\n\t$(c_red_alpha(([Avg Duration PMTD] * 86400  * 255) / $(vLimitTriggeredSync))),\nIf(AutomationRunMode='Webhook',\n\t$(c_red_alpha(([Avg Duration PMTD] * 86400  * 255) / $(vLimitWebhook))),\n\t$(c_red_alpha(([Avg Duration PMTD] * 86400  * 255) / $(vLimitScheduled)))\n))",
-            "qAttribute": true,
-            "id": "cellBackgroundColor"
-          }
-        ],
+        "qAttributeExpressions": [],
         "qAttributeDimensions": [],
         "qCalcCond": {},
         "qCalcCondition": {
@@ -3219,13 +3203,7 @@
           "qSortByLoadOrder": 1,
           "qExpression": {}
         },
-        "qAttributeExpressions": [
-          {
-            "qExpression": "If(AutomationRunMode='Triggered',\r\n\t$(c_red_alpha(([Max Duration] * 86400  * 255) / $(vLimitTriggeredSync))),\nIf(AutomationRunMode='Webhook',\n\t$(c_red_alpha(([Max Duration] * 86400  * 255) / $(vLimitWebhook))),\n\t$(c_red_alpha(([Max Duration] * 86400  * 255) / $(vLimitScheduled)))\n))",
-            "qAttribute": true,
-            "id": "cellBackgroundColor"
-          }
-        ],
+        "qAttributeExpressions": [],
         "qAttributeDimensions": [],
         "qCalcCond": {},
         "qCalcCondition": {
@@ -3364,13 +3342,7 @@
           "qSortByLoadOrder": 1,
           "qExpression": {}
         },
-        "qAttributeExpressions": [
-          {
-            "qExpression": "If(AutomationRunMode='Triggered',\r\n\t$(c_red_alpha(([Max Duration CMTD] * 86400  * 255) / $(vLimitTriggeredSync))),\nIf(AutomationRunMode='Webhook',\n\t$(c_red_alpha(([Max Duration CMTD] * 86400  * 255) / $(vLimitWebhook))),\n\t$(c_red_alpha(([Max Duration CMTD] * 86400  * 255) / $(vLimitScheduled)))\n))",
-            "qAttribute": true,
-            "id": "cellBackgroundColor"
-          }
-        ],
+        "qAttributeExpressions": [],
         "qAttributeDimensions": [],
         "qCalcCond": {},
         "qCalcCondition": {
@@ -3496,13 +3468,7 @@
           "qSortByLoadOrder": 1,
           "qExpression": {}
         },
-        "qAttributeExpressions": [
-          {
-            "qExpression": "If(AutomationRunMode='Triggered',\r\n\t$(c_red_alpha(([Max Duration PMTD] * 86400  * 255) / $(vLimitTriggeredSync))),\nIf(AutomationRunMode='Webhook',\n\t$(c_red_alpha(([Max Duration PMTD] * 86400  * 255) / $(vLimitWebhook))),\n\t$(c_red_alpha(([Max Duration PMTD] * 86400  * 255) / $(vLimitScheduled)))\n))",
-            "qAttribute": true,
-            "id": "cellBackgroundColor"
-          }
-        ],
+        "qAttributeExpressions": [],
         "qAttributeDimensions": [],
         "qCalcCond": {},
         "qCalcCondition": {

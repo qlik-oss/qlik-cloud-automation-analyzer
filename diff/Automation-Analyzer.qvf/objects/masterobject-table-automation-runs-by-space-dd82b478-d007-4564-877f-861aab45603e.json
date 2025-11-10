@@ -243,7 +243,7 @@
         },
         "qAttributeExpressions": [
           {
-            "qExpression": "$(c_blue_alpha(([Runs] * 255) / $(vMaxAutomationRuns)))",
+            "qExpression": "$(c_blue_alpha(([Runs] * 255) / $(vMaxAutomationRunsSpace)))",
             "qAttribute": true,
             "id": "cellBackgroundColor"
           }
@@ -251,9 +251,7 @@
         "qAttributeDimensions": [],
         "qCalcCond": {},
         "qCalcCondition": {
-          "qCond": {
-            "qv": "//Match('$(vDashTableColumnFilter)','All','Totals')"
-          },
+          "qCond": {},
           "qMsg": {}
         },
         "qTrendLines": [],
@@ -372,7 +370,7 @@
         },
         "qAttributeExpressions": [
           {
-            "qExpression": "$(c_blue_alpha(([Runs Standard] * 255) / $(vMaxAutomationRunsStandard)))",
+            "qExpression": "$(c_blue_alpha(([Runs Standard] * 255) / $(vMaxAutomationRunsStandardSpace)))",
             "qAttribute": true,
             "id": "cellBackgroundColor"
           }
@@ -499,7 +497,7 @@
         },
         "qAttributeExpressions": [
           {
-            "qExpression": "$(c_blue_alpha(([Runs Billable] * 255) / $(vMaxAutomationRunsBillable)))",
+            "qExpression": "$(c_blue_alpha(([Runs Billable] * 255) / $(vMaxAutomationRunsBillableSpace)))",
             "qAttribute": true,
             "id": "cellBackgroundColor"
           }
@@ -648,7 +646,7 @@
         },
         "qAttributeExpressions": [
           {
-            "qExpression": "$(c_blue_alpha(([Runs CMTD] * 255) / $(vMaxAutomationRunsCMTD)))",
+            "qExpression": "$(c_blue_alpha(([Runs CMTD] * 255) / $(vMaxAutomationRunsCMTDSpace)))",
             "qAttribute": true,
             "id": "cellBackgroundColor"
           }
@@ -778,7 +776,7 @@
         },
         "qAttributeExpressions": [
           {
-            "qExpression": "$(c_blue_alpha(([Runs PMTD] * 255) / $(vMaxAutomationRunsPMTD)))",
+            "qExpression": "$(c_blue_alpha(([Runs PMTD] * 255) / $(vMaxAutomationRunsPMTDSpace)))",
             "qAttribute": true,
             "id": "cellBackgroundColor"
           }
@@ -915,7 +913,7 @@
         },
         "qAttributeExpressions": [
           {
-            "qExpression": "$(c_blue_alpha(([Runs CMTD] * 255) / $(vMaxAutomationRunsCMTD)))",
+            "qExpression": "$(c_blue_alpha(([Runs CMTD] * 255) / $(vMaxAutomationRunsCMTDSpace)))",
             "qAttribute": true,
             "id": "cellBackgroundColor"
           }
@@ -1045,7 +1043,7 @@
         },
         "qAttributeExpressions": [
           {
-            "qExpression": "$(c_blue_alpha(([Runs PMTD] * 255) / $(vMaxAutomationRunsPMTD)))",
+            "qExpression": "$(c_blue_alpha(([Runs PMTD] * 255) / $(vMaxAutomationRunsPMTDSpace)))",
             "qAttribute": true,
             "id": "cellBackgroundColor"
           }
@@ -1416,7 +1414,7 @@
         },
         "qAttributeExpressions": [
           {
-            "qExpression": "$(c_blue_alpha(([Runs Prior Month] * 255) / $(vMaxAutomationRunsPriorMonth)))",
+            "qExpression": "$(c_blue_alpha(([Runs Prior Month] * 255) / $(vMaxAutomationRunsPriorMonthSpace)))",
             "qAttribute": true,
             "id": "cellBackgroundColor"
           }
@@ -1545,7 +1543,7 @@
         },
         "qAttributeExpressions": [
           {
-            "qExpression": "$(c_blue_alpha(([Runs Webhook] * 255) / $(vMaxAutomationRunsWebhook)))",
+            "qExpression": "$(c_blue_alpha(([Runs Webhook] * 255) / $(vMaxAutomationRunsWebhookSpace)))",
             "qAttribute": true,
             "id": "cellBackgroundColor"
           }
@@ -1674,7 +1672,7 @@
         },
         "qAttributeExpressions": [
           {
-            "qExpression": "$(c_blue_alpha(([Runs Scheduler] * 255) / $(vMaxAutomationRunsScheduler)))",
+            "qExpression": "$(c_blue_alpha(([Runs Scheduler] * 255) / $(vMaxAutomationRunsSchedulerSpace)))",
             "qAttribute": true,
             "id": "cellBackgroundColor"
           }
@@ -1803,7 +1801,7 @@
         },
         "qAttributeExpressions": [
           {
-            "qExpression": "$(c_blue_alpha(([Runs Editor] * 255) / $(vMaxAutomationRunsEditor)))",
+            "qExpression": "$(c_blue_alpha(([Runs Editor] * 255) / $(vMaxAutomationRunsEditorSpace)))",
             "qAttribute": true,
             "id": "cellBackgroundColor"
           }
@@ -1932,7 +1930,7 @@
         },
         "qAttributeExpressions": [
           {
-            "qExpression": "$(c_red_alpha(([Failed Runs] * 255) / $(vMaxAutomationFailedRuns)))",
+            "qExpression": "$(c_red_alpha(([Failed Runs] * 255) / $(vMaxAutomationFailedRunsSpace)))",
             "qAttribute": true,
             "id": "cellBackgroundColor"
           }
@@ -2083,7 +2081,7 @@
         },
         "qAttributeExpressions": [
           {
-            "qExpression": "$(c_red_alpha(([Failed Runs CMTD] * 255) / $(vMaxAutomationFailedRunsCMTD)))",
+            "qExpression": "$(c_red_alpha(([Failed Runs CMTD] * 255) / $(vMaxAutomationFailedRunsCMTDSpace)))",
             "qAttribute": true,
             "id": "cellBackgroundColor"
           }
@@ -2213,7 +2211,7 @@
         },
         "qAttributeExpressions": [
           {
-            "qExpression": "$(c_red_alpha(([Failed Runs PMTD] * 255) / $(vMaxAutomationFailedRunsPMTD)))",
+            "qExpression": "$(c_red_alpha(([Failed Runs PMTD] * 255) / $(vMaxAutomationFailedRunsPMTDSpace)))",
             "qAttribute": true,
             "id": "cellBackgroundColor"
           }
@@ -2758,13 +2756,7 @@
           "qSortByLoadOrder": 1,
           "qExpression": {}
         },
-        "qAttributeExpressions": [
-          {
-            "qExpression": "If(AutomationRunMode='Triggered',\r\n\t$(c_red_alpha(([Avg Duration] * 86400  * 255) / $(vLimitTriggeredSync))),\nIf(AutomationRunMode='Webhook',\n\t$(c_red_alpha(([Avg Duration] * 86400  * 255) / $(vLimitWebhook))),\n\t$(c_red_alpha(([Avg Duration] * 86400  * 255) / $(vLimitScheduled)))\n))",
-            "qAttribute": true,
-            "id": "cellBackgroundColor"
-          }
-        ],
+        "qAttributeExpressions": [],
         "qAttributeDimensions": [],
         "qCalcCond": {},
         "qCalcCondition": {
@@ -2907,13 +2899,7 @@
           "qSortByLoadOrder": 1,
           "qExpression": {}
         },
-        "qAttributeExpressions": [
-          {
-            "qExpression": "If(AutomationRunMode='Triggered',\r\n\t$(c_red_alpha(([Avg Duration CMTD] * 86400  * 255) / $(vLimitTriggeredSync))),\nIf(AutomationRunMode='Webhook',\n\t$(c_red_alpha(([Avg Duration CMTD] * 86400  * 255) / $(vLimitWebhook))),\n\t$(c_red_alpha(([Avg Duration CMTD] * 86400  * 255) / $(vLimitScheduled)))\n))",
-            "qAttribute": true,
-            "id": "cellBackgroundColor"
-          }
-        ],
+        "qAttributeExpressions": [],
         "qAttributeDimensions": [],
         "qCalcCond": {},
         "qCalcCondition": {
@@ -3039,13 +3025,7 @@
           "qSortByLoadOrder": 1,
           "qExpression": {}
         },
-        "qAttributeExpressions": [
-          {
-            "qExpression": "If(AutomationRunMode='Triggered',\r\n\t$(c_red_alpha(([Avg Duration PMTD] * 86400  * 255) / $(vLimitTriggeredSync))),\nIf(AutomationRunMode='Webhook',\n\t$(c_red_alpha(([Avg Duration PMTD] * 86400  * 255) / $(vLimitWebhook))),\n\t$(c_red_alpha(([Avg Duration PMTD] * 86400  * 255) / $(vLimitScheduled)))\n))",
-            "qAttribute": true,
-            "id": "cellBackgroundColor"
-          }
-        ],
+        "qAttributeExpressions": [],
         "qAttributeDimensions": [],
         "qCalcCond": {},
         "qCalcCondition": {
@@ -3168,13 +3148,7 @@
           "qSortByLoadOrder": 1,
           "qExpression": {}
         },
-        "qAttributeExpressions": [
-          {
-            "qExpression": "If(AutomationRunMode='Triggered',\r\n\t$(c_red_alpha(([Max Duration] * 86400  * 255) / $(vLimitTriggeredSync))),\nIf(AutomationRunMode='Webhook',\n\t$(c_red_alpha(([Max Duration] * 86400  * 255) / $(vLimitWebhook))),\n\t$(c_red_alpha(([Max Duration] * 86400  * 255) / $(vLimitScheduled)))\n))",
-            "qAttribute": true,
-            "id": "cellBackgroundColor"
-          }
-        ],
+        "qAttributeExpressions": [],
         "qAttributeDimensions": [],
         "qCalcCond": {},
         "qCalcCondition": {
@@ -3313,13 +3287,7 @@
           "qSortByLoadOrder": 1,
           "qExpression": {}
         },
-        "qAttributeExpressions": [
-          {
-            "qExpression": "If(AutomationRunMode='Triggered',\r\n\t$(c_red_alpha(([Max Duration CMTD] * 86400  * 255) / $(vLimitTriggeredSync))),\nIf(AutomationRunMode='Webhook',\n\t$(c_red_alpha(([Max Duration CMTD] * 86400  * 255) / $(vLimitWebhook))),\n\t$(c_red_alpha(([Max Duration CMTD] * 86400  * 255) / $(vLimitScheduled)))\n))",
-            "qAttribute": true,
-            "id": "cellBackgroundColor"
-          }
-        ],
+        "qAttributeExpressions": [],
         "qAttributeDimensions": [],
         "qCalcCond": {},
         "qCalcCondition": {
@@ -3445,13 +3413,7 @@
           "qSortByLoadOrder": 1,
           "qExpression": {}
         },
-        "qAttributeExpressions": [
-          {
-            "qExpression": "If(AutomationRunMode='Triggered',\r\n\t$(c_red_alpha(([Max Duration PMTD] * 86400  * 255) / $(vLimitTriggeredSync))),\nIf(AutomationRunMode='Webhook',\n\t$(c_red_alpha(([Max Duration PMTD] * 86400  * 255) / $(vLimitWebhook))),\n\t$(c_red_alpha(([Max Duration PMTD] * 86400  * 255) / $(vLimitScheduled)))\n))",
-            "qAttribute": true,
-            "id": "cellBackgroundColor"
-          }
-        ],
+        "qAttributeExpressions": [],
         "qAttributeDimensions": [],
         "qCalcCond": {},
         "qCalcCondition": {
