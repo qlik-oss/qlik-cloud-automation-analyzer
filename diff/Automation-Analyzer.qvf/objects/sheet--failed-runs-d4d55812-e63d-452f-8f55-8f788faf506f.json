@@ -9,7 +9,7 @@
       "description": ""
     },
     "creationDate": "2024-02-20T18:42:14.389Z",
-    "rank": 3,
+    "rank": 3.125000,
     "thumbnail": {
       "qStaticContentUrlDef": {
         "qUrl": "/api/v1/apps/<appId>/media/files/4.png"
@@ -1870,10 +1870,14 @@
                   "align": "left"
                 },
                 "representation": {
-                  "type": "text",
-                  "urlPosition": "dimension",
+                  "type": "url",
+                  "urlPosition": "attribute",
                   "urlLabel": "",
-                  "linkUrl": "",
+                  "linkUrl": {
+                    "qStringExpression": {
+                      "qExpr": "='$(vTenantAutomationPath)' \u0026 AutomationId \u0026 '/history'"
+                    }
+                  },
                   "imageSetting": "label",
                   "imageLabel": "",
                   "imageUrl": "",
@@ -1905,7 +1909,13 @@
               },
               "qTotalLabel": {},
               "qCalcCond": {},
-              "qAttributeExpressions": [],
+              "qAttributeExpressions": [
+                {
+                  "qExpression": "='$(vTenantAutomationPath)' \u0026 AutomationId \u0026 '/history'",
+                  "qAttribute": true,
+                  "id": "url"
+                }
+              ],
               "qAttributeDimensions": [],
               "qCalcCondition": {
                 "qCond": {},
@@ -2567,7 +2577,7 @@
               "qDef": {
                 "qGrouping": "N",
                 "qFieldDefs": [
-                  "=If(AutomationErrorCanBeViewed='True' AND (Date('$(vNow)') - (Timestamp(Timestamp([AutomationRunStartTime]) - $(vReloadTimeDiffFromGMT))) \u003c 30),'https://$(vu_tenant_fqdn)/api/v1/automations/' \u0026 AutomationRunPathURL,'')\r\n"
+                  "=If(AutomationErrorCanBeViewed='True' AND (Date('$(vNow)') - (Timestamp(Timestamp([AutomationRunStartTime]) - $(vReloadTimeDiffFromGMT))) \u003c 30),'https://$(vTenantHostname)/api/v1/automations/' \u0026 AutomationRunPathURL,'')"
                 ],
                 "qFieldLabels": [
                   "Link"

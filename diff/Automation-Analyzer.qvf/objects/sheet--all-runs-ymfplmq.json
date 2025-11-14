@@ -9,7 +9,7 @@
       "description": ""
     },
     "creationDate": "2024-02-20T18:42:14.389Z",
-    "rank": 4,
+    "rank": 4.062500,
     "thumbnail": {
       "qStaticContentUrlDef": {
         "qUrl": "/api/v1/apps/<appId>/media/files/5.png"
@@ -93,10 +93,14 @@
                   "align": "left"
                 },
                 "representation": {
-                  "type": "text",
-                  "urlPosition": "dimension",
+                  "type": "url",
+                  "urlPosition": "attribute",
                   "urlLabel": "",
-                  "linkUrl": "",
+                  "linkUrl": {
+                    "qStringExpression": {
+                      "qExpr": "='$(vTenantAutomationPath)' \u0026 AutomationId \u0026 '/history'"
+                    }
+                  },
                   "imageSetting": "label",
                   "imageLabel": "",
                   "imageUrl": "",
@@ -128,7 +132,13 @@
               },
               "qTotalLabel": {},
               "qCalcCond": {},
-              "qAttributeExpressions": [],
+              "qAttributeExpressions": [
+                {
+                  "qExpression": "='$(vTenantAutomationPath)' \u0026 AutomationId \u0026 '/history'",
+                  "qAttribute": true,
+                  "id": "url"
+                }
+              ],
               "qAttributeDimensions": [],
               "qCalcCondition": {
                 "qCond": {},
@@ -851,7 +861,7 @@
               "qDef": {
                 "qGrouping": "N",
                 "qFieldDefs": [
-                  "=If(Len(AutomationRunPathURL)\u003e0 AND NOT AutomationErrorCanBeViewed='False' AND (Date('$(vNow)') - (Timestamp(Timestamp([AutomationRunStartTime]) - $(vReloadTimeDiffFromGMT))) \u003c 30),\r\n'https://$(vu_tenant_fqdn)/api/v1/automations/' \u0026 AutomationRunPathURL,'')"
+                  "=If(Len(AutomationRunPathURL)\u003e0 AND NOT AutomationErrorCanBeViewed='False' AND (Date('$(vNow)') - (Timestamp(Timestamp([AutomationRunStartTime]) - $(vReloadTimeDiffFromGMT))) \u003c 30),\r\n'https://$(vTenantHostname)/api/v1/automations/' \u0026 AutomationRunPathURL,'')"
                 ],
                 "qFieldLabels": [
                   "Link"
